@@ -12,7 +12,7 @@ class Page {
 	function __construct() {
 	}
 
-	public function getPageAttributes() {
+	public function getPageAttributes( $extra = '' ) {
 		global $oWebuser;
 
 		$arr = array();
@@ -43,6 +43,11 @@ class Page {
 		$arr['logout'] = $logout;
 		$arr['website_name'] = Translations::get('website_name');
 		$arr['contact'] = Translations::get('contact');
+
+		// add extra settings
+		if ( is_array($extra) ) {
+			$arr = array_merge($arr, $extra);
+		}
 
 		return $arr;
 	}

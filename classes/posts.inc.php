@@ -96,7 +96,7 @@ class Posts{
 
 	    // which language are we using
 	    $query = "SELECT * FROM `post` ORDER BY kenmerk DESC, ID DESC LIMIT " . $page*$recordsPerPage . ", $recordsPerPage ";
-        //preprint($query);
+//preprint($query);
 	    $stmt = $dbConn->getConnection()->prepare($query);
 	    $stmt->execute();
 	    $result = $stmt->fetchAll();

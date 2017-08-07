@@ -28,6 +28,9 @@
         })();
         // -->
     </script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
 
@@ -36,7 +39,7 @@
     <div class="header">
         <table width="100%" cellspacing="0" cellpadding="0">
             <tr>
-                <td rowspan="2" width="130"><div class="logo"><img src="images/knaw_huc_logo_75.jpg"></div></td>
+                <td rowspan="2" width="130"><div class="logo"><a href="index.php"><img src="images/knaw_huc_logo_75.jpg"></a></div></td>
                 <td><span class="title">{{website_name}}</span></td>
                 <td align="right">
                     <span class="name">{{welcome|raw}}</span><br>
@@ -48,7 +51,9 @@
         </table>
     </div>
 
+	{% if hide_menu != 1 %}
 	<div class="menu">{{menu|raw}}</div>
+	{% endif %}
 
 	<div class="content">{{content|raw}}</div>
 

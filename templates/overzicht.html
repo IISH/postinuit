@@ -68,7 +68,11 @@
 <script>
     document.getElementById ("previous_button").addEventListener ("click", previousPage, false);
     document.getElementById ("next_button").addEventListener ("click", nextPage, false);
+
+	// TODO: werkt niet
     var pageNumber = location.href.substr(location.href.indexOf("=") + 1);
+//alert(pageNumber);
+    if(pageNumber == ''){ pageNumber = 0; }
     if(pageNumber === '0'){$('#previous_button').hide();}
 
     function previousPage(){

@@ -7,7 +7,6 @@
 </head>
 <h1>{{title}}</h1>
 
-{{message|raw}}
 <form method="post" action="upload_post_in.php" enctype="multipart/form-data">
     <table id="post_in_table">
         <tr>
@@ -51,7 +50,7 @@
             <td><textarea class="input-sm col-lg-12" id="commentsInput" name="remarks"></textarea></td><!--vrije tekst veld (text area, 2 regels, resizable)-->
         </tr>
         <tr>
-            <td><label for="registeredByInput">{{ registeredByInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ registeredByInfo }}">(?)</a></label></td>
+            <td><label for="registeredByInput">{{ registeredByInfo }}:</label></td>
             <td><input class="input-sm col-lg-12" id="registeredByInput" name="registered_by" type="text" readonly placeholder="Igor"></td><!--vrije tekst veld, hier moet straks automatisch de naam van de ingelogde persoon komen-->
         </tr>
         <tr>
@@ -89,10 +88,12 @@
 {#<br>#}
 {#DONE#}
 
+<!--
 OPMERKINGEN:<br>
 Documenten zouden op de HD bewaard moeten worden (en niet in de database)<br>
 maar hoe gaan we dat aanpakken ??? Hier nog over hebben voordat je begint met uploaden van documenten.<br>
 <br>
+// -->
 
 <script>
     $(document).ready(function(){

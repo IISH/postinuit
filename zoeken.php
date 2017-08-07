@@ -4,11 +4,6 @@ require_once "classes/start.inc.php";
 // check if an user is logged in
 $oWebuser->checkLoggedIn();
 
-if ( !$oWebuser->isAdmin() ) {
-	echo "You are not authorized to access this page.<br>";
-	die('Go to <a href="index.php">overzicht</a>');
-}
-
 // create webpage
 $oPage = new Page();
 $oPage->setTitle(Translations::get('website_name') . ' | ' . Translations::get('zoeken'));

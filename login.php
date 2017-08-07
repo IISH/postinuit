@@ -7,7 +7,7 @@ $oPage->setTitle(Translations::get('website_name') . ' | ' . Translations::get('
 $oPage->setContent(createLoginPage());
 
 // show page
-echo $twig->render('design.html', $oPage->getPageAttributes() );
+echo $twig->render('design.html', $oPage->getPageAttributes( array( 'hide_menu' => 1 ) ) );
 
 function createLoginPage() {
 	global $protect, $twig;

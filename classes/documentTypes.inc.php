@@ -24,7 +24,7 @@ class DocumentTypes {
         $stmt->execute();
         $result = $stmt->fetchAll();
         foreach($result as $row){
-            $arr[$row["ID"]] = [$row["type_" . $language], false];
+            $arr[$row["ID"]] = array($row["type_" . $language], false);
         }
 
         self::$settings = $arr;

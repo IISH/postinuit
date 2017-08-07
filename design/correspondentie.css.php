@@ -265,4 +265,14 @@ div.menu {
     padding: 5px;
 }
 
+.index_button_alignment {
+	text-align: center;
+}
 
+.index_button_margin {
+	margin-bottom: 30px;
+}
+
+.btn {
+	width: 300px;
+}

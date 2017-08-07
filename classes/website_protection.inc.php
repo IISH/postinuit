@@ -34,7 +34,8 @@ class WebsiteProtection {
 			$message .= "Warning: " . $tekst;
 
 			// send email
-			mail($recipients, $subject, $message, $headers);
+			// TODO: temporary disabled
+//			mail($recipients, $subject, $message, $headers);
 		}
 	}
 
