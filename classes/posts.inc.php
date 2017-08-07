@@ -54,6 +54,12 @@ class Post{
     public static function uploadPost($data){
         global $dbConn;
 
+        $settingsQuery = 'UPDATE settings SET value = value+1 WHERE property = "post_characteristic_last_used_counter"';
+        $settingsStmt = $dbConn->getConnection()->prepare($settingsQuery);
+        $settingsStmt->execute();
+
+        // TODO: get latest value of post_characteristic_last_used_counter and insert in kenmerk
+
         $stmt = $dbConn->getConnection()->prepare("INSERT INTO REGISTRY 
             (in_out, kenmerk, date, their_name, their_organisation, 
             our_name, our_institute, our_department, type_of_document, 
@@ -75,35 +81,6 @@ class Post{
         $stmt->bindParam(':registered_by', $data['registered_by'], PDO::PARAM_STR);
 
         $stmt->execute();
-
-//        $query = 'INSERT INTO' . ' ' . self::$settings_table .
-//            '(in_out, kenmerk, date, their_name, their_organisation,
-//            our_name, our_institute, our_department, type_of_document,
-//            subject, remarks, registered_by)'. ' VALUES(';
-////        $query .= http_build_query($data).');';
-//        $query.= "'".addslashes($data['in_out'])."',";;
-//        $query.= $data['kenmerk'].",";
-//        $query.= "'".$data['date']."',";
-//        $query.= "'".$data['their_name']."',";
-//        $query.= "'".$data['their_organisation']."',";
-//        $query.= "'".$data['our_name']."',";
-//        $query.= "'".$data['our_institute']."',";
-//        $query.= "'".$data['our_department']."',";
-//        $query.= "'".$data['type_of_document']."',";
-//        $query.= "'".$data['subject']."',";
-//        $query.= "'".$data['remarks']."',";
-//        $query.= "'".$data['registered_by']."'";
-//
-//        $query .= ');';
-//        $stmt = $dbConn->getConnection()->prepare($query);
-//        $stmt->execute();
-
-        // TODO: add query to update the characteristic data in settings
-        $countToSet = (int)substr($data['kenmerk'], -3);
-
-        $settingsQuery = 'UPDATE settings SET value = '. $countToSet .' WHERE property = "post_characteristic_counter"';
-        $settingsStmt = $dbConn->getConnection()->prepare($settingsQuery);
-        $settingsStmt->execute();
     }
 
     /**
