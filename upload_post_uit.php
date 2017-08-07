@@ -8,7 +8,7 @@ echo "<br>";
 $_POST['postInOrOut'] = 'out';
 
 // TODO: add check to see everything has been filled out
-if(count($_POST) === 12){
+if ( count($_POST) === 12 ) {
     echo Posts::uploadPost($_POST);
     echo "<br>";
     header("Location: postuit.php");

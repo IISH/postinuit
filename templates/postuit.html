@@ -1,15 +1,10 @@
-<head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
 <h1>{{title}}</h1>
 
 <form method="post" action="upload_post_uit.php" enctype="multipart/form-data">
     <table id="post_uit_table">
         <tr>
             <td><label for="characteristicInput">{{ characteristicsInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ characteristicsInfo }}">(?)</a></label></td>
-            <td><input class="input-sm col-lg-12" id="characteristicInput" name="kenmerk" type="text" readonly> </td> <!--Moet berekend worden yy-xxx-->
+            <td><input class="input-sm col-lg-12 disabledField" id="characteristicInput" name="kenmerk" type="text" readonly> </td> <!--Moet berekend worden yy-xxx-->
         </tr>
         <tr>
             <td><label for="dateSentInput">{{ dateSentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ dateSentInfo }}">(?)</a></label></td>
@@ -35,9 +30,8 @@
             <td><label for="receiverInstituteInput">{{ receiverInstituteInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ receiverInstituteInfo }}">(?)</a></label></td>
             <td><input class="input-sm col-lg-12" id="receiverInstituteInput" name="their_organisation" type="text"></td> <!--vrije tekst, met jquery auto aanvullen lijst (lijst komt uit veld 'their_organisation')-->
         </tr>
-
         <tr>
-            <td><label for="typeOfDocumentInput">{{ typeOfDocumentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ typeOfDocumentInfo }}">(?)</a></label></td>
+            <td><label for="typeOfDocumentTD">{{ typeOfDocumentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ typeOfDocumentInfo }}">(?)</a></label></td>
             <td id="typeOfDocumentTD"></td><!--select of radio box, keuzes: Beleidsdocument, Vergaderstuk, Besluit, Overeenkomst, Verslag, Overige correspondentie-->
         </tr>
         <tr>
@@ -50,7 +44,7 @@
         </tr>
         <tr>
             <td><label for="registeredByInput">{{ registeredByInfo }}:</label></td>
-            <td><input class="input-sm col-lg-12" id="registeredByInput" name="registered_by" type="text" readonly placeholder="Igor"></td><!--vrije tekst veld, hier moet straks automatisch de naam van de ingelogde persoon komen-->
+            <td><input class="input-sm col-lg-12 disabledField" id="registeredByInput" name="registered_by" type="text" readonly></td><!--vrije tekst veld, hier moet straks automatisch de naam van de ingelogde persoon komen-->
         </tr>
         <tr>
             <td><label for="documentInput">{{ documentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ documentInfo }}">(?)</a></label></td>
@@ -63,7 +57,7 @@
         <tr>
             <td></td>
             <td>
-                <input type="submit">
+                <input type="submit" value="Bewaar">
             </td>
         </tr>
     </table>
@@ -79,35 +73,36 @@ maar hoe gaan we dat aanpakken ??? Hier nog over hebben voordat je begint met up
 // -->
 
 <script>
-    $(document).ready(function(){
+    $(document).ready(function() {
         $('[data-toggle="popover"]').popover();
 
-        $(function(){
+        $(function() {
             var currentDate = new Date().getFullYear().toString().substr(-2);
             var characteristicsCount = {{ characteristicsValue }};
-            for(var i = characteristicsCount.toString().length; i < 3; i++){
+            for(var i = characteristicsCount.toString().length; i < 3; i++) {
                 currentDate += '0';
             }
             currentDate += characteristicsCount;
             $('#characteristicInput').val(currentDate);
         });
 
-        $(function(){
-            $.each({{ documentTypeOptions|json_encode|raw }}, function(key, value){
+        $(function() {
+            $.each( {{documentTypeOptions|json_encode|raw}}, function(key, value) {
                 var input = document.createElement("input");
                 var label = document.createElement("label");
 
                 input.setAttribute('name', 'type_of_document');
                 input.setAttribute('type', 'radio');
                 input.setAttribute('id', key); // ID from database
-                {#input.setAttribute('checked', 'value[1]');#}
+                // input.setAttribute('checked', 'value[1]');
                 input.setAttribute('value', key);
 
-                label.innerHTML = value[0];
-                label.setAttribute('for', key);
-                label.style.marginRight = "5px";
+                //label.innerHTML = value[0];
+                label.innerHTML = input.outerHTML + ' ' + value[0];
+                //label.setAttribute('for', key);
+                label.style.marginRight = "30px";
 
-                $('#typeOfDocumentTD').append(input);
+                //$('#typeOfDocumentTD').append(input);
                 $('#typeOfDocumentTD').append(label);
 
             });
@@ -123,7 +118,7 @@ maar hoe gaan we dat aanpakken ??? Hier nog over hebben voordat je begint met up
         return local.toJSON().slice(0,10);
     });
 
-    function makeFileList(){
+    function makeFileList() {
         //get the input and UL list
         var input = document.getElementById('documentInput');
         var list = document.getElementById('fileList');
@@ -141,7 +136,7 @@ maar hoe gaan we dat aanpakken ??? Hier nog over hebben voordat je begint met up
             list.appendChild(li);
         }
 
-        if(!list.hasChildNodes()){
+        if(!list.hasChildNodes()) {
             var li = document.createElement('li');
             li.innerHTML = "No Files Selected";
             list.appendChild(li);

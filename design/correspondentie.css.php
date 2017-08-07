@@ -74,7 +74,7 @@ input, select {
 h1 {
 	margin-top: 0px;
 	margin-bottom: 0px;
-	font-size: 15px;
+	font-size: 24px;
 }
 
 hr {
@@ -260,7 +260,7 @@ div.menu {
     width:80%;
 }
 
-#postHeaderRow > th{
+#postHeaderRow > th {
     border: 1px solid black;
     padding: 5px;
 }
@@ -270,9 +270,42 @@ div.menu {
 }
 
 .index_button_margin {
-	margin-bottom: 30px;
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
 .btn {
 	width: 300px;
+}
+
+table.login {
+    border-collapse: collapse;
+}
+
+table.login td {
+    padding: 10px 5px 10px 0px;
+}
+
+#postOverview tr td {
+    padding: 10px 5px 10px 0px;
+    border: 1px solid black;
+    padding: 5px;
+}
+
+.disabledField {
+    background-color: #efefef;
+}
+
+#post_in_table
+, #post_uit_table {
+    border-collapse: collapse;
+}
+
+#post_in_table td
+, #post_uit_table td {
+    padding: 3px 3px 3px 0px;
+}
+
+label {
+    font-size: 95%;
 }

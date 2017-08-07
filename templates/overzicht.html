@@ -1,22 +1,36 @@
-<head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
 <h1>{{title}}</h1>
 
 <body>
+	<div>
+		<input type="hidden" id="current_page" value="{{cuurent_page}}">
+		<input type="hidden" id="max_pages" value="{{max_pages}}">
+		<table>
+			<tr>
+				<td>
+					<button id="previous_button_top"> << </button>
+				</td>
+				<td id="previous_page_number" hidden>
+				</td>
+				<td id="total_pages_cell">
+				</td>
+				<td id="next_page_number" hidden>
+				</td>
+				<td>
+					<button id="next_button_top"> >> </button>
+				</td>
+			</tr>
+		</table>
+	</div>
     <div>
-        <table id="postOverview">
+        <table id="postOverview" class="table-bordered table-condensed table-hover table-striped">
             <tr id="postHeaderRow">
-                <th>ID</th>
-                <th>In/Uit</th>
                 <th>Kenmerk</th>
+	            <th>In/Uit</th>
                 <th>Datum</th>
                 <th>Hun naam</th>
-                <th>Hun instituut</th>
+                <th>Hun organisatie</th>
                 <th>Onze naam</th>
-                <th>Onze instituut</th>
+                <th>Onze organisatie</th>
                 <th>Onze afdeling</th>
                 <th>Type document</th>
                 <th>Onderwerp</th>
@@ -25,9 +39,8 @@
 
 			{% for post in posts %}
 				<tr>
-			        <td><a href="postin.php?ID={{ post.ID }}">{{post.ID}}</a></td>
+					<td><a href="{{post.url}}?ID={{post.ID}}">{{post.kenmerk}}</a></td>
 			        <td>{{post.inOut}}</td>
-			        <td>{{post.kenmerk}}</td>
 			        <td>{{post.date}}</td>
 			        <td>{{post.theirName}}</td>
 			        <td>{{post.theirOrganisation}}</td>
@@ -46,19 +59,10 @@
         <table>
             <tr>
                 <td>
-                    <button id="previous_button"> << </button>
-                </td>
-                <td id="previous_page_number" hidden>
-
-                </td>
-                <td id="total_pages_cell">
-
-                </td>
-                <td id="next_page_number" hidden>
-
+                    <button id="previous_button_bottom"> << </button>
                 </td>
                 <td>
-                    <button id="next_button"> >> </button>
+                    <button id="next_button_bottom"> >> </button>
                 </td>
             </tr>
         </table>
@@ -66,21 +70,34 @@
 </body>
 
 <script>
-    document.getElementById ("previous_button").addEventListener ("click", previousPage, false);
-    document.getElementById ("next_button").addEventListener ("click", nextPage, false);
+    document.getElementById("previous_button_bottom").addEventListener ("click", previousPage, false);
+    document.getElementById("previous_button_top").addEventListener ("click", previousPage, false);
+    document.getElementById("next_button_bottom").addEventListener ("click", nextPage, false);
+    document.getElementById("next_button_top").addEventListener ("click", nextPage, false);
 
-	// TODO: werkt niet
-    var pageNumber = location.href.substr(location.href.indexOf("=") + 1);
-//alert(pageNumber);
-    if(pageNumber == ''){ pageNumber = 0; }
-    if(pageNumber === '0'){$('#previous_button').hide();}
+	//
+    //var pageNumber = location.href.substr(location.href.indexOf("=") + 1); // werkt niet
+    var pageNumber = document.getElementById('current_page').value;
+    var maxPages = document.getElementById('max_pages').value;
 
-    function previousPage(){
-        if(pageNumber >= 1){ pageNumber--; }
+    // hide prev/next button
+    if ( pageNumber < 1 ) {
+        $('#previous_button_bottom').prop('disabled', true);
+        $('#previous_button_top').prop('disabled', true);
+    }
+    if ( pageNumber > maxPages - 2 ) {
+        $('#next_button_bottom').prop('disabled', true);
+        $('#next_button_top').prop('disabled', true);
+    }
+
+    //
+    function previousPage() {
+        if(pageNumber >= 1) { pageNumber--; }
         location = '?page=' + pageNumber;
     }
 
-    function nextPage(){
+    //
+    function nextPage() {
         pageNumber++;
         location = '?page=' + pageNumber;
     }

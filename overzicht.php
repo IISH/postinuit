@@ -15,39 +15,56 @@ echo $twig->render('design.html', $oPage->getPageAttributes() );
 function createOverzichtContent( ) {
 	global $oWebuser, $twig, $protect;
 
+	// records per page
     $recordsPerPage = Settings::get('post_records_per_page');
+
+    // current page
     $page = $protect->requestPositiveNumberOrEmpty('get', 'page');
+    if ( $page == '' ) {
+    	$page = 0;
+    }
+
+    // max pages
+	$max_pages = Posts::getPostsPageCount($recordsPerPage);
+
+	//
     $documentTypes = DocumentTypes::getDocumentTypes();
 
 	// TODO: datum formatten
-	// TODO: maak van elke ID een link naar postin.php?ID=xxx of postout.php?ID=xxx
 
-	// TODO: set recordsPerPage and page here
+	//
 	$arr = Posts::getPosts($recordsPerPage,$page);
 	$documentType = '';
-    //preprint($arr);
 	$posts = array();
 	foreach ( $arr as $post ) {
         // Find out what document type needs to be displayed
-	    foreach($documentTypes as $key => $docType){
-            if($post->getTypeOfDocument() == $key){
+	    foreach($documentTypes as $key => $docType) {
+            if ( $post->getTypeOfDocument() == $key) {
                 $documentType = $docType[0];
             }
         }
-			$posts[] = array(
-				'ID' => $post->getId()
-				, 'inOut' => $post->getInOut()
-				, 'kenmerk' => $post->getKenmerk()
-				, 'date' => $post->getDate()
-				, 'theirName' => $post->getTheirName()
-				, 'theirOrganisation' => $post->getTheirOrganisation()
-				, 'ourName' => $post->getOurName()
-				, 'ourOrganisation' => $post->getOurOrganisation()
-				, 'ourDepartment' => $post->getOurDepartment()
-				, 'typeOfDocument' => $documentType
-				, 'subject' => $post->getSubject()
-				, 'remarks' => $post->getRemarks()
-			);
+
+        if ( $post->getInOut() == 'in' ) {
+	        $url = 'postin.php';
+        } else {
+	        $url = 'postout.php';
+        }
+
+		$posts[] = array(
+			'ID' => $post->getId()
+			, 'url' => $url
+			, 'inOut' => $post->getInOut()
+			, 'kenmerk' => $post->getKenmerk()
+			, 'date' => $post->getDate()
+			, 'theirName' => $post->getTheirName()
+			, 'theirOrganisation' => $post->getTheirOrganisation()
+			, 'ourName' => $post->getOurName()
+			, 'ourOrganisation' => $post->getOurOrganisation()
+			, 'ourDepartment' => $post->getOurDepartment()
+			, 'typeOfDocument' => $documentType
+			, 'subject' => $post->getSubject()
+			, 'remarks' => $post->getRemarks()
+		);
 	}
 
 	//
@@ -55,5 +72,7 @@ function createOverzichtContent( ) {
 		'title' => Translations::get('menu_overzicht')
         , 'posts' => $posts
         , 'document_types' => DocumentTypes::getDocumentTypes()
+		, 'cuurent_page' => $page
+		, 'max_pages' => $max_pages
 	));
 }

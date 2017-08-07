@@ -14,7 +14,7 @@ class Posts{
 
         $arr = array();
 
-        // which language are we using
+        //
         $query = 'SELECT * FROM ' . self::$settings_table . ' ORDER BY kenmerk DESC, ID DESC';
         $stmt = $dbConn->getConnection()->prepare($query);
         $stmt->execute();
@@ -47,7 +47,7 @@ class Posts{
      * Upload the data entered in the post_in/post_uit form
      * @param $data array with data to be uploaded
      */
-    public static function uploadPost($data){
+    public static function uploadPost($data) {
         global $dbConn;
 
         $settingsQuery = 'UPDATE settings SET value = value+1 WHERE property = "post_characteristic_last_used_counter"';
@@ -89,14 +89,13 @@ class Posts{
      * Gets all the posts from the database (loaded in the settings variable)
      * @return null
      */
-    public static function getPosts($recordsPerPage, $page){
+    public static function getPosts($recordsPerPage, $page) {
         global $dbConn;
 
         $arr = array();
 
-	    // which language are we using
+	    //
 	    $query = "SELECT * FROM `post` ORDER BY kenmerk DESC, ID DESC LIMIT " . $page*$recordsPerPage . ", $recordsPerPage ";
-//preprint($query);
 	    $stmt = $dbConn->getConnection()->prepare($query);
 	    $stmt->execute();
 	    $result = $stmt->fetchAll();
@@ -107,13 +106,35 @@ class Posts{
 		return $arr;
     }
 
+	/**
+	 * Returns the number of pages for Posts
+	 * @param $recordsPerPage
+	 * @return integer
+	 */
+	public static function getPostsPageCount($recordsPerPage) {
+		global $dbConn;
+
+		$ret = 0;
+
+		//
+		$query = "SELECT count(*) AS NrOfRecords FROM `post` ";
+		$stmt = $dbConn->getConnection()->prepare($query);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		foreach ($result as $row) {
+			$ret = ceil($row['NrOfRecords'] / $recordsPerPage);
+		}
+
+		return $ret;
+	}
+
     /**
      * Returns the post corresponding to the id given
      * @param $id
      * @return string
      */
-    public static function findPostById($id){
-        if(!self::$is_loaded){
+    public static function findPostById($id) {
+        if(!self::$is_loaded) {
             self:self::load();
         }
 

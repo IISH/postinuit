@@ -10,7 +10,7 @@ class WebsiteProtection {
 		$recipients = str_replace(array(';', ':', ' '), ',', $recipients);
 
 		// fix multiple commas
-		if( strpos($recipients, ',,') !== false ) {
+		if ( strpos($recipients, ',,') !== false ) {
 			$recipients = str_replace(',,', ',', $recipients);
 		}
 

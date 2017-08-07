@@ -16,7 +16,7 @@ function createPostuitContent( ) {
 	global $oWebuser, $twig;
 
     // Check whether the date in the database is correct, otherwise adjust both date and counter for characteristic
-    if(Settings::get('post_characteristic_year') !== date('y') ){
+    if ( Settings::get('post_characteristic_year') !== date('y') ) {
         Settings::save('post_characteristic_year', date('y'));
         Settings::save('post_characteristic_last_used_counter', 1);
     }

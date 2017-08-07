@@ -29,7 +29,6 @@ require_once dirname(__FILE__) . "/settings.inc.php";
 require_once dirname(__FILE__) . "/tcdatetime.inc.php";
 require_once dirname(__FILE__) . "/translations.inc.php";
 require_once dirname(__FILE__) . "/website_protection.inc.php";
-require_once dirname(__FILE__) . "/Mobile_Detect.php";
 require_once dirname(__FILE__) . "/documentTypes.inc.php";
 require_once dirname(__FILE__) . "/post.inc.php";
 require_once dirname(__FILE__) . "/posts.inc.php";
@@ -48,9 +47,6 @@ if ( !defined('ENT_XHTML') ) {
 //
 $oWebuser = staticUser::getUserByLoginName( $_SESSION["loginname"] );
 
-$detect = new Mobile_Detect;
-$deviceType = ($detect->isMobile() ? ($detect->isTablet() ? 'tablet' : 'phone') : 'computer');
-
 //
 $menu = array();
 $menu[] = new MenuItem(Translations::get('menu_overzicht'), 'overzicht.php');
@@ -62,12 +58,7 @@ if ( $oWebuser->isAdmin() ) {
 }
 
 // load twig
-try{
-    $loader = new Twig_Loader_Filesystem('templates');
-}catch(Exception $e){
-    $loader = new Twig_Loader_Filesystem('/templates');
-}
-//$loader = new Twig_Loader_Filesystem('templates');
+$loader = new Twig_Loader_Filesystem('templates');
 $twig = new Twig_Environment( $loader);
 
 //

@@ -55,7 +55,6 @@ class User {
 		global $dbConn;
 		// reset values
 		$query = "SELECT * FROM users WHERE ID IN ( " . implode(',', $id) . " ) ";
-//echo $query . ' ///<br>';
 		$stmt = $dbConn->getConnection()->prepare($query);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
@@ -129,6 +128,6 @@ class User {
 	// TODO
 	public function getUserSetting( $setting, $default = '' ) {
 		return '';
-//		return ( isset($this->arrUserSettings[$setting]) ) ? $this->arrUserSettings[$setting] : $default;
+		//		return ( isset($this->arrUserSettings[$setting]) ) ? $this->arrUserSettings[$setting] : $default;
 	}
 }

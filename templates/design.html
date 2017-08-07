@@ -7,18 +7,17 @@
     <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
     <meta name="Robots" content="noindex,nofollow">
     <link rel="icon" type="img/ico" href="{{favicon}}">
-    <style type="text/css" media="all">@import url("design/correspondentie.css.php");</style>
     <script language="Javascript">
         <!--
         // source: http://stackoverflow.com/questions/2400935/browser-detection-in-javascript
-        navigator.browser_detection= (function(){
+        navigator.browser_detection= (function() {
             var ua= navigator.userAgent, tem,
                 M= ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
             if(/trident/i.test(M[1])){
                 tem=  /\brv[ :]+(\d+)/g.exec(ua) || [];
                 return 'IE '+(tem[1] || '');
             }
-            if(M[1]=== 'Chrome'){
+            if(M[1]=== 'Chrome') {
                 tem= ua.match(/\b(OPR|Edge)\/(\d+)/);
                 if(tem!= null) return tem.slice(1).join(' ').replace('OPR', 'Opera');
             }
@@ -31,6 +30,7 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<style type="text/css" media="all">@import url("design/correspondentie.css.php");</style>
 </head>
 <body>
 

@@ -11,19 +11,18 @@ class DocumentTypes {
     /**
      * Load the type of documents from the database
      */
-
-    private static function load(){
+    private static function load() {
         global $dbConn;
         $language  = getLanguage();
 
         $arr = array();
 
-        // which language are we using
+        //
         $query = 'SELECT * FROM ' . self::$document_types_table;
         $stmt = $dbConn->getConnection()->prepare($query);
         $stmt->execute();
         $result = $stmt->fetchAll();
-        foreach($result as $row){
+        foreach($result as $row) {
             $arr[$row["ID"]] = array($row["type_" . $language], false);
         }
 
@@ -37,8 +36,8 @@ class DocumentTypes {
      * @param $document_type
      * @return string
      */
-    public static function get($document_type){
-        if(!self::$is_loaded){
+    public static function get($document_type) {
+        if(!self::$is_loaded) {
             self::load();
         }
 
@@ -47,8 +46,8 @@ class DocumentTypes {
         return $value;
     }
 
-    public static function getDocumentTypes(){
-        if(!self::$is_loaded){
+    public static function getDocumentTypes() {
+        if(!self::$is_loaded) {
             self::load();
         }
 
@@ -57,7 +56,7 @@ class DocumentTypes {
         return $value;
     }
 
-    public function __toString(){
+    public function __toString() {
         return "Class: " . get_class($this) . "\n";
     }
 }

@@ -11,12 +11,12 @@ $_POST['in_out'] = 'in';
 //echo "<br>";
 
 // TODO: add check to see everything has been filled out
-if(count($_POST) === 12){
+if ( count($_POST) === 12) {
     echo Posts::uploadPost($_POST);
     echo "<br>";
     header("Location: postin.php");
     exit;
-}else{
+} else {
     echo "Not everything has been filled out!"."<br>";
     echo count($_POST);
 }
