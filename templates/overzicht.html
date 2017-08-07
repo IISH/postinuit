@@ -5,7 +5,6 @@
 </head>
 <h1>{{title}}</h1>
 
-{{message|raw}}
 <body>
     <div>
         <table id="postOverview">
@@ -13,7 +12,7 @@
                 <th>ID</th>
                 <th>In/Uit</th>
                 <th>Kenmerk</th>
-                <th>Datum in/uit</th>
+                <th>Datum</th>
                 <th>Hun naam</th>
                 <th>Hun instituut</th>
                 <th>Onze naam</th>
@@ -23,10 +22,27 @@
                 <th>Onderwerp</th>
                 <th>Opmerkingen</th>
             </tr>
+
+			{% for post in posts %}
+				<tr>
+			        <td>{{post.ID}}</td>
+			        <td>{{post.inOut}}</td>
+			        <td>{{post.kenmerk}}</td>
+			        <td>{{post.date}}</td>
+			        <td>{{post.theirName}}</td>
+			        <td>{{post.theirOrganisation}}</td>
+			        <td>{{post.ourName}}</td>
+			        <td>{{post.ourOrganisation}}</td>
+			        <td>{{post.ourDepartment}}</td>
+			        <td>{{post.typeOfDocument}}</td>
+			        <td>{{post.subject}}</td>
+			        <td>{{post.remarks}}</td>
+		        </tr>
+	        {% endfor %}
+
         </table>
     </div>
     <div>
-    </div>
         <table>
             <tr>
                 <td>
@@ -42,43 +58,3 @@
         </table>
     </div>
 </body>
-
-<script>
-    $(document).ready(function(){
-
-        $(function(){
-            let counter = 1, pageCounter = 1;
-            $.each({{ posts|json_encode|raw }}, function(key, value){
-                if(counter <= 20){
-                    var tr = document.createElement("tr");
-                    $('#postOverview').append(tr);
-
-                    for (var i = 0; i < 12; i++) {
-                        var td = document.createElement("td");
-                        if (i === 9) {
-                            $.each({{ document_types|json_encode|raw }}, function (doc_key, doc_value) {
-                                if (doc_key === value[i]) {
-                                    td.innerHTML = doc_value[0];
-                                }
-                            })
-                        } else {
-                            td.innerHTML = value[i];
-                        }
-                        td.style.border = '1px solid black';
-                        td.style.padding = '5px';
-                        tr.append(td);
-                    }
-                    counter++;
-                }else{
-                    counter++;
-                    pageCounter = counter%20;
-                }
-            });
-        });
-
-        function nextPage(){
-
-        }
-    });
-
-</script>

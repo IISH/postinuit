@@ -31,6 +31,7 @@ require_once dirname(__FILE__) . "/translations.inc.php";
 require_once dirname(__FILE__) . "/website_protection.inc.php";
 require_once dirname(__FILE__) . "/Mobile_Detect.php";
 require_once dirname(__FILE__) . "/documentTypes.inc.php";
+require_once dirname(__FILE__) . "/post.inc.php";
 require_once dirname(__FILE__) . "/posts.inc.php";
 
 //

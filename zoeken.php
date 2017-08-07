@@ -22,6 +22,6 @@ function createZoekenContent( ) {
 
 	return $twig->render('zoeken.html', array(
 		'title' => Translations::get('zoeken')
-        , 'posts' => Post::getAllPost()
+        , 'posts' => Posts::getPosts(20, 0)
 	));
 }

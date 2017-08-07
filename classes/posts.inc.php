@@ -1,11 +1,7 @@
 <?php
-/**
- * Class for loading and getting translations from the database
- */
-
 //require_once dirname(__FILE__) . "/../classes/_misc_functions.inc.php";
 
-class Post{
+class Posts{
     private static $is_loaded = false;
     private static $settings = null;
     private static $settings_table = 'post';
@@ -13,7 +9,7 @@ class Post{
     /**
      * Load the settings from the database
      */
-    private static function load() {
+    public static function load() {
         global $dbConn;
 
         $arr = array();
@@ -87,12 +83,27 @@ class Post{
      * Gets all the posts from the database (loaded in the settings variable)
      * @return null
      */
-    public static function getAllPost(){
-        if(!self::$is_loaded){
-            self::load();
-        }
+    public static function getPosts($recordsPerPage, $page){
+        global $dbConn, $protect;
 
-        return self::$settings;
+        $arr = array();
+
+		// TODO: move to overzicht.php
+	    $recordsPerPage = 5; // TODO: get from database
+	    // TODO: move to overzicht.php
+	    $page = $protect->requestPositiveNumberOrEmpty('get', 'page');
+
+	    // which language are we using
+	    $query = "SELECT * FROM `post` ORDER BY kenmerk DESC, ID DESC LIMIT " . $page*$recordsPerPage . ", $recordsPerPage ";
+//preprint($query);
+	    $stmt = $dbConn->getConnection()->prepare($query);
+	    $stmt->execute();
+	    $result = $stmt->fetchAll();
+	    foreach ($result as $row) {
+		    $arr[] = new Post( $row );
+	    }
+
+		return $arr;
     }
 
     /**

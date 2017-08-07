@@ -12,7 +12,7 @@ $_POST['in_out'] = 'in';
 
 // TODO: add check to see everything has been filled out
 if(count($_POST) === 12){
-    echo Post::uploadPost($_POST);
+    echo Posts::uploadPost($_POST);
     echo "<br>";
     header("Location: postin.php");
     exit;
