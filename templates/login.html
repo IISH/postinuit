@@ -1,0 +1,28 @@
+<h1>{{title}}</h1>
+
+{% if error != '' %}
+	<span class="error">{{error|raw}}</span>
+	<br>
+{% endif %}
+
+<form name="frmA" method="POST" action="{{action}}">
+<table border="0" cellspacing="0" cellpadding="2">
+	<tr>
+		<td>{{lblLoginname}}:&nbsp;</td>
+		<td><input type="text" name="fldLogin" class="login" maxlength="50" value="{{loginname}}" placeholder="{{loginname_placeholder}}"> <i>{{loginname_help}}</i></td>
+	</tr>
+	<tr>
+		<td>{{lblPassword}}:&nbsp;</td>
+		<td><input type="password" name="fldPassword" class="password" maxlength="50" autocomplete="on" placeholder="{{password_placeholder}}"></td>
+	</tr>
+
+	<tr>
+		<td></td>
+		<td>&nbsp;<input class="button_login" type="submit" name="btnSubmit" value="{{btn_login}}"></td>
+	</tr>
+</table>
+</form>
+
+{{your_login_credentials_are|raw}}
+
+{{focusjavascriptcode|raw}}

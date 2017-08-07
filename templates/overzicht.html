@@ -1,0 +1,84 @@
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<h1>{{title}}</h1>
+
+{{message|raw}}
+<body>
+    <div>
+        <table id="postOverview">
+            <tr id="postHeaderRow">
+                <th>ID</th>
+                <th>In/Uit</th>
+                <th>Kenmerk</th>
+                <th>Datum in/uit</th>
+                <th>Hun naam</th>
+                <th>Hun instituut</th>
+                <th>Onze naam</th>
+                <th>Onze instituut</th>
+                <th>Onze afdeling</th>
+                <th>Type document</th>
+                <th>Onderwerp</th>
+                <th>Opmerkingen</th>
+            </tr>
+        </table>
+    </div>
+    <div>
+    </div>
+        <table>
+            <tr>
+                <td>
+                    <button id="previous_button"> << </button>
+                </td>
+                <td id="total_pages_cell">
+
+                </td>
+                <td>
+                    <button id="next_button"> >> </button>
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+<script>
+    $(document).ready(function(){
+
+        $(function(){
+            let counter = 1, pageCounter = 1;
+            $.each({{ posts|json_encode|raw }}, function(key, value){
+                if(counter <= 20){
+                    var tr = document.createElement("tr");
+                    $('#postOverview').append(tr);
+
+                    for (var i = 0; i < 12; i++) {
+                        var td = document.createElement("td");
+                        if (i === 9) {
+                            $.each({{ document_types|json_encode|raw }}, function (doc_key, doc_value) {
+                                if (doc_key === value[i]) {
+                                    td.innerHTML = doc_value[0];
+                                }
+                            })
+                        } else {
+                            td.innerHTML = value[i];
+                        }
+                        td.style.border = '1px solid black';
+                        td.style.padding = '5px';
+                        tr.append(td);
+                    }
+                    counter++;
+                }else{
+                    counter++;
+                    pageCounter = counter%20;
+                }
+            });
+        });
+
+        function nextPage(){
+
+        }
+    });
+
+</script>

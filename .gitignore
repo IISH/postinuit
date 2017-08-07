@@ -1,0 +1,8 @@
+settings.php
+sites/default/correspondentie.settings.php
+correspondentie.settings.php
+bootstrap-3.3.7
+vendor
+*.ipr
+*.iml
+.idea

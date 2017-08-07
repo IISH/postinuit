@@ -1,0 +1,149 @@
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<h1>{{title}}</h1>
+
+{{message|raw}}
+<form method="post" action="upload_post_uit.php" enctype="multipart/form-data">
+    <table id="post_uit_table">
+        <tr>
+            <td><label for="characteristicInput">{{ characteristicsInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ characteristicsInfo }}">(?)</a></label></td>
+            <td><input class="input-sm col-lg-12" id="characteristicInput" name="kenmerk" type="text" readonly> </td> <!--Moet berekend worden yy-xxx-->
+        </tr>
+        <tr>
+            <td><label for="dateSentInput">{{ dateSentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ dateSentInfo }}">(?)</a></label></td>
+            <td><input class="input-sm col-lg-12" id="dateSentInput" name="date" type="date"></td> <!--picklist, moet wel aanpasbaar zijn-->
+        </tr>
+        <tr>
+            <td><label for="senderNameInput">{{ senderNameInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ senderNameInfo }}">(?)</a></label></td>
+            <td><input class="input-sm col-lg-12" id="senderNameInput" name="our_name" type="text"></td><!--vrije tekst veld-->
+        </tr>
+        <tr>
+            <td><label for="senderInstituteInput">{{ senderInstituteInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ senderInstituteInfo }}">(?)</a></label></td>
+            <td><input class="input-sm col-lg-12" id="senderInstituteInput" name="our_institute" type="text"></td><!--vrije tekst veld, moet later automatisch ingevuld worden, dan niet meer aanpasbaar-->
+        </tr>
+        <tr>
+            <td><label for="senderDepartmentInput">{{ senderDepartmentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ senderDepartmentInfo }}">(?)</a></label></td>
+            <td><input class="input-sm col-lg-12" id="senderDepartmentInput" name="our_department" type="text"></td><!--vrije tekst veld, moet later automatisch ingevuld worden, dan niet meer aanpasbaar-->
+        </tr>
+        <tr>
+            <td><label for="receiverNameInput">{{ receiverNameInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ receiverNameInfo }}">(?)</a></label></td>
+            <td><input class="input-sm col-lg-12" id="receiverNameInput" name="their_name" type="text"></td><!--vrije veld-->
+        </tr>
+        <tr>
+            <td><label for="receiverInstituteInput">{{ receiverInstituteInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ receiverInstituteInfo }}">(?)</a></label></td>
+            <td><input class="input-sm col-lg-12" id="receiverInstituteInput" name="their_organisation" type="text"></td> <!--vrije tekst, met jquery auto aanvullen lijst (lijst komt uit veld 'their_organisation')-->
+        </tr>
+
+        <tr>
+            <td><label for="typeOfDocumentInput">{{ typeOfDocumentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ typeOfDocumentInfo }}">(?)</a></label></td>
+            <td id="typeOfDocumentTD"></td><!--select of radio box, keuzes: Beleidsdocument, Vergaderstuk, Besluit, Overeenkomst, Verslag, Overige correspondentie-->
+        </tr>
+        <tr>
+            <td><label for="subjectInput">{{ subjectInputInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ subjectInputInfo }}">(?)</a></label></td>
+            <td><textarea class="input-sm col-lg-12" id="subjectInput" name="subject"></textarea></td><!--vrije tekst veld (text area, 2 regels, resizable)-->
+        </tr>
+        <tr>
+            <td><label for="commentsInput">{{ commentsInputInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ commentsInputInfo }}">(?)</a></label></td>
+            <td><textarea class="input-sm col-lg-12" id="commentsInput" name="remarks"></textarea></td><!--vrije tekst veld (text area, 2 regels, resizable)-->
+        </tr>
+        <tr>
+            <td><label for="registeredByInput">{{ registeredByInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ registeredByInfo }}">(?)</a></label></td>
+            <td><input class="input-sm col-lg-12" id="registeredByInput" name="registered_by" type="text" readonly placeholder="Igor"></td><!--vrije tekst veld, hier moet straks automatisch de naam van de ingelogde persoon komen-->
+        </tr>
+        <tr>
+            <td><label for="documentInput">{{ documentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ documentInfo }}">(?)</a></label></td>
+            <td><input class="input-sm col-lg-12" id="documentInput" name="document" type="file" multiple onchange="makeFileList();"></td><!--File1, File2, File3, ... (upload, delete, download)-->
+        </tr>
+        <tr>
+            <td></td>
+            <td><ul id="fileList"></ul></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit">
+            </td>
+        </tr>
+    </table>
+</form>
+
+<br>
+
+OPMERKINGEN:<br>
+Documenten zouden op de HD bewaard moeten worden (en niet in de database)<br>
+maar hoe gaan we dat aanpakken ??? Hier nog over hebben voordat je begint met uploaden van documenten.<br>
+<br>
+
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="popover"]').popover();
+
+        $(function(){
+            var currentDate = new Date().getFullYear().toString().substr(-2);
+            var characteristicsCount = {{ characteristicsValue }};
+            for(var i = characteristicsCount.toString().length; i < 3; i++){
+                currentDate += '0';
+            }
+            currentDate += characteristicsCount;
+            $('#characteristicInput').val(currentDate);
+        });
+
+        $(function(){
+            $.each({{ documentTypeOptions|json_encode|raw }}, function(key, value){
+                var input = document.createElement("input");
+                var label = document.createElement("label");
+
+                input.setAttribute('name', 'type_of_document');
+                input.setAttribute('type', 'radio');
+                input.setAttribute('id', key); // ID from database
+                {#input.setAttribute('checked', 'value[1]');#}
+                input.setAttribute('value', key);
+
+                label.innerHTML = value[0];
+                label.setAttribute('for', key);
+                label.style.marginRight = "5px";
+
+                $('#typeOfDocumentTD').append(input);
+                $('#typeOfDocumentTD').append(label);
+
+            });
+        });
+
+        $('#dateSentInput').val(new Date().toDateInputValue());
+    });
+
+    // To get the date from the correct timezone
+    Date.prototype.toDateInputValue = (function() {
+        var local = new Date(this);
+        local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+        return local.toJSON().slice(0,10);
+    });
+
+    function makeFileList(){
+        //get the input and UL list
+        var input = document.getElementById('documentInput');
+        var list = document.getElementById('fileList');
+
+        //empty list for now...
+        while (list.hasChildNodes()) {
+            list.removeChild(list.firstChild);
+        }
+
+        //for every file...
+        for (var x = 0; x < input.files.length; x++) {
+            //add to list
+            var li = document.createElement('li');
+            li.innerHTML = 'File ' + (x + 1) + ':  ' + input.files[x].name;
+            list.appendChild(li);
+        }
+
+        if(!list.hasChildNodes()){
+            var li = document.createElement('li');
+            li.innerHTML = "No Files Selected";
+            list.appendChild(li);
+        }
+    }
+</script>

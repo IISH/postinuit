@@ -1,0 +1,19 @@
+<h1>{{title}}</h1>
+
+<i><font size=-1>({{sorted_on}}:)</font></i><br>
+<ol>
+	<li><a href="print_firstname.php" target="_blank">{{lbl_firstname}} <img src="images/misc/popup.png"></a></li>
+	<li><a href="print_lastname.php" target="_blank">{{lbl_lastname}} <img src="images/misc/popup.png"></a>
+
+		{% if show_fire == 1 %}
+			<br><br>
+			{{or_go_to}}<br>
+			<br>
+	</li>
+	<li>
+		<a href="fire.php">{{menu_fire}}</a><br>
+		<br>
+		{% endif %}
+
+	</li>
+</ol>
