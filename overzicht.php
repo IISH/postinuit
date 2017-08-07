@@ -13,19 +13,27 @@ $oPage->setContent(createOverzichtContent( ));
 echo $twig->render('design.html', $oPage->getPageAttributes() );
 
 function createOverzichtContent( ) {
-	global $oWebuser, $twig;
+	global $oWebuser, $twig, $protect;
 
-	// TOOD: recordsPerPage (from database)
-	// TODO: page (from URL)
-	// TODO: achterhaal hier de label van 'type document' en stuur dat door naar twig
+    $recordsPerPage = Settings::get('post_records_per_page');
+    $page = $protect->requestPositiveNumberOrEmpty('get', 'page');
+    $documentTypes = DocumentTypes::getDocumentTypes();
+
 	// TODO: datum formatten
 	// TODO: maak van elke ID een link naar postin.php?ID=xxx of postout.php?ID=xxx
 
 	// TODO: set recordsPerPage and page here
-	$arr = Posts::getPosts(20,0);
-//preprint($arr);
+	$arr = Posts::getPosts($recordsPerPage,$page);
+	$documentType = '';
+    //preprint($arr);
 	$posts = array();
 	foreach ( $arr as $post ) {
+        // Find out what document type needs to be displayed
+	    foreach($documentTypes as $key => $docType){
+            if($post->getTypeOfDocument() == $key){
+                $documentType = $docType[0];
+            }
+        }
 			$posts[] = array(
 				'ID' => $post->getId()
 				, 'inOut' => $post->getInOut()
@@ -36,9 +44,9 @@ function createOverzichtContent( ) {
 				, 'ourName' => $post->getOurName()
 				, 'ourOrganisation' => $post->getOurOrganisation()
 				, 'ourDepartment' => $post->getOurDepartment()
-				, 'typeOfDocument' => 'aaa'
-				, 'subject' => 'bbb'
-				, 'remarks' => 'ccc'
+				, 'typeOfDocument' => $documentType
+				, 'subject' => $post->getSubject()
+				, 'remarks' => $post->getRemarks()
 			);
 	}
 

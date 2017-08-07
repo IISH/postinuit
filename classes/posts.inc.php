@@ -55,6 +55,12 @@ class Posts{
         $settingsStmt->execute();
 
         // TODO: get latest value of post_characteristic_last_used_counter and insert in kenmerk
+        $last_used_counter_query = "SELECT post_characteristic_last_used_counter FROM settings";
+        $last_used_counter_query_stmt = $dbConn->getConnection()->prepare($last_used_counter_query);
+        $last_used_counter_query_stmt->execute();
+        $result = $last_used_counter_query_stmt->fetchAll();
+
+        $new_kenmerk = substr($data['kenmerk'],0, 2) + $result;
 
         $stmt = $dbConn->getConnection()->prepare("INSERT INTO REGISTRY 
             (in_out, kenmerk, date, their_name, their_organisation, 
@@ -64,7 +70,7 @@ class Posts{
             :our_name, :our_institute, :our_department, :type_of_document,
             :subject, :remarks, :registered_by)");
         $stmt->bindParam(':in_out', $data['in_out'], PDO::PARAM_STR);
-        $stmt->bindParam(':kenmerk', $data['kenmerk'], PDO::PARAM_INT);
+        $stmt->bindParam(':kenmerk', $new_kenmerk, PDO::PARAM_INT);
         $stmt->bindParam(':date', $data['date'], PDO::PARAM_INT);
         $stmt->bindParam(':their_name', $data['their_name'], PDO::PARAM_STR);
         $stmt->bindParam(':their_organisation', $data['their_organisation'], PDO::PARAM_STR);
@@ -84,18 +90,13 @@ class Posts{
      * @return null
      */
     public static function getPosts($recordsPerPage, $page){
-        global $dbConn, $protect;
+        global $dbConn;
 
         $arr = array();
 
-		// TODO: move to overzicht.php
-	    $recordsPerPage = 5; // TODO: get from database
-	    // TODO: move to overzicht.php
-	    $page = $protect->requestPositiveNumberOrEmpty('get', 'page');
-
 	    // which language are we using
 	    $query = "SELECT * FROM `post` ORDER BY kenmerk DESC, ID DESC LIMIT " . $page*$recordsPerPage . ", $recordsPerPage ";
-//preprint($query);
+        //preprint($query);
 	    $stmt = $dbConn->getConnection()->prepare($query);
 	    $stmt->execute();
 	    $result = $stmt->fetchAll();
