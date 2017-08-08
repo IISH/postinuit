@@ -293,7 +293,7 @@ table.login td {
 }
 
 .disabledField {
-    background-color: #efefef;
+	background-color: #dfdfdf;
 }
 
 #post_in_table
