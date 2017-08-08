@@ -3,51 +3,51 @@
 <form method="post" action="upload_post_uit.php" enctype="multipart/form-data">
     <table id="post_uit_table">
         <tr>
-            <td><label for="characteristicInput">{{ characteristicsInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ characteristicsInfo }}">(?)</a></label></td>
+            <td><label for="characteristicInput">{{ characteristicsInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ characteristicsInfo }}" tabindex="-1">(?)</a></label></td>
             <td><input class="input-sm col-lg-12 disabledField" id="characteristicInput" name="kenmerk" type="text" readonly> </td> <!--Moet berekend worden yy-xxx-->
         </tr>
         <tr>
-            <td><label for="dateSentInput">{{ dateSentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ dateSentInfo }}">(?)</a></label></td>
+            <td><label for="dateSentInput">{{ dateSentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ dateSentInfo }}" tabindex="-1">(?)</a></label></td>
             <td><input class="input-sm col-lg-12" id="dateSentInput" name="date" type="date"></td> <!--picklist, moet wel aanpasbaar zijn-->
         </tr>
         <tr>
-            <td><label for="senderNameInput">{{ senderNameInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ senderNameInfo }}">(?)</a></label></td>
+            <td><label for="senderNameInput">{{ senderNameInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ senderNameInfo }}" tabindex="-1">(?)</a></label></td>
             <td><input class="input-sm col-lg-12" id="senderNameInput" name="our_name" type="text"></td><!--vrije tekst veld-->
         </tr>
         <tr>
-            <td><label for="senderInstituteInput">{{ senderInstituteInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ senderInstituteInfo }}">(?)</a></label></td>
+            <td><label for="senderInstituteInput">{{ senderInstituteInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ senderInstituteInfo }}" tabindex="-1">(?)</a></label></td>
             <td><input class="input-sm col-lg-12" id="senderInstituteInput" name="our_institute" type="text"></td><!--vrije tekst veld, moet later automatisch ingevuld worden, dan niet meer aanpasbaar-->
         </tr>
         <tr>
-            <td><label for="senderDepartmentInput">{{ senderDepartmentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ senderDepartmentInfo }}">(?)</a></label></td>
+            <td><label for="senderDepartmentInput">{{ senderDepartmentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ senderDepartmentInfo }}" tabindex="-1">(?)</a></label></td>
             <td><input class="input-sm col-lg-12" id="senderDepartmentInput" name="our_department" type="text"></td><!--vrije tekst veld, moet later automatisch ingevuld worden, dan niet meer aanpasbaar-->
         </tr>
         <tr>
-            <td><label for="receiverNameInput">{{ receiverNameInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ receiverNameInfo }}">(?)</a></label></td>
+            <td><label for="receiverNameInput">{{ receiverNameInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ receiverNameInfo }}" tabindex="-1">(?)</a></label></td>
             <td><input class="input-sm col-lg-12" id="receiverNameInput" name="their_name" type="text"></td><!--vrije veld-->
         </tr>
         <tr>
-            <td><label for="receiverInstituteInput">{{ receiverInstituteInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ receiverInstituteInfo }}">(?)</a></label></td>
+            <td><label for="receiverInstituteInput">{{ receiverInstituteInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ receiverInstituteInfo }}" tabindex="-1">(?)</a></label></td>
             <td><input class="input-sm col-lg-12" id="receiverInstituteInput" name="their_organisation" type="text"></td> <!--vrije tekst, met jquery auto aanvullen lijst (lijst komt uit veld 'their_organisation')-->
         </tr>
         <tr>
-            <td><label for="typeOfDocumentTD">{{ typeOfDocumentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ typeOfDocumentInfo }}">(?)</a></label></td>
+            <td><label for="typeOfDocumentTD">{{ typeOfDocumentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ typeOfDocumentInfo }}" tabindex="-1">(?)</a></label></td>
             <td id="typeOfDocumentTD"></td><!--select of radio box, keuzes: Beleidsdocument, Vergaderstuk, Besluit, Overeenkomst, Verslag, Overige correspondentie-->
         </tr>
         <tr>
-            <td><label for="subjectInput">{{ subjectInputInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ subjectInputInfo }}">(?)</a></label></td>
+            <td><label for="subjectInput">{{ subjectInputInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ subjectInputInfo }}" tabindex="-1">(?)</a></label></td>
             <td><textarea class="input-sm col-lg-12" id="subjectInput" name="subject"></textarea></td><!--vrije tekst veld (text area, 2 regels, resizable)-->
         </tr>
         <tr>
-            <td><label for="commentsInput">{{ commentsInputInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ commentsInputInfo }}">(?)</a></label></td>
+            <td><label for="commentsInput">{{ commentsInputInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ commentsInputInfo }}" tabindex="-1">(?)</a></label></td>
             <td><textarea class="input-sm col-lg-12" id="commentsInput" name="remarks"></textarea></td><!--vrije tekst veld (text area, 2 regels, resizable)-->
         </tr>
         <tr>
             <td><label for="registeredByInput">{{ registeredByInfo }}:</label></td>
-            <td><input class="input-sm col-lg-12 disabledField" id="registeredByInput" name="registered_by" type="text" readonly></td><!--vrije tekst veld, hier moet straks automatisch de naam van de ingelogde persoon komen-->
+            <td><input class="input-sm col-lg-12 disabledField" id="registeredByInput" name="registered_by" type="text" readonly tabindex="-1"></td><!--vrije tekst veld, hier moet straks automatisch de naam van de ingelogde persoon komen-->
         </tr>
         <tr>
-            <td><label for="documentInput">{{ documentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ documentInfo }}">(?)</a></label></td>
+            <td><label for="documentInput">{{ documentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ documentInfo }}" tabindex="-1">(?)</a></label></td>
             <td><input class="input-sm col-lg-12" id="documentInput" name="document" type="file" multiple onchange="makeFileList();"></td><!--File1, File2, File3, ... (upload, delete, download)-->
         </tr>
         <tr>
