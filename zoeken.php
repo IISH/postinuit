@@ -17,6 +17,7 @@ function createZoekenContent( ) {
 
 	return $twig->render('zoeken.html', array(
 		'title' => Translations::get('zoeken')
-        , 'posts' => Posts::getPosts(20, 0)
+		, 'message' => 'Under construction'
+//        , 'xxxposts' => Posts::getPosts(20, 0)
 	));
 }

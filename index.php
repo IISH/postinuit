@@ -6,7 +6,7 @@ $oWebuser->checkLoggedIn();
 
 // create webpage
 $oPage = new Page();
-$oPage->setTitle(Translations::get('website_name') . ' | ' . Translations::get('zoeken'));
+$oPage->setTitle(Translations::get('website_name') . ' | ' . Translations::get('index'));
 $oPage->setContent(createZoekenContent( ));
 
 // show page
@@ -16,7 +16,5 @@ function createZoekenContent( ) {
 	global $oWebuser, $twig;
 
 	return $twig->render('index.html', array(
-		'title' => Translations::get('zoeken')
-		, 'posts' => Posts::getPosts(20, 0)
 	));
 }
