@@ -4,47 +4,51 @@
     <table id="post_in_table">
         <tr>
             <td><label for="characteristicInput">{{ characteristicsInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ characteristicsInfo }}">(?)</a></label></td>
-            <td><input class="input-sm col-lg-12 disabledField" id="characteristicInput" name="kenmerk" type="text" readonly> </td> <!--Moet berekend worden yy-xxx-->
+            <td><input class="input-sm col-lg-12 disabledField" id="characteristicInput" name="kenmerk" type="text" readonly value="{{ characteristicsValue }} "></td> <!--Moet berekend worden yy-xxx-->
         </tr>
         <tr>
             <td><label for="dateArrivedInput">{{ dateArrivedInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ dateArrivedInfo }}">(?)</a></label></td>
-            <td><input class="input-sm col-lg-12" id="dateArrivedInput" name="date" type="date"></td> <!--picklist, moet wel aanpasbaar zijn-->
+            <td><input class="input-sm col-lg-12" id="dateArrivedInput" name="date" type="date" value="{{ selectedPost['date'] }}"></td> <!--picklist, moet wel aanpasbaar zijn-->
         </tr>
         <tr>
             <td><label for="senderNameInput">{{ senderNameInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ senderNameInfo }}">(?)</a></label></td>
-            <td><input class="input-sm col-lg-12" id="senderNameInput" name="their_name" type="text"></td><!--vrije veld-->
+            <td><input class="input-sm col-lg-12" id="senderNameInput" name="their_name" type="text" value="{{ selectedPost['their_name'] }}"></td><!--vrije veld-->
         </tr>
         <tr>
             <td><label for="senderInstituteInput">{{ senderInstituteInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ senderInstituteInfo }}">(?)</a></label></td>
-            <td><input class="input-sm col-lg-12" id="senderInstituteInput" name="their_organisation" type="text"></td> <!--vrije tekst, met jquery auto aanvullen lijst (lijst komt uit veld 'their_organisation')-->
+            <td><input class="input-sm col-lg-12" id="senderInstituteInput" name="their_organisation" type="text" value="{{ selectedPost['their_organisation'] }}"></td> <!--vrije tekst, met jquery auto aanvullen lijst (lijst komt uit veld 'their_organisation')-->
         </tr>
         <tr>
             <td><label for="receiverNameInput">{{ receiverNameInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ receiverNameInfo }}">(?)</a></label></td>
-            <td><input class="input-sm col-lg-12" id="receiverNameInput" name="our_name" type="text"></td><!--vrije tekst veld-->
+            <td><input class="input-sm col-lg-12" id="receiverNameInput" name="our_name" type="text" value="{{ selectedPost['our_name'] }}"></td><!--vrije tekst veld-->
         </tr>
         <tr>
             <td><label for="receiverInstituteInput">{{ receiverInstituteInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ receiverInstituteInfo }}">(?)</a></label></td>
-            <td><input class="input-sm col-lg-12" id="receiverInstituteInput" name="our_institute" type="text"></td><!--vrije tekst veld, moet later automatisch ingevuld worden, dan niet meer aanpasbaar-->
+            <td><input class="input-sm col-lg-12" id="receiverInstituteInput" name="our_institute" type="text" value="{{ selectedPost['our_institute'] }}"></td><!--vrije tekst veld, moet later automatisch ingevuld worden, dan niet meer aanpasbaar-->
         </tr>
         <tr>
             <td><label for="receiverDepartmentInput">{{ receiverDepartmentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ receiverDepartmentInfo }}">(?)</a></label></td>
-            <td><input class="input-sm col-lg-12" id="receiverDepartmentInput" name="our_department" type="text"></td><!--vrije tekst veld, moet later automatisch ingevuld worden, dan niet meer aanpasbaar-->
+            <td><input class="input-sm col-lg-12" id="receiverDepartmentInput" name="our_department" type="text" value="{{ selectedPost['our_department'] }}"></td><!--vrije tekst veld, moet later automatisch ingevuld worden, dan niet meer aanpasbaar-->
         </tr>
         <tr>
             <td><label for="typeOfDocumentTD">{{ typeOfDocumentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ typeOfDocumentInfo }}">(?)</a></label></td>
-            <td id="typeOfDocumentTD"></td><!--select of radio box, keuzes: Beleidsdocument, Vergaderstuk, Besluit, Overeenkomst, Verslag, Overige correspondentie-->
+            <td id="typeOfDocumentTD">
+                {% for key, value in documentTypeOptions %}
+                    <label for="{{ key }}" style="margin-right: 10px;"><input id="{{ key }}" value="{{ key }}" type="radio" name="type_of_document" {% if selectedPost['type_of_document'] == key %} checked {% endif %}>{{ value[0] }}</label>
+                {% endfor %}
+            </td><!--select of radio box, keuzes: Beleidsdocument, Vergaderstuk, Besluit, Overeenkomst, Verslag, Overige correspondentie-->
         </tr>
         <tr>
             <td><label for="subjectInput">{{ subjectInputInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ subjectInputInfo }}">(?)</a></label></td>
-            <td><textarea class="input-sm col-lg-12" id="subjectInput" name="subject"></textarea></td><!--vrije tekst veld (text area, 2 regels, resizable)-->
+            <td><textarea class="input-sm col-lg-12" id="subjectInput" name="subject">{{ selectedPost['subject'] }}</textarea></td><!--vrije tekst veld (text area, 2 regels, resizable)-->
         </tr>
         <tr>
             <td><label for="commentsInput">{{ commentsInputInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ commentsInputInfo }}">(?)</a></label></td>
-            <td><textarea class="input-sm col-lg-12" id="commentsInput" name="remarks"></textarea></td><!--vrije tekst veld (text area, 2 regels, resizable)-->
+            <td><textarea class="input-sm col-lg-12" id="commentsInput" name="remarks">{{ selectedPost['remarks'] }}</textarea></td><!--vrije tekst veld (text area, 2 regels, resizable)-->
         </tr>
         <tr>
             <td><label for="registeredByInput">{{ registeredByInfo }}:</label></td>
-            <td><input class="input-sm col-lg-12 disabledField" id="registeredByInput" name="registered_by" type="text" readonly></td><!--vrije tekst veld, hier moet straks automatisch de naam van de ingelogde persoon komen-->
+            <td><input class="input-sm col-lg-12 disabledField" id="registeredByInput" name="registered_by" type="text" readonly value="{{ selectedPost['registered_by'] }}"></td><!--vrije tekst veld, hier moet straks automatisch de naam van de ingelogde persoon komen-->
         </tr>
         <tr>
             <td><label for="documentInput">{{ documentInfo }}: <a href="#" data-toggle="popover" data-trigger="hover" data-content="{{ documentInfo }}">(?)</a></label></td>
@@ -57,84 +61,22 @@
         <tr>
             <td></td>
             <td>
-                <input type="submit" value="Bewaar">
+                <input type="submit" name="submitValue" value="{{ submitValue }}">
+                <input type="text" name="ID" value="{{ selectedPost['ID'] }}" hidden>
             </td>
         </tr>
     </table>
 </form>
 
-<br>
-{#OPMERKING:<br>#}
-{#bij (?) moeten we popups tonen met wat uitleg<br>#}
-{#DONE!#}
-{#<br>#}
-
-{#OPMERKING:<br>#}
-{#de veld labels moeten verhuizen naar tabel: translations<br>#}
-{#<br>#}
-{#DONE#}
-
-{#OPMERKING:<br>#}
-{#(yy = laatste 2 cijfers jaar, xxx = counter, padding 00 ervoor als niet minimaal 3 lang is)<br>#}
-{#In de database moet een counter bijgehouden worden (tabel settings)<br>#}
-{#bij het switchen van jaar moet de counter gereset worden.<br>#}
-{#<br>#}
-{#DONE#}
-
-<!--
-OPMERKINGEN:<br>
-Documenten zouden op de HD bewaard moeten worden (en niet in de database)<br>
-maar hoe gaan we dat aanpakken ??? Hier nog over hebben voordat je begint met uploaden van documenten.<br>
-<br>
-// -->
 
 <script>
     $(document).ready(function() {
         $('[data-toggle="popover"]').popover();
 
-        $(function() {
-           var currentDate = new Date().getFullYear().toString().substr(-2);
-           var characteristicsCount = {{ characteristicsValue }};
-           for(var i = characteristicsCount.toString().length; i < 3; i++) {
-               currentDate += '0';
-           }
-           currentDate += characteristicsCount;
-           $('#characteristicInput').val(currentDate);
-        });
-
-{#        $(function() {#}
-{#            if (!Modernizr.inputtypes.date) {#}
-{#                $('input[type=date]').datepicker({#}
-{#                        dateFormat : 'dd-mm-yy'#}
-{#                    }#}
-{#                );#}
-{#            }#}
-{#        });#}
-
-        $(function() {
-            $.each({{ documentTypeOptions|json_encode|raw }}, function(key, value) {
-                var input = document.createElement("input");
-                var label = document.createElement("label");
-
-                input.setAttribute('name', 'type_of_document');
-                input.setAttribute('type', 'radio');
-                input.setAttribute('id', key); // ID from database
-                // input.setAttribute('checked', 'value[1]');
-                input.setAttribute('value', key);
-
-                //label.innerHTML = value[0];
-                label.innerHTML = input.outerHTML + ' ' + value[0];
-                //label.setAttribute('for', key);
-                label.style.marginRight = "30px";
-
-                //$('#typeOfDocumentTD').append(input);
-                $('#typeOfDocumentTD').append(label);
-
-            });
-        });
-
-        // sets the current date in the dateArrivedInput field
-        $('#dateArrivedInput').val(new Date().toDateInputValue());
+        // sets the current date in the dateArrivedInput field, if empty
+        {% if selectedPost['date'] == "" %}
+            $('#dateArrivedInput').val(new Date().toDateInputValue());
+        {% endif %}
     });
 
     // To get the date from the correct timezone

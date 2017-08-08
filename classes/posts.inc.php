@@ -62,7 +62,7 @@ class Posts{
 
         $new_kenmerk = substr($data['kenmerk'],0, 2) + $result;
 
-        $stmt = $dbConn->getConnection()->prepare("INSERT INTO REGISTRY 
+        $stmt = $dbConn->getConnection()->prepare("INSERT INTO post 
             (in_out, kenmerk, date, their_name, their_organisation, 
             our_name, our_institute, our_department, type_of_document, 
             subject, remarks, registered_by) 
@@ -81,6 +81,45 @@ class Posts{
         $stmt->bindParam(':subject', $data['subject'], PDO::PARAM_STR);
         $stmt->bindParam(':remarks', $data['remarks'], PDO::PARAM_STR);
         $stmt->bindParam(':registered_by', $data['registered_by'], PDO::PARAM_STR);
+
+        $stmt->execute();
+    }
+
+    /**
+     * Edit the data in the database with the updated information from the post
+     * @param $data array post data from the website
+     */
+    public static function editPost($data){
+        global $dbConn;
+
+        $stmt = $dbConn->getConnection()->prepare(
+            "UPDATE post 
+            SET in_out = :in_out,
+                kenmerk = :kenmerk,
+                date = :date,
+                their_name = :their_name,
+                their_organisation = :their_organisation,
+                our_name = :our_name,
+                our_institute = :our_institute,
+                our_department = :our_department,
+                type_of_document = :type_of_document,
+                subject = :subject,
+                remarks = :remarks,
+                registered_by = :registered_by
+            WHERE ID = :ID");
+        $stmt->bindParam(':in_out', $data['in_out'], PDO::PARAM_STR);
+        $stmt->bindParam(':kenmerk', $data['kenmerk'], PDO::PARAM_INT);
+        $stmt->bindParam(':date', $data['date'], PDO::PARAM_INT);
+        $stmt->bindParam(':their_name', $data['their_name'], PDO::PARAM_STR);
+        $stmt->bindParam(':their_organisation', $data['their_organisation'], PDO::PARAM_STR);
+        $stmt->bindParam(':our_name', $data['our_name'], PDO::PARAM_STR);
+        $stmt->bindParam(':our_institute', $data['our_institute'], PDO::PARAM_STR);
+        $stmt->bindParam(':our_department', $data['our_department'], PDO::PARAM_STR);
+        $stmt->bindParam(':type_of_document', $data['type_of_document'], PDO::PARAM_INT);
+        $stmt->bindParam(':subject', $data['subject'], PDO::PARAM_STR);
+        $stmt->bindParam(':remarks', $data['remarks'], PDO::PARAM_STR);
+        $stmt->bindParam(':registered_by', $data['registered_by'], PDO::PARAM_STR);
+        $stmt->bindParam(':ID', $data['ID'], PDO::PARAM_INT);
 
         $stmt->execute();
     }

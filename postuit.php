@@ -13,7 +13,20 @@ $oPage->setContent(createPostuitContent( ));
 echo $twig->render('design.html', $oPage->getPageAttributes() );
 
 function createPostuitContent( ) {
-	global $oWebuser, $twig;
+	global $oWebuser, $twig, $protect;
+
+    // get id from the url
+    $id = $protect->requestPositiveNumberOrEmpty('get', 'ID');
+    $kenmerk = null; $submitValue = "Bewaar";
+    if($id !== ""){
+        $kenmerk = Posts::findPostById($id)['kenmerk'];
+        $submitValue = "Pas aan";
+    }else{
+        $currentDate = date('y');
+        $characteristicsCount = (Settings::get('post_characteristic_last_used_counter') + 1);
+        for($i = strlen($characteristicsCount); $i < 3; $i++){$currentDate.='0';}
+        $kenmerk = $currentDate.$characteristicsCount;
+    }
 
     // Check whether the date in the database is correct, otherwise adjust both date and counter for characteristic
     if ( Settings::get('post_characteristic_year') !== date('y') ) {
@@ -35,8 +48,10 @@ function createPostuitContent( ) {
         , 'commentsInputInfo' => Translations::get('lbl_post_comments')
         , 'registeredByInfo' => Translations::get('lbl_post_registered_by')
         , 'documentInfo' => Translations::get('lbl_post_documents')
-        , 'characteristicsValue' => (Settings::get('post_characteristic_last_used_counter') + 1)
+        , 'characteristicsValue' => $kenmerk
         , 'characteristicsYear' => Settings::get('post_characteristic_year')
         , 'documentTypeOptions' => DocumentTypes::getDocumentTypes()
+        , 'selectedPost' => Posts::findPostById($id)
+        , 'submitValue' => $submitValue
 	));
 }
