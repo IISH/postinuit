@@ -27,14 +27,10 @@
                 <th>Kenmerk</th>
 	            <th>In/Uit</th>
                 <th>Datum</th>
-                <th>Hun naam</th>
-                <th>Hun organisatie</th>
-                <th>Onze naam</th>
-                <th>Onze organisatie</th>
-                <th>Onze afdeling</th>
+                <th>Tegenpartij</th>
+                <th>Onze gegevens</th>
                 <th>Type document</th>
                 <th>Onderwerp</th>
-                <th>Opmerkingen</th>
             </tr>
 
 			{% for post in posts %}
@@ -42,14 +38,10 @@
 					<td><a href="{{post.url}}?ID={{post.ID}}">{{post.kenmerk}}</a></td>
 			        <td>{{post.inOut}}</td>
 			        <td>{{post.date}}</td>
-			        <td>{{post.theirName}}</td>
-			        <td>{{post.theirOrganisation}}</td>
-			        <td>{{post.ourName}}</td>
-			        <td>{{post.ourOrganisation}}</td>
-			        <td>{{post.ourDepartment}}</td>
+			        <td>{{post.theirName}}<br><i>{{post.theirOrganisation}}</i></td>
+			        <td>{{post.ourName}}<br><i>{{post.ourOrganisation}} ({{post.ourDepartment}})</i></td>
 			        <td>{{post.typeOfDocument}}</td>
 			        <td>{{post.subject}}</td>
-			        <td>{{post.remarks}}</td>
 		        </tr>
 	        {% endfor %}
 
