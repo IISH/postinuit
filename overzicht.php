@@ -47,7 +47,7 @@ function createOverzichtContent( ) {
         if ( $post->getInOut() == 'in' ) {
 	        $url = 'postin.php';
         } else {
-	        $url = 'postout.php';
+	        $url = 'postuit.php';
         }
 
 		$posts[] = array(
