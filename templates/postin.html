@@ -111,7 +111,38 @@
         {% if selectedPost['date'] == "" %}
             $('#dateArrivedInput').val(new Date().toDateInputValue());
         {% endif %}
+
+        $('#senderInstituteInput').on('keyup', function(){
+           if($(this).val().length >= 3){
+               autoComplete($(this), $(this).val(), 'vw_filter_their_organisation', 'their_organisation');
+           }
+        });
+
+        $('#receiverNameInput').on('keyup', function(){
+            if($(this).val().length >= 3){
+                autoComplete($(this), $(this).val(), 'vw_filter_our_name', 'our_name');
+            }
+        });
+
+        $('#senderNameInput').on('keyup', function(){
+            if($(this).val().length >= 3) {
+                autoComplete($(this), $(this).val(), 'vw_filter_their_name', 'their_name');
+            }
+        });
     });
+
+    // To autcomplete the input in the form
+    function autoComplete(element, value, table, column){
+        element.autocomplete({
+            source: function (request, response) {
+                $.getJSON("retrieve_data_autocomplete.php", {
+                    term: value,
+                    table: table,
+                    column: column
+                }, response);
+            }
+        });
+    }
 
     // To get the date from the correct timezone
     Date.prototype.toDateInputValue = (function() {
