@@ -55,12 +55,17 @@ class Posts{
         $settingsStmt->execute();
 
         // TODO: get latest value of post_characteristic_last_used_counter and insert in kenmerk
-        $last_used_counter_query = "SELECT post_characteristic_last_used_counter FROM settings";
+        $last_used_counter_query = 'SELECT value FROM settings WHERE property = "post_characteristic_last_used_counter"';
         $last_used_counter_query_stmt = $dbConn->getConnection()->prepare($last_used_counter_query);
         $last_used_counter_query_stmt->execute();
         $result = $last_used_counter_query_stmt->fetchAll();
+        $post_id = $result[0]['value'];
 
-        $new_kenmerk = substr($data['kenmerk'],0, 2) + $result;
+        $new_kenmerk = substr($data['kenmerk'],0, 2);
+        for($i = strlen($post_id); $i < 3; $i++){
+            $new_kenmerk .= '0';
+        }
+        $new_kenmerk .= $post_id;
 
         $stmt = $dbConn->getConnection()->prepare("INSERT INTO post 
             (in_out, kenmerk, date, their_name, their_organisation, 
