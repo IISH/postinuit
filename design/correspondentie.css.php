@@ -296,6 +296,10 @@ table.login td {
 	background-color: #dfdfdf;
 }
 
+.notYetDisabledField {
+	background-color: yellow;
+}
+
 #post_in_table
 , #post_uit_table {
     border-collapse: collapse;
@@ -307,5 +311,21 @@ table.login td {
 }
 
 label {
-    font-size: 95%;
+    font-size: 93%;
+	white-space: nowrap;
+}
+
+.required {
+	color: red;
+	font-size: 85%;
+	vertical-align: super;
+}
+.semiRequired {
+	color: orange;
+	font-size: 85%;
+	vertical-align: super;
+}
+.help {
+	font-size: 85%;
+	vertical-align: super;
 }

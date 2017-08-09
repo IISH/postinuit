@@ -39,7 +39,7 @@ function createPostinContent( ) {
         , 'characteristicsInfo' => Translations::get('lbl_post_characteristic')
         , 'dateArrivedInfo' => Translations::get('lbl_post_date_in')
         , 'senderNameInfo' => Translations::get('lbl_post_sender_name')
-        , 'senderInstituteInfo' => Translations::get('lbl_post_sender_institute')
+        , 'senderInstituteInfo' => Translations::get('lbl_post_sender_organisation')
         , 'receiverNameInfo' => Translations::get('lbl_post_receiver_name')
         , 'receiverInstituteInfo' => Translations::get('lbl_post_receiver_institute')
         , 'receiverDepartmentInfo' => Translations::get('lbl_post_receiver_department')
@@ -53,5 +53,8 @@ function createPostinContent( ) {
         , 'documentTypeOptions' => DocumentTypes::getDocumentTypes()
         , 'selectedPost' => Posts::findPostById($id)
         , 'submitValue' => $submitValue
+		, 'field_is_required' => Translations::get('field_is_required')
+		, 'field_is_semi_required' => Translations::get('field_is_semi_required')
+		, 'field_is_semi_required_sender_name_and_institute' => Translations::get('field_is_semi_required_sender_name_and_institute')
 	));
 }
