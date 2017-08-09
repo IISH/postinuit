@@ -39,7 +39,7 @@ function createPostuitContent( ) {
         , 'characteristicsInfo' => Translations::get('lbl_post_characteristic')
         , 'dateSentInfo' => Translations::get('lbl_post_date_out')
         , 'senderNameInfo' => Translations::get('lbl_post_sender_name')
-        , 'senderInstituteInfo' => Translations::get('lbl_post_sender_institute')
+        , 'senderInstituteInfo' => Translations::get('lbl_post_sender_organisation')
         , 'senderDepartmentInfo' => Translations::get('lbl_post_sender_department')
         , 'receiverNameInfo' => Translations::get('lbl_post_receiver_name')
         , 'receiverInstituteInfo' => Translations::get('lbl_post_receiver_organisation')
