@@ -49,10 +49,10 @@ $oWebuser = staticUser::getUserByLoginName( $_SESSION["loginname"] );
 
 //
 $menu = array();
-$menu[] = new MenuItem(Translations::get('menu_overzicht'), 'overzicht.php');
+$menu[] = new MenuItem(Translations::get('menu_zoeken'), 'zoeken.php');
+//$menu[] = new MenuItem(Translations::get('menu_overzicht'), 'overzicht.php');
 $menu[] = new MenuItem(Translations::get('menu_postin'), 'postin.php');
 $menu[] = new MenuItem(Translations::get('menu_postuit'), 'postuit.php');
-$menu[] = new MenuItem(Translations::get('menu_zoeken'), 'zoeken.php');
 if ( $oWebuser->isAdmin() ) {
 	$menu[] = new MenuItem(Translations::get('menu_admin'), 'admin.php');
 }

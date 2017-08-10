@@ -8,6 +8,7 @@ $protect = new WebsiteProtection();
 $c = $protect->request('get', 'c', '/^[0-9a-zA-Z]{6,6}$/');
 if ( $c == '' ) {
 	$c = '#707070';
+//	$c = black;
 } else {
 	$c = '#' . $c;
 }
@@ -320,12 +321,23 @@ label {
 	font-size: 85%;
 	vertical-align: super;
 }
+
 .semiRequired {
 	color: orange;
 	font-size: 85%;
 	vertical-align: super;
 }
+
 .help {
 	font-size: 85%;
 	vertical-align: super;
+}
+
+.table-striped tr:nth-child(odd) > td,
+.table-striped tr:nth-child(odd) > th {
+	background-color: #dfdfdf;
+}
+
+td {
+	color: black;
 }

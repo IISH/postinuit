@@ -86,7 +86,7 @@
 	                <a href="#" class="semiRequired" data-toggle="popover" data-trigger="hover" data-content="{{ field_is_semi_required }}" tabindex="-1">*</a>
                 </label>
             </td>
-            <td><input class="input-sm col-lg-12" id="documentInput" name="document" type="file" multiple onchange="makeFileList();"></td><!--File1, File2, File3, ... (upload, delete, download)-->
+            <td>DOCUMENTEN UPLOADEN WERKT NOG NIET<BR><input class="input-sm col-lg-12" id="documentInput" name="document" type="file" multiple onchange="makeFileList();"></td><!--File1, File2, File3, ... (upload, delete, download)-->
         </tr>
         <tr>
             <td></td>
@@ -107,6 +107,8 @@
     $(document).ready(function() {
         $('[data-toggle="popover"]').popover();
 
+        var minLengthSearchValue = 2;
+
         // sets the current date in the dateArrivedInput field, if empty
         $(function(){
             $('#dateArrivedInput').datepicker({ dateFormat: 'dd-mm-yy' });
@@ -119,20 +121,26 @@
         });
 
         $('#senderInstituteInput').on('keyup', function(){
-           if($(this).val().length >= 3){
+           if($(this).val().length >= minLengthSearchValue){
                autoComplete($(this), $(this).val(), 'vw_filter_their_organisation', 'their_organisation');
+           } else {
+	           // TODO: remove list of showing autocomplete choices
            }
         });
 
         $('#receiverNameInput').on('keyup', function(){
-            if($(this).val().length >= 3){
+            if($(this).val().length >= minLengthSearchValue){
                 autoComplete($(this), $(this).val(), 'vw_filter_our_name', 'our_name');
+            } else {
+	            // TODO: remove list of showing autocomplete choices
             }
         });
 
         $('#senderNameInput').on('keyup', function(){
-            if($(this).val().length >= 3) {
+            if($(this).val().length >= minLengthSearchValue) {
                 autoComplete($(this), $(this).val(), 'vw_filter_their_name', 'their_name');
+            } else {
+	            // TODO: remove list of showing autocomplete choices
             }
         });
     });

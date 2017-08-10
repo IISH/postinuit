@@ -129,9 +129,57 @@ class Posts{
         $stmt->execute();
     }
 
+	/**
+	 * Find the posts
+	 * @return array
+	 */
+	public static function findPosts($search, $recordsPerPage, $page) {
+		global $dbConn;
+
+		$search = trim($search);
+
+		$arr = array();
+		$criterium = '';
+		if ( $search != '' ) {
+			$criterium = Generate_Query(array('kenmerk', 'date', 'their_name', 'their_organisation', 'our_loginname', 'our_name', 'our_institute', 'our_department', 'subject', 'remarks', 'registered_by'), explode(' ', $search));
+		}
+//preprint($criterium);
+
+		//
+		$query = "SELECT * FROM `post` WHERE 1=1 " . $criterium . " ORDER BY kenmerk DESC, ID DESC ";
+//preprint( $query );
+		$stmt = $dbConn->getConnection()->prepare($query);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		$nrOfRecords = count($result);
+		$skipCounter = 0;
+		$saveCounter = 0;
+		foreach ($result as $row) {
+			// skip X records
+			if ( $skipCounter < $page*$recordsPerPage ) {
+				$skipCounter++;
+			} else {
+				// and then take Y records
+				$arr[] = new Post( $row );
+				$saveCounter++;
+
+				if ( $saveCounter >= $recordsPerPage ) {
+					break;
+				}
+			}
+		}
+
+		return array(
+				'data' => $arr
+				, 'page' => $page
+				, 'recordsPerPage' => $recordsPerPage
+				, 'maxPages' => Misc::calculatePagesCount($nrOfRecords, $recordsPerPage)
+			);
+	}
+
     /**
      * Gets all the posts from the database (loaded in the settings variable)
-     * @return null
+     * @return array
      */
     public static function getPosts($recordsPerPage, $page) {
         global $dbConn;

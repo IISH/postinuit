@@ -7,6 +7,10 @@ function preprint( $object ) {
 
 class Misc {
 
+	public static function calculatePagesCount( $recordCount, $recordsPerPage ) {
+		return ceil($recordCount / $recordsPerPage);
+	}
+
 	public static function cryptPassword( $password ) {
 		// A higher "cost" is more secure but consumes more processing power
 		$cost = 10;

@@ -19,7 +19,8 @@ function createPostuitContent( ) {
     $id = $protect->requestPositiveNumberOrEmpty('get', 'ID');
     $kenmerk = null; $submitValue = "Bewaar";
     if($id !== ""){
-        $kenmerk = Posts::findPostById($id)['kenmerk'];
+        $kenmerk = Posts::findPostById($id);
+        $kenmerk = $kenmerk['kenmerk'];
         $submitValue = "Pas aan";
     }else{
         $currentDate = date('y');
