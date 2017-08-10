@@ -141,7 +141,7 @@ class Posts{
 		$arr = array();
 		$criterium = '';
 		if ( $search != '' ) {
-			$criterium = Generate_Query(array('kenmerk', 'date', 'their_name', 'their_organisation', 'our_loginname', 'our_institute', 'our_department', 'subject', 'remarks', 'registered_by'), explode(' ', $search));
+			$criterium = Generate_Query(array('kenmerk', 'date', 'their_name', 'their_organisation', 'our_loginname', 'our_name', 'our_institute', 'our_department', 'subject', 'remarks', 'registered_by'), explode(' ', $search));
 		}
 //preprint($criterium);
 
