@@ -13,7 +13,7 @@
 	                <a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ dateSentInfo }}" tabindex="-1">?</a>
                 </label>
             </td>
-            <td><input class="input-sm col-lg-12" id="dateSentInput" name="date" type="date" value="{{ selectedPost['date'] }}"></td> <!--picklist, moet wel aanpasbaar zijn-->
+            <td><input class="input-sm col-lg-12" id="dateSentInput" name="date" type="text" value="{{ selectedPost['date'] }}"></td> <!--picklist, moet wel aanpasbaar zijn-->
         </tr>
         <tr>
             <td>
@@ -108,9 +108,15 @@
         $('[data-toggle="popover"]').popover();
 
         // sets the current date in the dateArrivedInput field, if empty
-        {% if selectedPost['date'] == "" %}
-            $('#dateSentInput').val(new Date().toDateInputValue());
-        {% endif %}
+        $(function(){
+            $('#dateSentInput').datepicker({ dateFormat: 'dd-mm-yy' });
+            {% if selectedPost['date'] == "" %}
+                $('#dateSentInput').datepicker('setDate', new Date());
+            {% else %}
+                var date = new Date('{{ selectedPost['date'] }}');
+                $('#dateSentInput').datepicker('setDate', date.getDate()+"-"+(date.getUTCMonth()+1)+"-"+date.getUTCFullYear());
+            {% endif %}
+        });
     
         $('#receiverInstituteInput').on('keyup', function(){
             if($(this).val().length >= 3){
@@ -143,13 +149,6 @@
             }
         });
     }
-
-    // To get the date from the correct timezone
-    Date.prototype.toDateInputValue = (function() {
-        var local = new Date(this);
-        local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-        return local.toJSON().slice(0,10);
-    });
 
     function makeFileList() {
         //get the input and UL list
