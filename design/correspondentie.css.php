@@ -293,6 +293,10 @@ table.login td {
     padding: 5px;
 }
 
+#postOverview{
+    width: 100%;
+}
+
 .disabledField {
 	background-color: #dfdfdf;
 }

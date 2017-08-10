@@ -129,6 +129,94 @@ class Posts{
         $stmt->execute();
     }
 
+    public static function findPostsAdvanced($data, $recordsPerPage, $page){
+        global $dbConn;
+
+        $arr = array();
+
+        $dateFrom = !empty($data[2]) ? date('Y-m-d', strtotime($data[2])) : "1900-01-01";
+        $dateTo = !empty($data[3]) ? date('Y-m-d', strtotime($data[3])) : "2199-01-01";
+
+        $in_or_out_query = "";
+        $in_or_out = explode(",", $data[0]);
+        foreach($in_or_out as $value){
+            $in_or_out_query .= "in_out LIKE '%".$value."%' OR ";
+        }
+        $in_or_out_query = rtrim($in_or_out_query, " OR ");
+
+        $type_of_document_query = "";
+        $docTypes = explode(",", $data[6]);
+        foreach($docTypes as $doc_type){
+            $type_of_document_query .= "type_of_document LIKE '%".$doc_type."%' OR ";
+        }
+        $type_of_document_query = rtrim($type_of_document_query, " OR ");
+
+        $query = "SELECT * FROM " . self::$settings_table .
+            " WHERE ".$in_or_out_query.
+            " AND kenmerk LIKE '%".$data[1]."%'".
+            " AND date >= '".$dateFrom."'".
+            " AND date <= '".$dateTo."'".
+            " AND their_name LIKE '%".$data[4]."%'".
+            " AND our_name LIKE '%".$data[5]."%'".
+            " AND ".$type_of_document_query.
+            " AND our_department LIKE '%".$data[7]."%'".
+            " AND subject LIKE '%".$data[8]."%'".
+            " AND remarks LIKE '%".$data[9]."%'".
+            " AND registered_by LIKE '%".$data[10]."%'";
+        $stmt = $dbConn->getConnection()->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetchAll();
+
+        $nrOfRecords = count($result);
+        $skipCounter = 0;
+        $saveCounter = 0;
+        foreach ($result as $row) {
+            // skip X records
+            if ( $skipCounter < $page*$recordsPerPage ) {
+                $skipCounter++;
+            } else {
+                // and then take Y records
+                $arr[] = new Post( $row );
+                $saveCounter++;
+
+                if ( $saveCounter >= $recordsPerPage ) {
+                    break;
+                }
+            }
+        }
+
+        return array(
+            'data' => $arr
+        , 'page' => $page
+        , 'recordsPerPage' => $recordsPerPage
+        , 'maxPages' => Misc::calculatePagesCount($nrOfRecords, $recordsPerPage)
+        );
+
+        //TODO: Not sure if code below needs to be used or the current way is safe enough
+//        $stmt = $dbConn->getConnection()->prepare("SELECT * FROM post
+//            WHERE in_out LIKE '%:in_out%' AND kenmerk LIKE '%:kenmerk%' AND date >= :datefrom AND date <= :dateto AND
+//            their_name LIKE '%:their_name%' AND our_name LIKE '%:our_name%' AND our_department LIKE '%:our_department%'
+//            AND type_of_document LIKE '%:type_of_document%' AND subject LIKE '%:subject%'
+//            AND remarks LIKE '%:remarks%' AND registered_by LIKE '%:registered_by%'");
+//        $stmt->bindParam(':in_out', $data[0], PDO::PARAM_STR);
+//        $stmt->bindParam(':kenmerk', $data[1], PDO::PARAM_INT);
+//        $stmt->bindParam(':datefrom', $data[2], PDO::PARAM_STR);
+//        $stmt->bindParam(':dateto', $data[3], PDO::PARAM_STR);
+//        $stmt->bindParam(':their_name', $data[4], PDO::PARAM_STR);
+//        $stmt->bindParam(':our_name', $data[5], PDO::PARAM_STR);
+//        $stmt->bindParam(':our_department', $data[6], PDO::PARAM_STR);
+//        $stmt->bindParam(':type_of_document', $data[7], PDO::PARAM_INT);
+//        $stmt->bindParam(':subject', $data[8], PDO::PARAM_STR);
+//        $stmt->bindParam(':remarks', $data[9], PDO::PARAM_STR);
+//        $stmt->bindParam(':registered_by', $data[10], PDO::PARAM_STR);
+//
+//        preprint($stmt);
+//
+//        $stmt->execute();
+//
+//        preprint($stmt->fetchAll());
+    }
+
 	/**
 	 * Find the posts
 	 * @return array
