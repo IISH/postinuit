@@ -6,15 +6,16 @@ $oWebuser->checkLoggedIn();
 
 // create webpage
 $oPage = new Page();
-$oPage->setTitle(Translations::get('website_name') . ' | ' . Translations::get('zoeken'));
-$oPage->setContent(createZoekenContent( ));
+$oPage->setTitle(Translations::get('website_name') . ' | ' . Translations::get('geavanceerd_zoeken'));
+$oPage->setContent(createGeavanceerdZoekenContent( ));
 
 // show page
 echo $twig->render('design.html', $oPage->getPageAttributes() );
 
-function createZoekenContent( ) {
+function createGeavanceerdZoekenContent( ) {
 	global $oWebuser, $twig, $protect;
 
+/*
 	// get search value
 	$searchOriginal = ( isset($_GET['search']) ? trim($_GET['search']) : '' );
 	// easy protect
@@ -68,14 +69,15 @@ function createZoekenContent( ) {
 			, 'remarks' => $post->getRemarks()
 		);
 	}
+*/
 
 	//
-	return $twig->render('zoeken.html', array(
-		'title' => Translations::get('menu_zoeken')
-		, 'posts' => $posts
-		, 'document_types' => DocumentTypes::getDocumentTypes()
-		, 'cuurent_page' => $page
-		, 'max_pages' => $arr['maxPages']
-		, 'search' => $search
+	return $twig->render('geavanceerd_zoeken.html', array(
+		'title' => Translations::get('menu_geavanceerd_zoeken')
+//		, 'posts' => $posts
+//		, 'document_types' => DocumentTypes::getDocumentTypes()
+//		, 'cuurent_page' => $page
+//		, 'max_pages' => $arr['maxPages']
+//		, 'search' => $search
 	));
 }
