@@ -1,5 +1,4 @@
 <?php
-//require_once dirname(__FILE__) . "/../classes/_misc_functions.inc.php";
 
 class Posts{
     private static $is_loaded = false;
@@ -134,35 +133,78 @@ class Posts{
 
         $arr = array();
 
-        $dateFrom = !empty($data[2]) ? date('Y-m-d', strtotime($data[2])) : "1900-01-01";
-        $dateTo = !empty($data[3]) ? date('Y-m-d', strtotime($data[3])) : "2199-01-01";
+        // date from to
+        $dateFrom = !empty($data['date_from']) ? " AND date >= '" . date('Y-m-d', strtotime($data['date_from'])) . "'" : "";
+        $dateTo = !empty($data['date_to']) ? " AND date <= '" . date('Y-m-d', strtotime($data['date_to'])) . "'" : "";
 
+        // in or out
         $in_or_out_query = "";
-        $in_or_out = explode(",", $data[0]);
-        foreach($in_or_out as $value){
-            $in_or_out_query .= "in_out LIKE '%".$value."%' OR ";
-        }
-        $in_or_out_query = rtrim($in_or_out_query, " OR ");
+		if ( $data['in_or_out']!= '' ) {
+			$in_or_out = explode(",", $data['in_or_out']);
+			$in_or_out_query = " AND in_out IN ( ";
+			$separator = '';
+			foreach ($in_or_out as $value) {
+				$in_or_out_query .= $separator . " '" . $value . "' ";
+				$separator = ', ';
+			}
+			$in_or_out_query .= " ) ";
+		}
 
-        $type_of_document_query = "";
-        $docTypes = explode(",", $data[6]);
-        foreach($docTypes as $doc_type){
-            $type_of_document_query .= "type_of_document LIKE '%".$doc_type."%' OR ";
-        }
-        $type_of_document_query = rtrim($type_of_document_query, " OR ");
+	    // type of documents
+	    $type_of_document_query = "";
+	    if ( $data['type_of_documents'] != '' ) {
+		    $type_of_document_query = " AND type_of_document IN (" . $data['type_of_documents'] . ") ";
+	    }
 
-        $query = "SELECT * FROM " . self::$settings_table .
-            " WHERE ".$in_or_out_query.
-            " AND kenmerk LIKE '%".$data[1]."%'".
-            " AND date >= '".$dateFrom."'".
-            " AND date <= '".$dateTo."'".
-            " AND their_name LIKE '%".$data[4]."%'".
-            " AND our_name LIKE '%".$data[5]."%'".
-            " AND ".$type_of_document_query.
-            " AND our_department LIKE '%".$data[7]."%'".
-            " AND subject LIKE '%".$data[8]."%'".
-            " AND remarks LIKE '%".$data[9]."%'".
-            " AND registered_by LIKE '%".$data[10]."%'";
+	    // start query buildign
+        $query = "SELECT * FROM `post` WHERE 1 ";
+
+	    // kenmerk
+		if ( $data['kenmerk'] != '' ) {
+		    $query .= " AND kenmerk LIKE '%" . $data['kenmerk'] . "%'";
+	    }
+
+	    // in or out
+	    $query .= $in_or_out_query;
+
+		// date from to
+		$query .= $dateFrom;
+		$query .= $dateTo;
+
+	    // tegenpartij
+	    if ( $data['tegenpartij'] != '' ) {
+		    $query .= Generate_Query(array("their_name", "their_organisation"), explode(' ', $data['tegenpartij']));
+	    }
+
+	    // onze gegevens
+	    if ( $data['onze_gegevens'] != '' ) {
+		    $query .= Generate_Query(array("our_name", "our_institute", "our_department"), explode(' ', $data['onze_gegevens']));
+	    }
+
+	    // type of document
+		$query .= $type_of_document_query;
+
+	    // subject
+	    if ( $data['subject'] != '' ) {
+		    $query .= Generate_Query(array("subject"), explode(' ', $data['subject']));
+	    }
+
+	    // remarks
+	    if ( $data['remarks'] != '' ) {
+		    $query .= Generate_Query(array("remarks"), explode(' ', $data['remarks']));
+	    }
+
+	    // registered by
+	    if ( $data['registered_by'] != '' ) {
+		    $query .= Generate_Query(array("registered_by"), explode(' ', $data['registered_by']));
+	    }
+
+	    // set order
+		$query .= " ORDER BY kenmerk DESC, ID DESC ";
+
+//preprint($query);
+
+		//
         $stmt = $dbConn->getConnection()->prepare($query);
         $stmt->execute();
         $result = $stmt->fetchAll();
@@ -186,11 +228,11 @@ class Posts{
         }
 
         return array(
-            'data' => $arr
-        , 'page' => $page
-        , 'recordsPerPage' => $recordsPerPage
-        , 'maxPages' => Misc::calculatePagesCount($nrOfRecords, $recordsPerPage)
-        );
+                'data' => $arr
+	            , 'page' => $page
+                , 'recordsPerPage' => $recordsPerPage
+                , 'maxPages' => Misc::calculatePagesCount($nrOfRecords, $recordsPerPage)
+	        );
 
         //TODO: Not sure if code below needs to be used or the current way is safe enough
 //        $stmt = $dbConn->getConnection()->prepare("SELECT * FROM post
@@ -231,11 +273,9 @@ class Posts{
 		if ( $search != '' ) {
 			$criterium = Generate_Query(array('kenmerk', 'date', 'their_name', 'their_organisation', 'our_loginname', 'our_name', 'our_institute', 'our_department', 'subject', 'remarks', 'registered_by'), explode(' ', $search));
 		}
-//preprint($criterium);
 
 		//
 		$query = "SELECT * FROM `post` WHERE 1=1 " . $criterium . " ORDER BY kenmerk DESC, ID DESC ";
-//preprint( $query );
 		$stmt = $dbConn->getConnection()->prepare($query);
 		$stmt->execute();
 		$result = $stmt->fetchAll();

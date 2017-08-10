@@ -1,7 +1,8 @@
 <h1>{{title}}</h1>
+(of ga naar <a href="geavanceerd_zoeken.php">geavanceerd zoeken<a>)<br>
+<br>
 
 Zoek: <input type="text" id="search" value="{{ search }}"> <button id="zoek">Zoek</button><br>
-(of ga naar <a href="geavanceerd_zoeken.php">geavanceerd zoeken<a>)<br>
 <br>
 
 <div>
@@ -27,13 +28,13 @@ Zoek: <input type="text" id="search" value="{{ search }}"> <button id="zoek">Zoe
 <div>
 	<table id="postOverview" class="table-bordered table-condensed table-hover table-striped">
 		<tr id="postHeaderRow">
-			<th>Kenmerk</th>
-			<th>In/Uit</th>
-			<th>Datum</th>
-			<th>Tegenpartij</th>
-			<th>Onze gegevens</th>
-			<th>Type document</th>
-			<th>Onderwerp</th>
+			<th>{{ kenmerk_lbl }}</th>
+			<th>{{ in_uit_lbl }}</th>
+			<th>{{ lbl_date }}</th>
+			<th>{{ lbl_tegenpartij }}</th>
+			<th>{{ lbl_onze_gegevens }}</th>
+			<th>{{ type_of_document_lbl }}</th>
+			<th>{{ subject_lbl }}</th>
 		</tr>
 
 		{% for post in posts %}

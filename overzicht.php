@@ -30,8 +30,6 @@ function createOverzichtContent( ) {
 	//
     $documentTypes = DocumentTypes::getDocumentTypes();
 
-	// TODO: datum formatten
-
 	//
 	$arr = Posts::getPosts($recordsPerPage,$page);
 	$documentType = '';
@@ -55,7 +53,7 @@ function createOverzichtContent( ) {
 			, 'url' => $url
 			, 'inOut' => $post->getInOut()
 			, 'kenmerk' => $post->getKenmerk()
-			, 'date' => $post->getDate()
+			, 'date' => date("d-m-Y", strtotime($post->getDate()))
 			, 'theirName' => $post->getTheirName()
 			, 'theirOrganisation' => $post->getTheirOrganisation()
 			, 'ourName' => $post->getOurName()

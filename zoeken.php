@@ -57,7 +57,7 @@ function createZoekenContent( ) {
 			, 'url' => $url
 			, 'inOut' => $post->getInOut()
 			, 'kenmerk' => $post->getKenmerk()
-			, 'date' => $post->getDate() 	// TODO: datum formatten
+			, 'date' => date("d-m-Y", strtotime($post->getDate()))
 			, 'theirName' => $post->getTheirName()
 			, 'theirOrganisation' => $post->getTheirOrganisation()
 			, 'ourName' => $post->getOurName()
@@ -77,5 +77,12 @@ function createZoekenContent( ) {
 		, 'cuurent_page' => $page
 		, 'max_pages' => $arr['maxPages']
 		, 'search' => $search
+		, 'lbl_date' => Translations::get('lbl_date')
+		, 'in_uit_lbl' => Translations::get('lbl_in_out')
+		, 'kenmerk_lbl' => Translations::get('lbl_post_characteristic')
+		, 'type_of_document_lbl' => Translations::get('lbl_post_document_type')
+		, 'lbl_tegenpartij' => Translations::get('lbl_tegenpartij')
+		, 'lbl_onze_gegevens' => Translations::get('lbl_onze_gegevens')
+		, 'subject_lbl' => Translations::get('lbl_post_subject')
 	));
 }
