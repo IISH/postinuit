@@ -46,7 +46,7 @@ class Posts{
      * Upload the data entered in the post_in/post_uit form
      * @param $data array with data to be uploaded
      */
-    public static function uploadPost($data) {
+    public static function uploadPost($data, $files) {
         global $dbConn;
 
         $settingsQuery = 'UPDATE settings SET value = value+1 WHERE property = "post_characteristic_last_used_counter"';
@@ -87,13 +87,32 @@ class Posts{
         $stmt->bindParam(':registered_by', $data['registered_by'], PDO::PARAM_STR);
 
         $stmt->execute();
+
+        $directory_to_save = "./documenten/".$new_kenmerk."/";
+        $numberOfFiles = count($files['documentInput']['name']);
+
+        if(mkdir($directory_to_save, 0777, true)) {
+            for($i = 0; $i < $numberOfFiles; $i++){
+                $fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
+                file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
+            }
+        }
+    }
+
+    /**
+     * Removes the given file from the given directory
+     * @param $data string the file to remove
+     * @param $kenmerk string the folder where the file exists
+     */
+    public static function removeFileFromPost($data, $kenmerk){
+        unlink("./documenten/".$kenmerk."/".$data);
     }
 
     /**
      * Edit the data in the database with the updated information from the post
      * @param $data array post data from the website
      */
-    public static function editPost($data){
+    public static function editPost($data, $files){
         global $dbConn;
 
         $stmt = $dbConn->getConnection()->prepare(
@@ -126,6 +145,16 @@ class Posts{
         $stmt->bindParam(':ID', $data['ID'], PDO::PARAM_INT);
 
         $stmt->execute();
+
+        $directory_to_save = "./documenten/".$data['kenmerk']."/";
+        $numberOfFiles = count($files['documentInput']['name']);
+
+        if(is_dir($directory_to_save)) {
+            for($i = 0; $i < $numberOfFiles; $i++){
+                $fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
+                file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
+            }
+        }
     }
 
     public static function findPostsAdvanced($data, $recordsPerPage, $page){

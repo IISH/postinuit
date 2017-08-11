@@ -1,6 +1,6 @@
 <h1>{{title}}</h1>
 
-<form method="post" action="upload_post_in.php" enctype="multipart/form-data">
+<form id="post_in_form" method="post" action="upload_post_in.php" enctype="multipart/form-data">
     <table id="post_in_table">
         <tr>
             <td><label for="characteristicInput">{{ characteristicsInfo }}</label></td>
@@ -82,11 +82,27 @@
         </tr>
         <tr>
             <td>
+                {% if files_from_post|length > 0 %}
+                    <label>Files for this post on server</label> <br>(click on the file to delete it)
+                {% endif %}
+            </td>
+            <td>
+                {% if files_from_post|length > 0 %}
+                    <ul>
+                    {% for file in files_from_post %}
+                        <li><input id="deleteFileFromServer" name="deleteFileFromServer" type="submit" formaction="remove_file_from_post.php" value="{{ file }}"></li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td>
                 <label for="documentInput">{{ documentInfo }}
 	                <a href="#" class="semiRequired" data-toggle="popover" data-trigger="hover" data-content="{{ field_is_semi_required }}" tabindex="-1">*</a>
                 </label>
             </td>
-            <td>DOCUMENTEN UPLOADEN WERKT NOG NIET<BR><input class="input-sm col-lg-12" id="documentInput" name="document" type="file" multiple onchange="makeFileList();"></td><!--File1, File2, File3, ... (upload, delete, download)-->
+            <td><input class="input-sm col-lg-12" id="documentInput" name="documentInput[]" type="file" multiple onchange="makeFileList();"></td><!--File1, File2, File3, ... (upload, delete, download)-->
         </tr>
         <tr>
             <td></td>
@@ -105,6 +121,11 @@
 
 <script>
     $(document).ready(function() {
+
+        $('#deleteFileFromServer').on('click', function(){
+            return confirm("Are you sure you want to delete the file?");
+        });
+
         $('[data-toggle="popover"]').popover();
 
         var minLengthSearchValue = 2;

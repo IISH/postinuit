@@ -17,11 +17,12 @@ function createPostuitContent( ) {
 
     // get id from the url
     $id = $protect->requestPositiveNumberOrEmpty('get', 'ID');
-    $kenmerk = null; $submitValue = "Bewaar";
+    $kenmerk = null; $submitValue = "Bewaar"; $files_belonging_to_post = array();
     if($id !== ""){
         $kenmerk = Posts::findPostById($id);
         $kenmerk = $kenmerk['kenmerk'];
         $submitValue = "Pas aan";
+        $files_belonging_to_post = array_diff(scandir("./documenten/" . $kenmerk), array('..', '.'));
     }else{
         $currentDate = date('y');
         $characteristicsCount = (Settings::get('post_characteristic_last_used_counter') + 1);
@@ -57,5 +58,6 @@ function createPostuitContent( ) {
 		, 'field_is_required' => Translations::get('field_is_required')
 		, 'field_is_semi_required' => Translations::get('field_is_semi_required')
 		, 'field_is_semi_required_receiver_name_and_institute' => Translations::get('field_is_semi_required_receiver_name_and_institute')
+        , 'files_from_post' => $files_belonging_to_post
 	));
 }
