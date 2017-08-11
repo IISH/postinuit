@@ -345,3 +345,12 @@ label {
 td {
 	color: black;
 }
+
+#advanced_search_table td {
+	padding-right: 10px;
+}
+
+label.in_out
+, label.type_of_document {
+	padding-right: 20px;
+}

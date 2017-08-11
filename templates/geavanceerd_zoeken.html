@@ -2,44 +2,40 @@
 (of ga naar <a href="zoeken.php">simpel zoeken<a>)<br>
 <br>
 
-{#Zoek: <input type="text" id="search" value="{{ search }}"> <button id="zoek">Zoek</button><br>#}
 <table id="advanced_search_table">
+
     <tr>
-        <td width="13%">
+        <td>
             <label id="kenmerk_search_lbl" for="kenmerk_search">{{ kenmerk_lbl }}</label>
         </td>
-        <td width="37%">
+        <td>
             {{ search[1] }}
             <input type="text" id="kenmerk_search" name="kenmerk_search" value="{{ search['kenmerk'] }}">
         </td>
-        <td width="13%">
-            <label id="type_of_document_search_lbl">{{ type_of_document_lbl }}</label>
-        </td>
-        <td width="37%">
-            {% for key, doctype in document_types %}
-            {% set selected = false %}
-            {% for doc_type in selected_document_types %}
-            {% if doc_type == key %}
-            {% set selected = true %}
-            {% endif %}
-            {% endfor %}
-            <label><input type="checkbox" id="type_of_document_search" name="type_of_document_search" {% if selected %}checked{% endif %} value="{{ key }}"> {{ doctype[0] }}</label>
-            {% endfor %}
-        </td>
+	    <td>
+		    <label id="receiver_search_lbl" for="receiver_search">{{ receiver_name_lbl }}</label>
+	    </td>
+	    <td>
+		    <input type="text" id="receiver_search" name="receiver_search" value="{{ search['receiver_name'] }}">
+	    </td>
     </tr>
+
     <tr>
         <td>
             <label id="in_uit_search_lbl">{{ in_uit_lbl }}</label>
         </td>
         <td>
-            {% for key, in_out in in_outs %}
+
+	        {% for in_out in in_outs %}
+
                 {% set selected = false %}
                 {% for in_or_out in selected_in_or_out %}
-                    {% if in_or_out == in_out %}
+                    {% if in_or_out == in_out.key %}
                         {% set selected = true %}
                     {% endif %}
                 {% endfor %}
-                <label><input type="checkbox" id="in_uit_search" name="in_uit_search" {% if selected %}checked{% endif %} value="{{ in_out }}"> {{ in_out }}</label>
+
+                <label class="in_out"><input type="checkbox" id="in_uit_search" name="in_uit_search" {% if selected %}checked{% endif %} value="{{ in_out.key }}"> {{ in_out.label }}</label>
             {% endfor %}
         </td>
         <td>
@@ -49,6 +45,7 @@
             <input type="text" id="subject_search" name="subject_search" value="{{ search['subject'] }}">
         </td>
     </tr>
+
     <tr>
         <td>
             <label id="date_search_lbl" for="date_from_search">{{ date_search_lbl }}</label>
@@ -64,6 +61,7 @@
             <input type="text" id="remarks_search" name="remarks_search" value="{{ search['remarks'] }}">
         </td>
     </tr>
+
     <tr>
         <td>
             <label id="sender_search_lbl" for="sender_search">{{ sender_name_lbl }}</label>
@@ -78,15 +76,25 @@
             <input type="text" id="registered_by_search" name="registered_by_search" value="{{ search['registered_by'] }}">
         </td>
     </tr>
-    <tr>
-        <td>
-            <label id="receiver_search_lbl" for="receiver_search">{{ receiver_name_lbl }}</label>
-        </td>
-        <td>
-            <input type="text" id="receiver_search" name="receiver_search" value="{{ search['receiver_name'] }}">
-        </td>
-    </tr>
-    <tr>
+
+	<tr>
+		<td>
+			<label id="type_of_document_search_lbl">{{ type_of_document_lbl }}</label>
+		</td>
+		<td colspan=3>
+			{% for key, doctype in document_types %}
+				{% set selected = false %}
+				{% for doc_type in selected_document_types %}
+					{% if doc_type == key %}
+						{% set selected = true %}
+					{% endif %}
+				{% endfor %}
+				<label class="type_of_document"><input type="checkbox" id="type_of_document_search" name="type_of_document_search" {% if selected %}checked{% endif %} value="{{ key }}"> {{ doctype[0] }}</label>
+			{% endfor %}
+		</td>
+	</tr>
+
+	<tr>
         <td colspan="4">
             <button id="advanced_search_button">{{ search_lbl }}</button>
         </td>

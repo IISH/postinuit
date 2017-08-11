@@ -113,7 +113,10 @@ function createGeavanceerdZoekenContent( ) {
         , 'search_lbl' => Translations::get('lbl_search')
         , 'selected_document_types' => $type_of_documents_array
         , 'selected_in_or_out' => $in_or_out_array
-        , 'in_outs' => array("in", "out")
+		, 'in_outs' => array(
+				array('key' => "in", 'label' => Translations::get('in'))
+				, array('key' => "out", 'label' => Translations::get('out'))
+			)
 		, 'lbl_tegenpartij' => Translations::get('lbl_tegenpartij')
 		, 'lbl_onze_gegevens' => Translations::get('lbl_onze_gegevens')
 	));
