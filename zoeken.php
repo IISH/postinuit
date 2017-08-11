@@ -55,7 +55,7 @@ function createZoekenContent( ) {
 		$posts[] = array(
 			'ID' => $post->getId()
 			, 'url' => $url
-			, 'inOut' => $post->getInOut()
+			, 'inOut' => Translations::get($post->getInOut())
 			, 'kenmerk' => $post->getKenmerk()
 			, 'date' => date("d-m-Y", strtotime($post->getDate()))
 			, 'theirName' => $post->getTheirName()
