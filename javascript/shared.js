@@ -1,58 +1,46 @@
-var browser_IE4 = (document.all) ? 1 : 0;
-var browser_NS6 = (document.getElementById&&!document.all) ? 1 : 0;
-var browser_SAFARI = (navigator.userAgent.indexOf('Safari')>-1) ? 1 : 0;
 
-// TODOEXPLAIN
-function open_page(url) {
-  window.open(url, '_top');
-
-	return false;
+// To autcomplete the input in the form
+function autoComplete(element, value, type){
+    element.autocomplete({
+        source: function (request, response) {
+            $.getJSON("retrieve_data_autocomplete.php", {
+                term: value,
+                type: type
+            }, response);
+        }
+    });
 }
 
-// TODOEXPLAIN
-function doc_submit(pressedbutton) {
-	if (browser_SAFARI) { // SAFARI
-		document.formulier.pressedbutton.value=pressedbutton;
-		document.formulier.submit();
-	} else if (browser_IE4) { // OPERA & IE
-		document.all.formulier.pressedbutton.value=pressedbutton;
-		document.all.formulier.submit();
-	} else if (browser_NS6) { // FIREFOX
-		document.formulier.pressedbutton.value=pressedbutton;
-		document.formulier.submit();
-	} else {
-		document.all.formulier.pressedbutton.value=pressedbutton;
-		document.all.formulier.submit();
-	}
+//
+function makeFileList() {
+    //get the input and UL list
+    var input = document.getElementById('documentInput');
+    var list = document.getElementById('fileList');
 
-	return true;
-}
+    //empty list for now...
+    while (list.hasChildNodes()) {
+        list.removeChild(list.firstChild);
+    }
 
-// TODOEXPLAIN
-function doc_delete(pressedbutton) {
-	input_box=confirm('Please confirm delete');
-	if (input_box==true) {
+    if ( input.files.length > 1 ) {
+        var ul = document.createElement('ul');
+        ul.setAttribute('class', 'in_out');
 
-		if (browser_SAFARI) { // SAFARI
-			document.formulier.pressedbutton.value=pressedbutton;
-			document.formulier.FORM_isdeleted.value='1';
-			document.formulier.submit();
-		} else if (browser_IE4) { // OPERA & IE
-			document.all.formulier.pressedbutton.value=pressedbutton;
-			document.all.formulier.FORM_isdeleted.value='1';
-			document.all.formulier.submit();
-		} else if (browser_NS6) { // FIREFOX
-			document.formulier.pressedbutton.value=pressedbutton;
-			document.formulier.FORM_isdeleted.value='1';
-			document.formulier.submit();
-		} else {
-			document.all.formulier.pressedbutton.value=pressedbutton;
-			document.all.formulier.FORM_isdeleted.value='1';
-			document.all.formulier.submit();
-		}
+        //for every file...
+        for (var x = 0; x < input.files.length; x++) {
+            //add to list
+            var li = document.createElement('li');
+            li.innerHTML = input.files[x].name;
+            ul.appendChild(li);
+        }
 
-		return true;
-	} else {
-		return false;
-	}
+        list.appendChild(ul);
+    }
+
+//		if(!list.hasChildNodes()) {
+//			var li = document.createElement('li');
+//			li.innerHTML = "No files Selected";
+//			list.appendChild(li);
+//		}
+
 }

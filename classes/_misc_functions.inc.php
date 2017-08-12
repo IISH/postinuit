@@ -124,20 +124,20 @@ function getBackUrl() {
 		}
 	}
 
-    if ( $ret == '' ) {
-        if ( isset( $_GET["burl"] ) ) {
-            $ret = $_GET["burl"];
-        }
-    }
+	if ( $ret == '' ) {
+		if ( isset( $_GET["burl"] ) ) {
+			$ret = $_GET["burl"];
+		}
+	}
 
-    if ( $ret == '' ) {
+	if ( $ret == '' ) {
 		$scriptNameStrippedEdit = str_replace('_edit', '', $_SERVER['SCRIPT_NAME']);
 		if ( $_SERVER['SCRIPT_NAME'] != $scriptNameStrippedEdit ) {
 			$ret = $scriptNameStrippedEdit;
 		}
 	}
 
-    // simple javascript protection
+	// simple javascript protection
 	$ret = str_replace('<', ' ', $ret);
 	$ret = str_replace('>', ' ', $ret);
 

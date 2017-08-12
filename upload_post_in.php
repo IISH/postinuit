@@ -6,15 +6,14 @@ $_POST['in_out'] = 'in';
 
 // TODO: add check to see everything has been filled out
 if (count($_POST) >= 12) {
-    if($_POST['submitValue'] === "Bewaar") {
-        Posts::uploadPost($_POST, $_FILES);
-    }
-    else if($_POST['submitValue'] === "Pas aan") {
-        Posts::editPost($_POST, $_FILES);
-    }
-    header("Location: postin.php");
-    exit;
+	if($_POST['submitValue'] === "Bewaar") {
+		Posts::uploadPost($_POST, $_FILES);
+	} else if($_POST['submitValue'] === "Pas aan") {
+		Posts::editPost($_POST, $_FILES);
+	}
+	header("Location: postin.php");
+	exit;
 } else {
-    echo "Not everything has been filled out!" . "<br>";
-    echo count($_POST);
+	echo "Not everything has been filled out!" . "<br>";
+	echo count($_POST);
 }

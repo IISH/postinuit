@@ -4,78 +4,78 @@
 
 <table id="advanced_search_table">
 
-    <tr>
-        <td>
-            <label id="kenmerk_search_lbl" for="kenmerk_search">{{ kenmerk_lbl }}</label>
-        </td>
-        <td>
-            {{ search[1] }}
-            <input type="text" id="kenmerk_search" name="kenmerk_search" value="{{ search['kenmerk'] }}">
-        </td>
-	    <td>
-		    <label id="receiver_search_lbl" for="receiver_search">{{ receiver_name_lbl }}</label>
-	    </td>
-	    <td>
-		    <input type="text" id="receiver_search" name="receiver_search" value="{{ search['receiver_name'] }}">
-	    </td>
-    </tr>
+	<tr>
+		<td>
+			<label id="kenmerk_search_lbl" for="kenmerk_search">{{ kenmerk_lbl }}</label>
+		</td>
+		<td>
+			{{ search[1] }}
+			<input type="text" id="kenmerk_search" name="kenmerk_search" value="{{ search['kenmerk'] }}">
+		</td>
+		<td>
+			<label id="receiver_search_lbl" for="receiver_search">{{ receiver_name_lbl }}</label>
+		</td>
+		<td>
+			<input type="text" id="receiver_search" name="receiver_search" value="{{ search['receiver_name'] }}">
+		</td>
+	</tr>
 
-    <tr>
-        <td>
-            <label id="in_uit_search_lbl">{{ in_uit_lbl }}</label>
-        </td>
-        <td>
+	<tr>
+		<td>
+			<label id="in_uit_search_lbl">{{ in_uit_lbl }}</label>
+		</td>
+		<td>
 
-	        {% for in_out in in_outs %}
+			{% for in_out in in_outs %}
 
-                {% set selected = false %}
-                {% for in_or_out in selected_in_or_out %}
-                    {% if in_or_out == in_out.key %}
-                        {% set selected = true %}
-                    {% endif %}
-                {% endfor %}
+				{% set selected = false %}
+				{% for in_or_out in selected_in_or_out %}
+					{% if in_or_out == in_out.key %}
+						{% set selected = true %}
+					{% endif %}
+				{% endfor %}
 
-                <label class="in_out"><input type="checkbox" id="in_uit_search" name="in_uit_search" {% if selected %}checked{% endif %} value="{{ in_out.key }}"> {{ in_out.label }}</label>
-            {% endfor %}
-        </td>
-        <td>
-            <label id="subject_search_lbl" for="subject_search">{{ subject_lbl }}</label>
-        </td>
-        <td>
-            <input type="text" id="subject_search" name="subject_search" value="{{ search['subject'] }}">
-        </td>
-    </tr>
+				<label class="in_out"><input type="checkbox" id="in_uit_search" name="in_uit_search" {% if selected %}checked{% endif %} value="{{ in_out.key }}"> {{ in_out.label }}</label>
+			{% endfor %}
+		</td>
+		<td>
+			<label id="subject_search_lbl" for="subject_search">{{ subject_lbl }}</label>
+		</td>
+		<td>
+			<input type="text" id="subject_search" name="subject_search" value="{{ search['subject'] }}">
+		</td>
+	</tr>
 
-    <tr>
-        <td>
-            <label id="date_search_lbl" for="date_from_search">{{ date_search_lbl }}</label>
-        </td>
-        <td>
-            <input type="text" id="date_from_search" name="date_from_search" value="{{ search['date_from'] }}">
-            <input type="text" id="date_to_search" name="date_to_search" value="{{ search['date_to'] }}">
-        </td>
-        <td>
-            <label id="remarks_search_lbl" for="remarks_search">{{ remarks_lbl }}</label>
-        </td>
-        <td>
-            <input type="text" id="remarks_search" name="remarks_search" value="{{ search['remarks'] }}">
-        </td>
-    </tr>
+	<tr>
+		<td>
+			<label id="date_search_lbl" for="date_from_search">{{ date_search_lbl }}</label>
+		</td>
+		<td>
+			<input type="text" id="date_from_search" name="date_from_search" value="{{ search['date_from'] }}">
+			<input type="text" id="date_to_search" name="date_to_search" value="{{ search['date_to'] }}">
+		</td>
+		<td>
+			<label id="remarks_search_lbl" for="remarks_search">{{ remarks_lbl }}</label>
+		</td>
+		<td>
+			<input type="text" id="remarks_search" name="remarks_search" value="{{ search['remarks'] }}">
+		</td>
+	</tr>
 
-    <tr>
-        <td>
-            <label id="sender_search_lbl" for="sender_search">{{ sender_name_lbl }}</label>
-        </td>
-        <td>
-            <input type="text" id="sender_search" name="sender_search" value="{{ search['sender_name'] }}">
-        </td>
-        <td>
-            <label id="registered_by_search_lbl" for="registered_by_search">{{ registered_by_lbl }}</label>
-        </td>
-        <td>
-            <input type="text" id="registered_by_search" name="registered_by_search" value="{{ search['registered_by'] }}">
-        </td>
-    </tr>
+	<tr>
+		<td>
+			<label id="sender_search_lbl" for="sender_search">{{ sender_name_lbl }}</label>
+		</td>
+		<td>
+			<input type="text" id="sender_search" name="sender_search" value="{{ search['sender_name'] }}">
+		</td>
+		<td>
+			<label id="registered_by_search_lbl" for="registered_by_search">{{ registered_by_lbl }}</label>
+		</td>
+		<td>
+			<input type="text" id="registered_by_search" name="registered_by_search" value="{{ search['registered_by'] }}">
+		</td>
+	</tr>
 
 	<tr>
 		<td>
@@ -95,200 +95,200 @@
 	</tr>
 
 	<tr>
-        <td colspan="4">
-            <button id="advanced_search_button">{{ search_lbl }}</button>
-        </td>
-    </tr>
+		<td colspan="4">
+			<button id="advanced_search_button">{{ search_lbl }}</button>
+		</td>
+	</tr>
 </table>
 
 <br>
 
 <div>
-    <input type="hidden" id="current_page" value="{{cuurent_page}}">
-    <input type="hidden" id="max_pages" value="{{max_pages}}">
-    <table>
-        <tr>
-            <td>
-                <button id="previous_button_top"> << </button>
-            </td>
-            <td id="previous_page_number" hidden>
-            </td>
-            <td id="total_pages_cell">
-            </td>
-            <td id="next_page_number" hidden>
-            </td>
-            <td>
-                <button id="next_button_top"> >> </button>
-            </td>
-        </tr>
-    </table>
+	<input type="hidden" id="current_page" value="{{cuurent_page}}">
+	<input type="hidden" id="max_pages" value="{{max_pages}}">
+	<table>
+		<tr>
+			<td>
+				<button id="previous_button_top"> << </button>
+			</td>
+			<td id="previous_page_number" hidden>
+			</td>
+			<td id="total_pages_cell">
+			</td>
+			<td id="next_page_number" hidden>
+			</td>
+			<td>
+				<button id="next_button_top"> >> </button>
+			</td>
+		</tr>
+	</table>
 </div>
 <div>
-    <table id="postOverview" class="table-bordered table-condensed table-hover table-striped">
-        <tr id="postHeaderRow">
-            <th>{{ kenmerk_lbl }}</th>
-            <th>{{ in_uit_lbl }}</th>
-            <th>{{ lbl_date }}</th>
-            <th>{{ lbl_tegenpartij }}</th>
-            <th>{{ lbl_onze_gegevens }}</th>
-            <th>{{ type_of_document_lbl }}</th>
-            <th>{{ subject_lbl }}</th>
-        </tr>
+	<table id="postOverview" class="table-bordered table-condensed table-hover table-striped">
+		<tr id="postHeaderRow">
+			<th>{{ kenmerk_lbl }}</th>
+			<th>{{ in_uit_lbl }}</th>
+			<th>{{ lbl_date }}</th>
+			<th>{{ lbl_tegenpartij }}</th>
+			<th>{{ lbl_onze_gegevens }}</th>
+			<th>{{ type_of_document_lbl }}</th>
+			<th>{{ subject_lbl }}</th>
+		</tr>
 
-        {% for post in posts %}
-            <tr>
-                <td><a href="{{post.url}}?ID={{post.ID}}">{{post.kenmerk}}</a></td>
-                <td>{{post.inOut}}</td>
-                <td>{{post.date}}</td>
-                <td>{{post.theirName}}<br><i>{{post.theirOrganisation}}</i></td>
-                <td>{{post.ourName}}<br><i>{{post.ourOrganisation}} ({{post.ourDepartment}})</i></td>
-                <td>{{post.typeOfDocument}}</td>
-                <td>{{post.subject}}</td>
-            </tr>
-        {% endfor %}
+		{% for post in posts %}
+			<tr>
+				<td><a href="{{post.url}}?ID={{post.ID}}">{{post.kenmerk}}</a></td>
+				<td>{{post.inOut}}</td>
+				<td>{{post.date}}</td>
+				<td>{{post.theirName}}<br><i>{{post.theirOrganisation}}</i></td>
+				<td>{{post.ourName}}<br><i>{{post.ourOrganisation}} ({{post.ourDepartment}})</i></td>
+				<td>{{post.typeOfDocument}}</td>
+				<td>{{post.subject}}</td>
+			</tr>
+		{% endfor %}
 
-    </table>
+	</table>
 </div>
 <div>
-    <table>
-        <tr>
-            <td>
-                <button id="previous_button_bottom"> << </button>
-            </td>
-            <td>
-                <button id="next_button_bottom"> >> </button>
-            </td>
-        </tr>
-    </table>
+	<table>
+		<tr>
+			<td>
+				<button id="previous_button_bottom"> << </button>
+			</td>
+			<td>
+				<button id="next_button_bottom"> >> </button>
+			</td>
+		</tr>
+	</table>
 </div>
 
 <script>
-    document.getElementById("previous_button_bottom").addEventListener ("click", previousPage, false);
-    document.getElementById("previous_button_top").addEventListener ("click", previousPage, false);
-    document.getElementById("next_button_bottom").addEventListener ("click", nextPage, false);
-    document.getElementById("next_button_top").addEventListener ("click", nextPage, false);
-    document.getElementById("advanced_search_button").addEventListener("click", doAdvancedSearch, false);
+	document.getElementById("previous_button_bottom").addEventListener ("click", previousPage, false);
+	document.getElementById("previous_button_top").addEventListener ("click", previousPage, false);
+	document.getElementById("next_button_bottom").addEventListener ("click", nextPage, false);
+	document.getElementById("next_button_top").addEventListener ("click", nextPage, false);
+	document.getElementById("advanced_search_button").addEventListener("click", doAdvancedSearch, false);
 
-    //
-    //var pageNumber = location.href.substr(location.href.indexOf("=") + 1); // werkt niet
-    var pageNumber = document.getElementById('current_page').value;
-    var maxPages = document.getElementById('max_pages').value;
+	//
+	//var pageNumber = location.href.substr(location.href.indexOf("=") + 1); // werkt niet
+	var pageNumber = document.getElementById('current_page').value;
+	var maxPages = document.getElementById('max_pages').value;
 
-    $(document).ready(function(){
-    });
+	$(document).ready(function(){
+	});
 
-    // hide prev/next button
-    if ( pageNumber < 1 ) {
-        $('#previous_button_bottom').prop('disabled', true);
-        $('#previous_button_top').prop('disabled', true);
-    }
-    if ( pageNumber > maxPages - 2 ) {
-        $('#next_button_bottom').prop('disabled', true);
-        $('#next_button_top').prop('disabled', true);
-    }
+	// hide prev/next button
+	if ( pageNumber < 1 ) {
+		$('#previous_button_bottom').prop('disabled', true);
+		$('#previous_button_top').prop('disabled', true);
+	}
+	if ( pageNumber > maxPages - 2 ) {
+		$('#next_button_bottom').prop('disabled', true);
+		$('#next_button_top').prop('disabled', true);
+	}
 
-    function doAdvancedSearch(){
-        var kenmerk_value = $('#kenmerk_search').val();
-        var date_from_value = $('#date_from_search').val();
-        var date_to_value = $('#date_to_search').val();
-        var sender_name_value = $('#sender_search').val();
-        var receiver_name_value = $('#receiver_search').val();
-        var in_uit_value = "";
-        $("input:checkbox[name='in_uit_search']:checked").each(function(){
-            in_uit_value += $(this).val() + ",";
-        });
-        var type_of_document_value = "";
-        $("input:checkbox[name='type_of_document_search']:checked").each(function(){
-            type_of_document_value += $(this).val();
-        });
-        var department_value = $('#department_search').val();
-        var subject_value = $('#subject_search').val();
-        var remarks_value = $('#remarks_search').val();
-        var registered_by_value = $('#registered_by_search').val();
-        location = '?in_out=' + in_uit_value
-                    + '&kenmerk=' + kenmerk_value
-                    + '&date_from=' + date_from_value
-                    + '&date_to=' + date_to_value
-                    + '&sender_name=' + sender_name_value
-                    + '&receiver_name=' + receiver_name_value
-                    + '&type_of_document=' + type_of_document_value
-                    + '&department=' + department_value
-                    + '&subject=' + subject_value
-                    + '&remarks=' + remarks_value
-                    + '&registered_by=' + registered_by_value
-        ;
-    }
+	function doAdvancedSearch(){
+		var kenmerk_value = $('#kenmerk_search').val();
+		var date_from_value = $('#date_from_search').val();
+		var date_to_value = $('#date_to_search').val();
+		var sender_name_value = $('#sender_search').val();
+		var receiver_name_value = $('#receiver_search').val();
+		var in_uit_value = "";
+		$("input:checkbox[name='in_uit_search']:checked").each(function(){
+			in_uit_value += $(this).val() + ",";
+		});
+		var type_of_document_value = "";
+		$("input:checkbox[name='type_of_document_search']:checked").each(function(){
+			type_of_document_value += $(this).val();
+		});
+		var department_value = $('#department_search').val();
+		var subject_value = $('#subject_search').val();
+		var remarks_value = $('#remarks_search').val();
+		var registered_by_value = $('#registered_by_search').val();
+		location = '?in_out=' + in_uit_value
+					+ '&kenmerk=' + kenmerk_value
+					+ '&date_from=' + date_from_value
+					+ '&date_to=' + date_to_value
+					+ '&sender_name=' + sender_name_value
+					+ '&receiver_name=' + receiver_name_value
+					+ '&type_of_document=' + type_of_document_value
+					+ '&department=' + department_value
+					+ '&subject=' + subject_value
+					+ '&remarks=' + remarks_value
+					+ '&registered_by=' + registered_by_value
+		;
+	}
 
-    $(function(){
-        $('#date_to_search').datepicker({ dateFormat: 'dd-mm-yy' });
-        $('#date_from_search').datepicker({ dateFormat: 'dd-mm-yy'});
-    });
+	$(function(){
+		$('#date_to_search').datepicker({ dateFormat: 'dd-mm-yy' });
+		$('#date_from_search').datepicker({ dateFormat: 'dd-mm-yy'});
+	});
 
-    //
-    function previousPage() {
-        if(pageNumber >= 1) { pageNumber--; }
-        var kenmerk_value = $('#kenmerk_search').val();
-        var date_from_value = $('#date_from_search').val();
-        var date_to_value = $('#date_to_search').val();
-        var sender_name_value = $('#sender_search').val();
-        var receiver_name_value = $('#receiver_search').val();
-        var in_uit_value = "";
-        $("input:checkbox[name='in_uit_search']:checked").each(function(){
-            in_uit_value += $(this).val() + ",";
-        });
-        var type_of_document_value = "";
-        $("input:checkbox[name='type_of_document_search']:checked").each(function(){
-            type_of_document_value += $(this).val();
-        });
-        var department_value = $('#department_search').val();
-        var subject_value = $('#subject_search').val();
-        var remarks_value = $('#remarks_search').val();
-        var registered_by_value = $('#registered_by_search').val();
-        location = '?page=' + pageNumber + '&in_out=' + in_uit_value
-            + '&kenmerk=' + kenmerk_value
-            + '&date_from=' + date_from_value
-            + '&date_to=' + date_to_value
-            + '&sender_name=' + sender_name_value
-            + '&receiver_name=' + receiver_name_value
-            + '&type_of_document=' + type_of_document_value
-            + '&department=' + department_value
-            + '&subject=' + subject_value
-            + '&remarks=' + remarks_value
-            + '&registered_by=' + registered_by_value
-        ;
-    }
+	//
+	function previousPage() {
+		if(pageNumber >= 1) { pageNumber--; }
+		var kenmerk_value = $('#kenmerk_search').val();
+		var date_from_value = $('#date_from_search').val();
+		var date_to_value = $('#date_to_search').val();
+		var sender_name_value = $('#sender_search').val();
+		var receiver_name_value = $('#receiver_search').val();
+		var in_uit_value = "";
+		$("input:checkbox[name='in_uit_search']:checked").each(function(){
+			in_uit_value += $(this).val() + ",";
+		});
+		var type_of_document_value = "";
+		$("input:checkbox[name='type_of_document_search']:checked").each(function(){
+			type_of_document_value += $(this).val();
+		});
+		var department_value = $('#department_search').val();
+		var subject_value = $('#subject_search').val();
+		var remarks_value = $('#remarks_search').val();
+		var registered_by_value = $('#registered_by_search').val();
+		location = '?page=' + pageNumber + '&in_out=' + in_uit_value
+			+ '&kenmerk=' + kenmerk_value
+			+ '&date_from=' + date_from_value
+			+ '&date_to=' + date_to_value
+			+ '&sender_name=' + sender_name_value
+			+ '&receiver_name=' + receiver_name_value
+			+ '&type_of_document=' + type_of_document_value
+			+ '&department=' + department_value
+			+ '&subject=' + subject_value
+			+ '&remarks=' + remarks_value
+			+ '&registered_by=' + registered_by_value
+		;
+	}
 
-    //
-    function nextPage() {
-        pageNumber++;
-        var kenmerk_value = $('#kenmerk_search').val();
-        var date_from_value = $('#date_from_search').val();
-        var date_to_value = $('#date_to_search').val();
-        var sender_name_value = $('#sender_search').val();
-        var receiver_name_value = $('#receiver_search').val();
-        var in_uit_value = "";
-        $("input:checkbox[name='in_uit_search']:checked").each(function(){
-            in_uit_value += $(this).val() + ",";
-        });
-        var type_of_document_value = "";
-        $("input:checkbox[name='type_of_document_search']:checked").each(function(){
-            type_of_document_value += $(this).val();
-        });
-        var department_value = $('#department_search').val();
-        var subject_value = $('#subject_search').val();
-        var remarks_value = $('#remarks_search').val();
-        var registered_by_value = $('#registered_by_search').val();
-        location = '?page=' + pageNumber + '&in_out=' + in_uit_value
-            + '&kenmerk=' + kenmerk_value
-            + '&date_from=' + date_from_value
-            + '&date_to=' + date_to_value
-            + '&sender_name=' + sender_name_value
-            + '&receiver_name=' + receiver_name_value
-            + '&type_of_document=' + type_of_document_value
-            + '&department=' + department_value
-            + '&subject=' + subject_value
-            + '&remarks=' + remarks_value
-            + '&registered_by=' + registered_by_value
-        ;
-    }
+	//
+	function nextPage() {
+		pageNumber++;
+		var kenmerk_value = $('#kenmerk_search').val();
+		var date_from_value = $('#date_from_search').val();
+		var date_to_value = $('#date_to_search').val();
+		var sender_name_value = $('#sender_search').val();
+		var receiver_name_value = $('#receiver_search').val();
+		var in_uit_value = "";
+		$("input:checkbox[name='in_uit_search']:checked").each(function(){
+			in_uit_value += $(this).val() + ",";
+		});
+		var type_of_document_value = "";
+		$("input:checkbox[name='type_of_document_search']:checked").each(function(){
+			type_of_document_value += $(this).val();
+		});
+		var department_value = $('#department_search').val();
+		var subject_value = $('#subject_search').val();
+		var remarks_value = $('#remarks_search').val();
+		var registered_by_value = $('#registered_by_search').val();
+		location = '?page=' + pageNumber + '&in_out=' + in_uit_value
+			+ '&kenmerk=' + kenmerk_value
+			+ '&date_from=' + date_from_value
+			+ '&date_to=' + date_to_value
+			+ '&sender_name=' + sender_name_value
+			+ '&receiver_name=' + receiver_name_value
+			+ '&type_of_document=' + type_of_document_value
+			+ '&department=' + department_value
+			+ '&subject=' + subject_value
+			+ '&remarks=' + remarks_value
+			+ '&registered_by=' + registered_by_value
+		;
+	}
 </script>

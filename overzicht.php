@@ -16,37 +16,37 @@ function createOverzichtContent( ) {
 	global $oWebuser, $twig, $protect;
 
 	// records per page
-    $recordsPerPage = Settings::get('post_records_per_page');
+	$recordsPerPage = Settings::get('post_records_per_page');
 
-    // current page
-    $page = $protect->requestPositiveNumberOrEmpty('get', 'page');
-    if ( $page == '' ) {
-    	$page = 0;
-    }
+	// current page
+	$page = $protect->requestPositiveNumberOrEmpty('get', 'page');
+	if ( $page == '' ) {
+		$page = 0;
+	}
 
-    // max pages
+	// max pages
 	$max_pages = Posts::getPostsPageCount($recordsPerPage);
 
 	//
-    $documentTypes = DocumentTypes::getDocumentTypes();
+	$documentTypes = DocumentTypes::getDocumentTypes();
 
 	//
 	$arr = Posts::getPosts($recordsPerPage,$page);
 	$documentType = '';
 	$posts = array();
 	foreach ( $arr as $post ) {
-        // Find out what document type needs to be displayed
-	    foreach($documentTypes as $key => $docType) {
-            if ( $post->getTypeOfDocument() == $key) {
-                $documentType = $docType[0];
-            }
-        }
+		// Find out what document type needs to be displayed
+		foreach($documentTypes as $key => $docType) {
+			if ( $post->getTypeOfDocument() == $key) {
+				$documentType = $docType[0];
+			}
+		}
 
-        if ( $post->getInOut() == 'in' ) {
-	        $url = 'postin.php';
-        } else {
-	        $url = 'postuit.php';
-        }
+		if ( $post->getInOut() == 'in' ) {
+			$url = 'postin.php';
+		} else {
+			$url = 'postuit.php';
+		}
 
 		$posts[] = array(
 			'ID' => $post->getId()
@@ -68,8 +68,8 @@ function createOverzichtContent( ) {
 	//
 	return $twig->render('overzicht.html', array(
 		'title' => Translations::get('menu_overzicht')
-        , 'posts' => $posts
-        , 'document_types' => DocumentTypes::getDocumentTypes()
+		, 'posts' => $posts
+		, 'document_types' => DocumentTypes::getDocumentTypes()
 		, 'cuurent_page' => $page
 		, 'max_pages' => $max_pages
 	));

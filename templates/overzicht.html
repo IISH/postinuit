@@ -20,75 +20,75 @@
 			</tr>
 		</table>
 	</div>
-    <div>
-        <table id="postOverview" class="table-bordered table-condensed table-hover table-striped">
-            <tr id="postHeaderRow">
-                <th>Kenmerk</th>
-	            <th>In/Uit</th>
-                <th>Datum</th>
-                <th>Tegenpartij</th>
-                <th>Onze gegevens</th>
-                <th>Type document</th>
-                <th>Onderwerp</th>
-            </tr>
+	<div>
+		<table id="postOverview" class="table-bordered table-condensed table-hover table-striped">
+			<tr id="postHeaderRow">
+				<th>Kenmerk</th>
+				<th>In/Uit</th>
+				<th>Datum</th>
+				<th>Tegenpartij</th>
+				<th>Onze gegevens</th>
+				<th>Type document</th>
+				<th>Onderwerp</th>
+			</tr>
 
 			{% for post in posts %}
 				<tr>
 					<td><a href="{{post.url}}?ID={{post.ID}}">{{post.kenmerk}}</a></td>
-			        <td>{{post.inOut}}</td>
-			        <td>{{post.date}}</td>
-			        <td>{{post.theirName}}<br><i>{{post.theirOrganisation}}</i></td>
-			        <td>{{post.ourName}}<br><i>{{post.ourOrganisation}} ({{post.ourDepartment}})</i></td>
-			        <td>{{post.typeOfDocument}}</td>
-			        <td>{{post.subject}}</td>
-		        </tr>
-	        {% endfor %}
+					<td>{{post.inOut}}</td>
+					<td>{{post.date}}</td>
+					<td>{{post.theirName}}<br><i>{{post.theirOrganisation}}</i></td>
+					<td>{{post.ourName}}<br><i>{{post.ourOrganisation}} ({{post.ourDepartment}})</i></td>
+					<td>{{post.typeOfDocument}}</td>
+					<td>{{post.subject}}</td>
+				</tr>
+			{% endfor %}
 
-        </table>
-    </div>
-    <div>
-        <table>
-            <tr>
-                <td>
-                    <button id="previous_button_bottom"> << </button>
-                </td>
-                <td>
-                    <button id="next_button_bottom"> >> </button>
-                </td>
-            </tr>
-        </table>
-    </div>
+		</table>
+	</div>
+	<div>
+		<table>
+			<tr>
+				<td>
+					<button id="previous_button_bottom"> << </button>
+				</td>
+				<td>
+					<button id="next_button_bottom"> >> </button>
+				</td>
+			</tr>
+		</table>
+	</div>
 
 <script>
-    document.getElementById("previous_button_bottom").addEventListener ("click", previousPage, false);
-    document.getElementById("previous_button_top").addEventListener ("click", previousPage, false);
-    document.getElementById("next_button_bottom").addEventListener ("click", nextPage, false);
-    document.getElementById("next_button_top").addEventListener ("click", nextPage, false);
+	document.getElementById("previous_button_bottom").addEventListener ("click", previousPage, false);
+	document.getElementById("previous_button_top").addEventListener ("click", previousPage, false);
+	document.getElementById("next_button_bottom").addEventListener ("click", nextPage, false);
+	document.getElementById("next_button_top").addEventListener ("click", nextPage, false);
 
 	//
-    //var pageNumber = location.href.substr(location.href.indexOf("=") + 1); // werkt niet
-    var pageNumber = document.getElementById('current_page').value;
-    var maxPages = document.getElementById('max_pages').value;
+	//var pageNumber = location.href.substr(location.href.indexOf("=") + 1); // werkt niet
+	var pageNumber = document.getElementById('current_page').value;
+	var maxPages = document.getElementById('max_pages').value;
 
-    // hide prev/next button
-    if ( pageNumber < 1 ) {
-        $('#previous_button_bottom').prop('disabled', true);
-        $('#previous_button_top').prop('disabled', true);
-    }
-    if ( pageNumber > maxPages - 2 ) {
-        $('#next_button_bottom').prop('disabled', true);
-        $('#next_button_top').prop('disabled', true);
-    }
+	// hide prev/next button
+	if ( pageNumber < 1 ) {
+		$('#previous_button_bottom').prop('disabled', true);
+		$('#previous_button_top').prop('disabled', true);
+	}
+	if ( pageNumber > maxPages - 2 ) {
+		$('#next_button_bottom').prop('disabled', true);
+		$('#next_button_top').prop('disabled', true);
+	}
 
-    //
-    function previousPage() {
-        if(pageNumber >= 1) { pageNumber--; }
-        location = '?page=' + pageNumber;
-    }
+	//
+	function previousPage() {
+		if(pageNumber >= 1) { pageNumber--; }
+		location = '?page=' + pageNumber;
+	}
 
-    //
-    function nextPage() {
-        pageNumber++;
-        location = '?page=' + pageNumber;
-    }
+	//
+	function nextPage() {
+		pageNumber++;
+		location = '?page=' + pageNumber;
+	}
 </script>

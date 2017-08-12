@@ -7,6 +7,16 @@ function preprint( $object ) {
 
 class Misc {
 
+	public static function getListOfFiles( $directory  ) {
+		$files = array();
+
+		if ( file_exists($directory) ) {
+			$files = array_diff(scandir($directory), array('..', '.'));
+		}
+
+		return $files;
+	}
+
 	public static function calculatePagesCount( $recordCount, $recordsPerPage ) {
 		return ceil($recordCount / $recordsPerPage);
 	}
@@ -28,20 +38,20 @@ class Misc {
 		return $hash;
 	}
 
-    public static function get_remote_addr() {
-        $retval = '';
-        if ( isset( $_SERVER["HTTP_X_FORWARDED_FOR"] ) ) {
-            $retval = trim($_SERVER["HTTP_X_FORWARDED_FOR"]);
-        }
+	public static function get_remote_addr() {
+		$retval = '';
+		if ( isset( $_SERVER["HTTP_X_FORWARDED_FOR"] ) ) {
+			$retval = trim($_SERVER["HTTP_X_FORWARDED_FOR"]);
+		}
 
-        if ( $retval == '' ) {
-            if ( isset( $_SERVER["REMOTE_ADDR"] ) ) {
-                $retval = trim($_SERVER["REMOTE_ADDR"]);
-            }
-        }
+		if ( $retval == '' ) {
+			if ( isset( $_SERVER["REMOTE_ADDR"] ) ) {
+				$retval = trim($_SERVER["REMOTE_ADDR"]);
+			}
+		}
 
-        return $retval;
-    }
+		return $retval;
+	}
 
 	public static function stripLeftPart( $string, $strip ) {
 		if ( strtolower(substr($string, 0, strlen($strip))) == strtolower($strip) ) {

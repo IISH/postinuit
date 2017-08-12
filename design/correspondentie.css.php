@@ -96,6 +96,7 @@ div.main {
 	max-width: 1200px;
 	margin-left: auto;
 	margin-right: auto;
+    xxxborder: 1px dashed red;
 }
 
 div.header {
@@ -243,27 +244,19 @@ div.menu {
 	color: darkgrey;
 }
 :-ms-input-placeholder { /* IE 10+ */
-    color: darkgrey;
+	color: darkgrey;
 }
 :-moz-placeholder { /* Firefox 18- */
-    color: darkgrey;
+	color: darkgrey;
 }
 
 @keyframes blinker {
-    50% { opacity: 0; }
-}
-
-#post_in_table{
-    width:80%;
-}
-
-#post_uit_table{
-    width:80%;
+	50% { opacity: 0; }
 }
 
 #postHeaderRow > th {
-    border: 1px solid black;
-    padding: 5px;
+	border: 1px solid black;
+	padding: 5px;
 }
 
 .index_button_alignment {
@@ -271,8 +264,8 @@ div.menu {
 }
 
 .index_button_margin {
-    margin-top: 30px;
-    margin-bottom: 30px;
+	margin-top: 30px;
+	margin-bottom: 30px;
 }
 
 .btn {
@@ -280,21 +273,21 @@ div.menu {
 }
 
 table.login {
-    border-collapse: collapse;
+	border-collapse: collapse;
 }
 
 table.login td {
-    padding: 10px 5px 10px 0px;
+	padding: 10px 5px 10px 0px;
 }
 
 #postOverview tr td {
-    padding: 10px 5px 10px 0px;
-    border: 1px solid black;
-    padding: 5px;
+	padding: 10px 5px 10px 0px;
+	border: 1px solid black;
+	padding: 5px;
 }
 
 #postOverview{
-    width: 100%;
+	width: 100%;
 }
 
 .disabledField {
@@ -307,16 +300,16 @@ table.login td {
 
 #post_in_table
 , #post_uit_table {
-    border-collapse: collapse;
+	border-collapse: collapse;
 }
 
 #post_in_table td
 , #post_uit_table td {
-    padding: 3px 3px 3px 0px;
+	padding: 3px 3px 3px 0px;
 }
 
 label {
-    font-size: 93%;
+	font-size: 93%;
 	white-space: nowrap;
 }
 
@@ -353,4 +346,24 @@ td {
 label.in_out
 , label.type_of_document {
 	padding-right: 20px;
+}
+
+ul.in_out {
+    padding: 0px 0px 0px 16px;
+}
+
+div.border {
+    clear: both;
+    border: 1px solid black;
+    margin-bottom: 10px;
+	padding: 3px;
+}
+
+input[type=file] {
+	border: none;
+}
+
+div.container {
+	xxxborder: 1px dashed darkgreen;
+	xxxmargin: 0px !important;
 }

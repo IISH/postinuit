@@ -41,10 +41,10 @@ function createLoginPage() {
 				$_SESSION["loginname"] = $fldLogin;
 
 				//
-                $burl = getBackUrl();
-                if ( $burl == '' ) {
-                    $burl = 'presentornot.php';
-                }
+				$burl = getBackUrl();
+				if ( $burl == '' ) {
+					$burl = 'presentornot.php';
+				}
 				Header("Location: " . $burl);
 				die(Translations::get('go_to') . " <a href=\"" . $burl . "\">next</a>");
 			} else {

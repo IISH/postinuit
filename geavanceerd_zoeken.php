@@ -20,17 +20,18 @@ function createGeavanceerdZoekenContent( ) {
 
 	// type of documents
 	// TODO: dit zal niet werken als ID 10 of hoger is !!!
-    $original_type_of_documents = str_replace(array('\\', '/', '%'), '',isset($_GET['type_of_document'])?trim($_GET['type_of_document']) : '');
+//preprint( $_GET['type_of_document'] );
+	$original_type_of_documents = str_replace(array('\\', '/', '%'), '',isset($_GET['type_of_document'])?trim($_GET['type_of_document']) : '');
 
-    $type_of_documents_array = array();
-    for ( $i = 0; $i < strlen($original_type_of_documents); $i++ ) {
-	    $type_of_documents_array[] = substr($_GET['type_of_document'], $i, 1);
-    }
+	$type_of_documents_array = array();
+	for ( $i = 0; $i < strlen($original_type_of_documents); $i++ ) {
+		$type_of_documents_array[] = substr($_GET['type_of_document'], $i, 1);
+	}
 
 	// in or out
-    $original_in_or_out = str_replace(array('\\', '/', '%'), '',isset($_GET['in_out'])?trim($_GET['in_out']) : '');
-    $in_or_out = rtrim($original_in_or_out, ",");
-    $in_or_out_array = explode(",", $in_or_out);
+	$original_in_or_out = str_replace(array('\\', '/', '%'), '',isset($_GET['in_out'])?trim($_GET['in_out']) : '');
+	$in_or_out = rtrim($original_in_or_out, ",");
+	$in_or_out_array = explode(",", $in_or_out);
 
 	$search['kenmerk'] = str_replace(array('\\', '/', '%'), '',isset($_GET['kenmerk'])?trim($_GET['kenmerk']) : '');
 	$search['in_or_out'] = $in_or_out;
@@ -99,20 +100,20 @@ function createGeavanceerdZoekenContent( ) {
 		, 'cuurent_page' => $page
 		, 'max_pages' => $arr['maxPages']
 		, 'search' => $_GET
-        , 'in_uit_lbl' => Translations::get('lbl_in_out')
+		, 'in_uit_lbl' => Translations::get('lbl_in_out')
 		, 'lbl_date' => Translations::get('lbl_date')
-        , 'kenmerk_lbl' => Translations::get('lbl_post_characteristic')
-        , 'date_search_lbl' => Translations::get('lbl_date_search')
-        , 'sender_name_lbl' => Translations::get('lbl_tegenpartij')
-        , 'receiver_name_lbl' => Translations::get('lbl_onze_gegevens')
-        , 'type_of_document_lbl' => Translations::get('lbl_post_document_type')
-        , 'department_lbl' => Translations::get('lbl_post_receiver_department')
-        , 'subject_lbl' => Translations::get('lbl_post_subject')
-        , 'remarks_lbl' => Translations::get('lbl_post_comments')
-        , 'registered_by_lbl' => Translations::get('lbl_post_registered_by')
-        , 'search_lbl' => Translations::get('lbl_search')
-        , 'selected_document_types' => $type_of_documents_array
-        , 'selected_in_or_out' => $in_or_out_array
+		, 'kenmerk_lbl' => Translations::get('lbl_post_characteristic')
+		, 'date_search_lbl' => Translations::get('lbl_date_search')
+		, 'sender_name_lbl' => Translations::get('lbl_tegenpartij')
+		, 'receiver_name_lbl' => Translations::get('lbl_onze_gegevens')
+		, 'type_of_document_lbl' => Translations::get('lbl_post_document_type')
+		, 'department_lbl' => Translations::get('lbl_post_receiver_department')
+		, 'subject_lbl' => Translations::get('lbl_post_subject')
+		, 'remarks_lbl' => Translations::get('lbl_post_comments')
+		, 'registered_by_lbl' => Translations::get('lbl_post_registered_by')
+		, 'search_lbl' => Translations::get('lbl_search')
+		, 'selected_document_types' => $type_of_documents_array
+		, 'selected_in_or_out' => $in_or_out_array
 		, 'in_outs' => array(
 				array('key' => "in", 'label' => Translations::get('in'))
 				, array('key' => "out", 'label' => Translations::get('out'))
