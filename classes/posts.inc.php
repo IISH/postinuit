@@ -66,16 +66,23 @@ class Posts{
 		}
 		$new_kenmerk .= $post_id;
 
-		$stmt = $dbConn->getConnection()->prepare("INSERT INTO post 
-			(in_out, kenmerk, date, their_name, their_organisation, 
+		$query = "INSERT INTO post (in_out, kenmerk, `date`, their_name, their_organisation, 
 			our_name, our_institute, our_department, type_of_document, 
 			subject, remarks, registered_by) 
 			VALUES (:in_out, :kenmerk, :date, :their_name, :their_organisation,
 			:our_name, :our_institute, :our_department, :type_of_document,
-			:subject, :remarks, :registered_by)");
+			:subject, :remarks, :registered_by) ";
+
+		//
+		$formattedDate = $data['date'];
+		$formattedDate = date("Y-m-d", strtotime($formattedDate));
+
+		$stmt = $dbConn->getConnection()->prepare($query);
+
+//preprint($formattedDate);
 		$stmt->bindParam(':in_out', $data['in_out'], PDO::PARAM_STR);
-		$stmt->bindParam(':kenmerk', $new_kenmerk, PDO::PARAM_INT);
-		$stmt->bindParam(':date', $data['date'], PDO::PARAM_INT);
+		$stmt->bindParam(':kenmerk', $new_kenmerk, PDO::PARAM_STR);
+		$stmt->bindParam(':date', $formattedDate, PDO::PARAM_STR);
 		$stmt->bindParam(':their_name', $data['their_name'], PDO::PARAM_STR);
 		$stmt->bindParam(':their_organisation', $data['their_organisation'], PDO::PARAM_STR);
 		$stmt->bindParam(':our_name', $data['our_name'], PDO::PARAM_STR);
@@ -91,21 +98,31 @@ class Posts{
 		$directory_to_save = "./documenten/".$new_kenmerk."/";
 		$numberOfFiles = count($files['documentInput']['name']);
 
-		if(mkdir($directory_to_save, 0777, true)) {
+		if ( mkdir($directory_to_save, 0764, true ) ) {
 			for ( $i = 0; $i < $numberOfFiles; $i++ ) {
 				$fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
 				file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
 			}
 		}
+
+//		$directory_to_save = "./documenten/".$data['kenmerk']."/";
+//		$numberOfFiles = count($files['documentInput']['name']);
+//
+//		if(is_dir($directory_to_save)) {
+//			for ( $i = 0; $i < $numberOfFiles; $i++ ) {
+//				$fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
+//				file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
+//			}
+//		}
 	}
 
 	/**
 	 * Removes the given file from the given directory
-	 * @param $data string the file to remove
+	 * @param $filename string the file to remove
 	 * @param $kenmerk string the folder where the file exists
 	 */
-	public static function removeFileFromPost($data, $kenmerk){
-		unlink("./documenten/".$kenmerk."/".$data);
+	public static function removeFileFromPost($filename, $kenmerk){
+		unlink("./documenten/".$kenmerk."/".$filename);
 	}
 
 	/**

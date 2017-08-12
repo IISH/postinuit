@@ -17,8 +17,11 @@ function createPostuitContent( ) {
 
 	// get id from the url
 	$id = $protect->requestPositiveNumberOrEmpty('get', 'ID');
-	$kenmerk = null; $submitValue = "Bewaar"; $files_belonging_to_post = array();
-	if($id !== ""){
+	$kenmerk = null;
+	$submitValue = "Bewaar";
+	$files_belonging_to_post = array();
+
+	if ( $id !== "" ) {
 		$kenmerk = Posts::findPostById($id);
 		$kenmerk = $kenmerk['kenmerk'];
 		$submitValue = "Pas aan";

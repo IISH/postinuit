@@ -1,5 +1,5 @@
 <?php 
-header('Content-type: text/css');
+Header('Content-type: text/css');
 require_once "../classes/misc.inc.php";
 require_once "../classes/website_protection.inc.php";
 

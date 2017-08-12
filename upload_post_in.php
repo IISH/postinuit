@@ -1,19 +1,15 @@
 <?php
 require_once "classes/start.inc.php";
 
-// Add element to $_POST array to notify the post is post that is coming in.
+// TODO: add check to see everything has been filled out
 $_POST['in_out'] = 'in';
 
-// TODO: add check to see everything has been filled out
-if (count($_POST) >= 12) {
-	if($_POST['submitValue'] === "Bewaar") {
-		Posts::uploadPost($_POST, $_FILES);
-	} else if($_POST['submitValue'] === "Pas aan") {
-		Posts::editPost($_POST, $_FILES);
-	}
-	header("Location: postin.php");
-	exit;
-} else {
-	echo "Not everything has been filled out!" . "<br>";
-	echo count($_POST);
+if ( $_POST['submitValue'] === "Bewaar" ) {
+	Posts::uploadPost( $_POST, $_FILES);
+} elseif ( $_POST['submitValue'] === "Pas aan") {
+	Posts::editPost( $_POST, $_FILES);
 }
+
+$next = 'postin.php';
+die('1111 go to <a href="' . $next . '">' . $next . '</a>');
+Header("Location: " . $next);

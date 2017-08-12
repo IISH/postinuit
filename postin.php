@@ -4,6 +4,11 @@ require_once "classes/start.inc.php";
 // check if an user is logged in
 $oWebuser->checkLoggedIn();
 
+//preprint ( $_SERVER['REQUEST_METHOD'] );
+if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+	die('zzz');
+}
+
 // create webpage
 $oPage = new Page();
 $oPage->setTitle(Translations::get('website_name') . ' | ' . Translations::get('postin'));
@@ -17,8 +22,12 @@ function createPostinContent( ) {
 
 	// get id from the url
 	$id = $protect->requestPositiveNumberOrEmpty('get', 'ID');
-	$kenmerk = null; $submitValue = "Bewaar"; $selectedPost = array(); $files_belonging_to_post = array();
-	if($id !== ""){
+	$kenmerk = null;
+	$submitValue = "Bewaar";
+	$selectedPost = array();
+	$files_belonging_to_post = array();
+
+	if ( $id !== "" ) {
 		$kenmerk = Posts::findPostById($id);
 		$selectedPost = $kenmerk;
 		$kenmerk = $kenmerk['kenmerk'];
