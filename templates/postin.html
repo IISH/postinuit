@@ -141,39 +141,30 @@
             {% endif %}
         });
 
+        $('#senderNameInput').on('keyup', function(){
+            autoComplete($(this), $(this).val(), 'their_name');
+        });
+
         $('#senderInstituteInput').on('keyup', function(){
-           if($(this).val().length >= minLengthSearchValue){
-               autoComplete($(this), $(this).val(), 'vw_filter_their_organisation', 'their_organisation');
-           } else {
-	           // TODO: remove list of showing autocomplete choices
-           }
+             autoComplete($(this), $(this).val(), 'their_organisation');
         });
 
         $('#receiverNameInput').on('keyup', function(){
-            if($(this).val().length >= minLengthSearchValue){
-                autoComplete($(this), $(this).val(), 'vw_filter_our_name', 'our_name');
-            } else {
-	            // TODO: remove list of showing autocomplete choices
-            }
+            autoComplete($(this), $(this).val(), 'our_name');
         });
 
-        $('#senderNameInput').on('keyup', function(){
-            if($(this).val().length >= minLengthSearchValue) {
-                autoComplete($(this), $(this).val(), 'vw_filter_their_name', 'their_name');
-            } else {
-	            // TODO: remove list of showing autocomplete choices
-            }
+        $('#receiverInstituteInput').on('keyup', function(){
+            autoComplete($(this), $(this).val(), 'our_institute');
         });
     });
 
     // To autcomplete the input in the form
-    function autoComplete(element, value, table, column){
+    function autoComplete(element, value, type){
         element.autocomplete({
             source: function (request, response) {
                 $.getJSON("retrieve_data_autocomplete.php", {
                     term: value,
-                    table: table,
-                    column: column
+                    type: type
                 }, response);
             }
         });

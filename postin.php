@@ -27,7 +27,9 @@ function createPostinContent( ) {
     }else{
         $currentDate = date('y');
         $characteristicsCount = (Settings::get('post_characteristic_last_used_counter') + 1);
-        for($i = strlen($characteristicsCount); $i < 3; $i++){$currentDate.='0';}
+        for ( $i = strlen($characteristicsCount); $i < 3; $i++ ) {
+        	$currentDate.='0';
+        }
         $kenmerk = $currentDate.$characteristicsCount;
     }
 

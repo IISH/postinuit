@@ -26,7 +26,9 @@ function createPostuitContent( ) {
     }else{
         $currentDate = date('y');
         $characteristicsCount = (Settings::get('post_characteristic_last_used_counter') + 1);
-        for($i = strlen($characteristicsCount); $i < 3; $i++){$currentDate.='0';}
+        for ( $i = strlen($characteristicsCount); $i < 3; $i++ ) {
+        	$currentDate.='0';
+        }
         $kenmerk = $currentDate.$characteristicsCount;
     }
 
@@ -41,7 +43,7 @@ function createPostuitContent( ) {
         , 'characteristicsInfo' => Translations::get('lbl_post_characteristic')
         , 'dateSentInfo' => Translations::get('lbl_post_date_out')
         , 'senderNameInfo' => Translations::get('lbl_post_sender_name')
-        , 'senderInstituteInfo' => Translations::get('lbl_post_sender_organisation')
+        , 'senderInstituteInfo' => Translations::get('lbl_post_sender_institute')
         , 'senderDepartmentInfo' => Translations::get('lbl_post_sender_department')
         , 'receiverNameInfo' => Translations::get('lbl_post_receiver_name')
         , 'receiverInstituteInfo' => Translations::get('lbl_post_receiver_organisation')

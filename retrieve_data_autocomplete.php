@@ -8,11 +8,34 @@ $oWebuser->checkLoggedIn();
 $minLengthSearchTerm = 2;
 $result = array();
 
-// TODO: security!!!!
-// table en column moeten niet zichtbaar zijn/opgegeven worden in url, maar een cijfer (of code)
+//
 $searchterm =  substr(trim($_GET['term']), 0,20);
-$table = trim($_GET['table']);
-$column = trim($_GET['column']);
+$type = trim($_GET['type']);
+switch ( $type ) {
+	case "our_name":
+		$table = 'vw_filter_our_name';
+		$column = 'our_name';
+		break;
+	case "our_institute":
+		$table = 'vw_filter_our_institute';
+		$column = 'our_institute';
+		break;
+	case "our_department":
+		$table = 'vw_filter_our_department';
+		$column = 'our_department';
+		break;
+	case "their_name":
+		$table = 'vw_filter_their_name';
+		$column = 'their_name';
+		break;
+	case "their_organisation":
+		$table = 'vw_filter_their_organisation';
+		$column = 'their_organisation';
+		break;
+	default:
+		echo json_encode($result);
+		die();
+}
 
 // conroleer of zoek term voldoet aan minimale lengte
 if ( strlen($searchterm) >= $minLengthSearchTerm ) {

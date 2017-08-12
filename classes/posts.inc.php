@@ -61,7 +61,7 @@ class Posts{
         $post_id = $result[0]['value'];
 
         $new_kenmerk = substr($data['kenmerk'],0, 2);
-        for($i = strlen($post_id); $i < 3; $i++){
+        for ( $i = strlen($post_id); $i < 3; $i++ ) {
             $new_kenmerk .= '0';
         }
         $new_kenmerk .= $post_id;
@@ -92,7 +92,7 @@ class Posts{
         $numberOfFiles = count($files['documentInput']['name']);
 
         if(mkdir($directory_to_save, 0777, true)) {
-            for($i = 0; $i < $numberOfFiles; $i++){
+            for ( $i = 0; $i < $numberOfFiles; $i++ ) {
                 $fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
                 file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
             }
@@ -150,7 +150,7 @@ class Posts{
         $numberOfFiles = count($files['documentInput']['name']);
 
         if(is_dir($directory_to_save)) {
-            for($i = 0; $i < $numberOfFiles; $i++){
+            for ( $i = 0; $i < $numberOfFiles; $i++ ) {
                 $fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
                 file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
             }

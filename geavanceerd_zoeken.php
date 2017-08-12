@@ -23,7 +23,7 @@ function createGeavanceerdZoekenContent( ) {
     $original_type_of_documents = str_replace(array('\\', '/', '%'), '',isset($_GET['type_of_document'])?trim($_GET['type_of_document']) : '');
 
     $type_of_documents_array = array();
-    for($i = 0; $i < strlen($original_type_of_documents); $i++){
+    for ( $i = 0; $i < strlen($original_type_of_documents); $i++ ) {
 	    $type_of_documents_array[] = substr($_GET['type_of_document'], $i, 1);
     }
 
