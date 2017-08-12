@@ -136,6 +136,7 @@ div.content {
 }
 
 div.footer {
+	clear: both;
 	background-color: #707070;
 	border: thin solid #AAAAAA;
 	padding: 5px;
@@ -363,7 +364,8 @@ input[type=file] {
 	border: none;
 }
 
-div.container {
-	xxxborder: 1px dashed darkgreen;
-	xxxmargin: 0px !important;
+.inputformsubmitbutton {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	text-align: center;
 }
