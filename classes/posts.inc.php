@@ -166,14 +166,19 @@ class Posts{
 		$directory_to_save = "./documenten/".$data['kenmerk']."/";
 		$numberOfFiles = count($files['documentInput']['name']);
 
-		// TODO: hier wordt vanuit gegaan dat de directory al bestaat
-		// voor alle zekerheid toch mkdir
 		if(is_dir($directory_to_save)) {
 			for ( $i = 0; $i < $numberOfFiles; $i++ ) {
 				$fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
 				file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
 			}
-		}
+		}else{
+            if ( mkdir($directory_to_save, 0764, true ) ) {
+                for ( $i = 0; $i < $numberOfFiles; $i++ ) {
+                    $fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
+                    file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
+                }
+            }
+        }
 	}
 
 	public static function findPostsAdvanced($data, $recordsPerPage, $page){
@@ -281,30 +286,6 @@ class Posts{
 				, 'recordsPerPage' => $recordsPerPage
 				, 'maxPages' => Misc::calculatePagesCount($nrOfRecords, $recordsPerPage)
 			);
-
-		//TODO: Not sure if code below needs to be used or the current way is safe enough
-//		$stmt = $dbConn->getConnection()->prepare("SELECT * FROM post
-//			WHERE in_out LIKE '%:in_out%' AND kenmerk LIKE '%:kenmerk%' AND date >= :datefrom AND date <= :dateto AND
-//			their_name LIKE '%:their_name%' AND our_name LIKE '%:our_name%' AND our_department LIKE '%:our_department%'
-//			AND type_of_document LIKE '%:type_of_document%' AND subject LIKE '%:subject%'
-//			AND remarks LIKE '%:remarks%' AND registered_by LIKE '%:registered_by%'");
-//		$stmt->bindParam(':in_out', $data[0], PDO::PARAM_STR);
-//		$stmt->bindParam(':kenmerk', $data[1], PDO::PARAM_INT);
-//		$stmt->bindParam(':datefrom', $data[2], PDO::PARAM_STR);
-//		$stmt->bindParam(':dateto', $data[3], PDO::PARAM_STR);
-//		$stmt->bindParam(':their_name', $data[4], PDO::PARAM_STR);
-//		$stmt->bindParam(':our_name', $data[5], PDO::PARAM_STR);
-//		$stmt->bindParam(':our_department', $data[6], PDO::PARAM_STR);
-//		$stmt->bindParam(':type_of_document', $data[7], PDO::PARAM_INT);
-//		$stmt->bindParam(':subject', $data[8], PDO::PARAM_STR);
-//		$stmt->bindParam(':remarks', $data[9], PDO::PARAM_STR);
-//		$stmt->bindParam(':registered_by', $data[10], PDO::PARAM_STR);
-//
-//		preprint($stmt);
-//
-//		$stmt->execute();
-//
-//		preprint($stmt->fetchAll());
 	}
 
 	/**
