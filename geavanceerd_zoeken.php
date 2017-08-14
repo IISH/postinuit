@@ -92,6 +92,15 @@ function createGeavanceerdZoekenContent( ) {
 		);
 	}
 
+	// To save the location to go to for when an Post is updated.
+    // TODO: check whether the safety of this is top notch!
+    $output = implode('&', array_map(
+        function ($v, $k) { return sprintf("%s=%s", $k, $v); },
+        $_GET,
+        array_keys($_GET)
+    ));
+    $_SESSION['previous_location'] = 'geavanceerd_zoeken.php?'.$output;
+
 	//
 	return $twig->render('geavanceerd_zoeken.html', array(
 		'title' => Translations::get('menu_geavanceerd_zoeken')

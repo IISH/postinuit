@@ -1,6 +1,9 @@
 <h1>{{title}}</h1>
+{% if submitError %}
+    <h3 id="errorHeader" style="color: red;">{{ submitError }}</h3>
+{% endif %}
 
-<form method="POST" action="upload_post_uit.php" enctype="multipart/form-data">
+<form method="POST" onsubmit="return validateForm()" enctype="multipart/form-data">
 
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
@@ -163,5 +166,24 @@
 			autoComplete($(this), $(this).val(), 'their_organisation');
 		});
 	});
+
+    function validateForm(){
+        var isValid = true;
+        if($('#dateSentInput').val() === ""){
+            isValid = false;
+        }else if($('#senderNameInput').val() === ""){
+            isValid = false;
+        }else if($('#receiverNameInput').val() === "" && $('#receiverInstituteInput').val() === ""){
+            isValid = false;
+        }else if($('[name="type_of_document"]').selected === false){
+            isValid = false;
+        }else if($('#subjectInput').val() === ""){
+            isValid = false;
+        }
+
+        if(!isValid)
+            alert("Not all fields have been filled out!");
+        return isValid;
+    }
 
 </script>

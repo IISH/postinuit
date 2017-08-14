@@ -22,49 +22,54 @@ function createPostinContent( ) {
 	$submitValue = "Bewaar";
 	$selectedPost = array();
 	$files_belonging_to_post = array();
+	$submitError = "";
 
-	// ergens hier
-//preprint ( $_SERVER['REQUEST_METHOD'] );
-// controleer of gesubmit
 	if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
-		// als gesubmit
-		// doe de
-		// a) controles of alle velden zijn ingevuld
-		// b) bewaar document
-		// als niet alle velden zijn ingevuld, dan niet bewaren
-		// maar foutmelding op het scherm tonen
-		// en ingevulde velden tonen
-		// als alles okay en bewaard is, ga dan terug naar pagina waar je vandaan kwam
-	} else {
-		// hier dus geen submit
-		// controleer of we een edit doen van een bestaande document
-		// of dat we een nieuwe document aanmaken
-		// is te achterhaleen door $_GET['ID'];
+        $isValid = true;
+        if($_POST['date'] === ""){
+            $isValid = false;
+        }else if($_POST['their_name'] === "" && $_POST['their_organisation'] === ""){
+            $isValid = false;
+        }else if($_POST['our_name'] === ""){
+            $isValid = false;
+        }else if($_POST['type_of_document'] === ""){
+            $isValid = false;
+        }else if($_POST['subject'] === ""){
+            $isValid = false;
+        }
 
-		// als we een edit doen, moet de data uit de db gehaald worden
-		// zo niet lege velden
+        if($isValid){
+            $next = "";
+            $_POST['in_out'] = 'in';
+            if ( $_POST['submitValue'] === "Bewaar" ) {
+                Posts::uploadPost($_POST, $_FILES);
+                $next = 'postin.php';
+            } else if ( $_POST['submitValue'] === "Pas aan" ) {
+                $next = $_SESSION['previous_location']; // gets the previous location (basic search)
+                Posts::editPost( $_POST, $_FILES);
+            }
+            Header("Location: " . $next);
+        }else{
+            $selectedPost = $_POST;
+            $submitError = "* Not all fields have been filled in!";
+        }
 
-		// HIER DE GET VAN JOUW PLAATSEN
+	} else if($_SERVER['REQUEST_METHOD'] == 'GET') {
+        if ( $id !== "" ) {
+            $kenmerk = Posts::findPostById($id);
+            $selectedPost = $kenmerk;
+            $kenmerk = $kenmerk['kenmerk'];
+            $submitValue = "Pas aan";
+            $files_belonging_to_post = Misc::getListOfFiles( "./documenten/" . $kenmerk );
+        }else{
+            $currentDate = date('y');
+            $characteristicsCount = (Settings::get('post_characteristic_last_used_counter') + 1);
+            for ( $i = strlen($characteristicsCount); $i < 3; $i++ ) {
+                $currentDate.='0';
+            }
+            $kenmerk = $currentDate.$characteristicsCount;
+        }
 	}
-
-	// IDEM BIJ POSTUIT
-
-	// GET
-	if ( $id !== "" ) {
-		$kenmerk = Posts::findPostById($id);
-		$selectedPost = $kenmerk;
-		$kenmerk = $kenmerk['kenmerk'];
-		$submitValue = "Pas aan";
-		$files_belonging_to_post = Misc::getListOfFiles( "./documenten/" . $kenmerk );
-	}else{
-		$currentDate = date('y');
-		$characteristicsCount = (Settings::get('post_characteristic_last_used_counter') + 1);
-		for ( $i = strlen($characteristicsCount); $i < 3; $i++ ) {
-			$currentDate.='0';
-		}
-		$kenmerk = $currentDate.$characteristicsCount;
-	}
-	// EINDE GET
 
 	// Check whether the date in the database is correct, otherwise adjust both date and counter for characteristic
 	if ( Settings::get('post_characteristic_year') !== date('y') ) {
@@ -95,5 +100,6 @@ function createPostinContent( ) {
 		, 'field_is_semi_required' => Translations::get('field_is_semi_required')
 		, 'field_is_semi_required_sender_name_and_institute' => Translations::get('field_is_semi_required_sender_name_and_institute')
 		, 'files_from_post' => $files_belonging_to_post
+        , 'submitError' => $submitError
 	));
 }

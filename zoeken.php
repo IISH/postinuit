@@ -69,6 +69,8 @@ function createZoekenContent( ) {
 		);
 	}
 
+    $_SESSION['previous_location'] = 'zoeken.php'.'?page='.$page;
+
 	//
 	return $twig->render('zoeken.html', array(
 		'title' => Translations::get('menu_zoeken')
