@@ -166,6 +166,8 @@ class Posts{
 		$directory_to_save = "./documenten/".$data['kenmerk']."/";
 		$numberOfFiles = count($files['documentInput']['name']);
 
+		// TODO: hier wordt vanuit gegaan dat de directory al bestaat
+		// voor alle zekerheid toch mkdir
 		if(is_dir($directory_to_save)) {
 			for ( $i = 0; $i < $numberOfFiles; $i++ ) {
 				$fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);

@@ -10,6 +10,6 @@ if ( $_POST['submitValue'] === "Bewaar" ) {
 	Posts::editPost( $_POST, $_FILES);
 }
 
-$next = 'postout.php';
-die('2222 go to <a href="' . $next . '">' . $next . '</a>');
+$next = 'postuit.php';
+//die('2222 go to <a href="' . $next . '">' . $next . '</a>');
 Header("Location: " . $next);

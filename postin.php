@@ -4,10 +4,6 @@ require_once "classes/start.inc.php";
 // check if an user is logged in
 $oWebuser->checkLoggedIn();
 
-//preprint ( $_SERVER['REQUEST_METHOD'] );
-if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
-	die('zzz');
-}
 
 // create webpage
 $oPage = new Page();
@@ -27,6 +23,33 @@ function createPostinContent( ) {
 	$selectedPost = array();
 	$files_belonging_to_post = array();
 
+	// ergens hier
+//preprint ( $_SERVER['REQUEST_METHOD'] );
+// controleer of gesubmit
+	if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+		// als gesubmit
+		// doe de
+		// a) controles of alle velden zijn ingevuld
+		// b) bewaar document
+		// als niet alle velden zijn ingevuld, dan niet bewaren
+		// maar foutmelding op het scherm tonen
+		// en ingevulde velden tonen
+		// als alles okay en bewaard is, ga dan terug naar pagina waar je vandaan kwam
+	} else {
+		// hier dus geen submit
+		// controleer of we een edit doen van een bestaande document
+		// of dat we een nieuwe document aanmaken
+		// is te achterhaleen door $_GET['ID'];
+
+		// als we een edit doen, moet de data uit de db gehaald worden
+		// zo niet lege velden
+
+		// HIER DE GET VAN JOUW PLAATSEN
+	}
+
+	// IDEM BIJ POSTUIT
+
+	// GET
 	if ( $id !== "" ) {
 		$kenmerk = Posts::findPostById($id);
 		$selectedPost = $kenmerk;
@@ -41,6 +64,7 @@ function createPostinContent( ) {
 		}
 		$kenmerk = $currentDate.$characteristicsCount;
 	}
+	// EINDE GET
 
 	// Check whether the date in the database is correct, otherwise adjust both date and counter for characteristic
 	if ( Settings::get('post_characteristic_year') !== date('y') ) {

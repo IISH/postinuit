@@ -11,5 +11,5 @@ if ( $_POST['submitValue'] === "Bewaar" ) {
 }
 
 $next = 'postin.php';
-die('1111 go to <a href="' . $next . '">' . $next . '</a>');
+//die('1111 go to <a href="' . $next . '">' . $next . '</a>');
 Header("Location: " . $next);
