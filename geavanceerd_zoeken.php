@@ -17,32 +17,19 @@ function createGeavanceerdZoekenContent( ) {
 
 	// get search value
 	$search = array();
-
-	// type of documents
-	// TODO: dit zal niet werken als ID 10 of hoger is !!!
-//preprint( $_GET['type_of_document'] );
-	$original_type_of_documents = str_replace(array('\\', '/', '%'), '',isset($_GET['type_of_document'])?trim($_GET['type_of_document']) : '');
-
-	$type_of_documents_array = array();
-	for ( $i = 0; $i < strlen($original_type_of_documents); $i++ ) {
-		$type_of_documents_array[] = substr($_GET['type_of_document'], $i, 1);
-	}
-
-	// in or out
-	$original_in_or_out = str_replace(array('\\', '/', '%'), '',isset($_GET['in_out'])?trim($_GET['in_out']) : '');
-	$in_or_out = rtrim($original_in_or_out, ",");
-	$in_or_out_array = explode(",", $in_or_out);
-
 	$search['kenmerk'] = str_replace(array('\\', '/', '%'), '',isset($_GET['kenmerk'])?trim($_GET['kenmerk']) : '');
-	$search['in_or_out'] = $in_or_out;
+	$search['in_or_out'] = str_replace(array('\\', '/', '%'), '',isset($_GET['in_out'])?trim($_GET['in_out']) : '');
 	$search['date_from'] = str_replace(array('\\', '/', '%'), '',isset($_GET['date_from'])?trim($_GET['date_from']) : '');
 	$search['date_to'] = str_replace(array('\\', '/', '%'), '',isset($_GET['date_to'])?trim($_GET['date_to']) : '');
 	$search['tegenpartij'] = str_replace(array('\\', '/', '%'), '',isset($_GET['sender_name'])?trim($_GET['sender_name']) : '');
 	$search['onze_gegevens'] = str_replace(array('\\', '/', '%'), '',isset($_GET['receiver_name'])?trim($_GET['receiver_name']) : '');
-	$search['type_of_documents'] = implode(', ', $type_of_documents_array);
+	$search['type_of_documents'] = str_replace(array('\\', '/', '%'), '',isset($_GET['type_of_document'])?trim($_GET['type_of_document']) : '');
 	$search['subject'] = str_replace(array('\\', '/', '%'), '',isset($_GET['subject'])?trim($_GET['subject']) : '');
 	$search['remarks'] = str_replace(array('\\', '/', '%'), '',isset($_GET['remarks'])?trim($_GET['remarks']) : '');
 	$search['registered_by'] = str_replace(array('\\', '/', '%'), '',isset($_GET['registered_by'])?trim($_GET['registered_by']) : '');
+
+    $type_of_documents_array = explode(',',$search['type_of_documents']);
+    $in_or_out_array = explode(",", $search['in_or_out']);
 
 	// records per page
 	$recordsPerPage = Settings::get('post_records_per_page');

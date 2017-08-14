@@ -194,12 +194,16 @@
 		var sender_name_value = $('#sender_search').val();
 		var receiver_name_value = $('#receiver_search').val();
 		var in_uit_value = "";
+		var separator = "";
 		$("input:checkbox[name='in_uit_search']:checked").each(function(){
-			in_uit_value += $(this).val() + ",";
+			in_uit_value += separator + $(this).val();
+			separator = ","
 		});
 		var type_of_document_value = "";
+		separator = "";
 		$("input:checkbox[name='type_of_document_search']:checked").each(function(){
-			type_of_document_value += $(this).val();
+			type_of_document_value += separator +$(this).val();
+			separator = ",";
 		});
 		var department_value = $('#department_search').val(); // TODO: Wordt deze nog wel gebruikt?
 		var subject_value = $('#subject_search').val();
@@ -233,14 +237,18 @@
 		var sender_name_value = $('#sender_search').val();
 		var receiver_name_value = $('#receiver_search').val();
 		var in_uit_value = "";
+		var separator = "";
 		$("input:checkbox[name='in_uit_search']:checked").each(function(){
-			in_uit_value += $(this).val() + ",";
+			in_uit_value += separator + $(this).val();
+			separator = ",";
 		});
 		var type_of_document_value = "";
+		separator = "";
 		$("input:checkbox[name='type_of_document_search']:checked").each(function(){
-			type_of_document_value += $(this).val();
+			type_of_document_value += separator + $(this).val();
+			separator = ",";
 		});
-		var department_value = $('#department_search').val();
+		var department_value = $('#department_search').val(); // TODO: Wordt deze nog wel gebruikt?
 		var subject_value = $('#subject_search').val();
 		var remarks_value = $('#remarks_search').val();
 		var registered_by_value = $('#registered_by_search').val();
@@ -267,14 +275,18 @@
 		var sender_name_value = $('#sender_search').val();
 		var receiver_name_value = $('#receiver_search').val();
 		var in_uit_value = "";
+        var separator = "";
 		$("input:checkbox[name='in_uit_search']:checked").each(function(){
-			in_uit_value += $(this).val() + ",";
+			in_uit_value += separator + $(this).val();
+			separator = ",";
 		});
 		var type_of_document_value = "";
+		separator = "";
 		$("input:checkbox[name='type_of_document_search']:checked").each(function(){
-			type_of_document_value += $(this).val();
+			type_of_document_value += separator + $(this).val();
+			separator = ",";
 		});
-		var department_value = $('#department_search').val();
+		var department_value = $('#department_search').val(); // TODO: Wordt deze nog wel gebruikt?
 		var subject_value = $('#subject_search').val();
 		var remarks_value = $('#remarks_search').val();
 		var registered_by_value = $('#registered_by_search').val();
