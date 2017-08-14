@@ -48,11 +48,11 @@
 				</tr>
 				<tr>
 					<td><label for="receiverInstituteInput">{{ receiverInstituteInfo }}</label></td>
-					<td><input class="input-sm col-xs-12 col-lg-12 notYetDisabledField" id="receiverInstituteInput" name="our_institute" type="text" value="{{ selectedPost['our_institute'] }}" tabindex="-1"></td><!--vrije tekst veld, moet later automatisch ingevuld worden, dan niet meer aanpasbaar-->
+					<td><input class="input-sm col-xs-12 col-lg-12 notYetDisabledField" id="receiverInstituteInput" name="our_institute" type="text" value="{{ selectedPost['our_institute'] }}"></td><!--vrije tekst veld, moet later automatisch ingevuld worden, dan niet meer aanpasbaar-->
 				</tr>
 				<tr>
 					<td><label for="receiverDepartmentInput">{{ receiverDepartmentInfo }}</label></td>
-					<td><input class="input-sm col-xs-12 col-lg-12 notYetDisabledField" id="receiverDepartmentInput" name="our_department" type="text" value="{{ selectedPost['our_department'] }}" tabindex="-1"></td><!--vrije tekst veld, moet later automatisch ingevuld worden, dan niet meer aanpasbaar-->
+					<td><input class="input-sm col-xs-12 col-lg-12 notYetDisabledField" id="receiverDepartmentInput" name="our_department" type="text" value="{{ selectedPost['our_department'] }}"></td><!--vrije tekst veld, moet later automatisch ingevuld worden, dan niet meer aanpasbaar-->
 				</tr>
 				<tr>
 					<td>
@@ -103,7 +103,7 @@
 
 			{% if files_from_post|length > 0 %}
 			<div class="border">
-				<label>Already uploaded files</label>
+				<label>Already uploaded documents</label>
 				<ul class="in_out">
 					{% for file in files_from_post %}
 					<li>{{ file }} <input id="openFileFromServer" name="openFileFromServer" type="submit" formaction="open_file_from_post.php" value="Open"> <input id="deleteFileFromServer" name="deleteFileFromServer" type="submit" formaction="remove_file_from_post.php" value="Delete"></li>
