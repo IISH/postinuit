@@ -87,5 +87,6 @@ function createZoekenContent( ) {
 		, 'lbl_onze_gegevens' => Translations::get('lbl_onze_gegevens')
 		, 'subject_lbl' => Translations::get('lbl_post_subject')
         , 'lbl_current_page' => $page + 1
+        , 'lbl_page_indicator_or' => Translations::get('search_page_indicator_or')
 	));
 }

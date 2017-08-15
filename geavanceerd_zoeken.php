@@ -117,5 +117,6 @@ function createGeavanceerdZoekenContent( ) {
 		, 'lbl_tegenpartij' => Translations::get('lbl_tegenpartij')
 		, 'lbl_onze_gegevens' => Translations::get('lbl_onze_gegevens')
         , 'lbl_current_page' => $page + 1
+        , 'lbl_page_indicator_or' => Translations::get('search_page_indicator_or')
 	));
 }
