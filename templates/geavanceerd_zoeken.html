@@ -104,22 +104,28 @@
 <br>
 
 <div>
-	<input type="hidden" id="current_page" value="{{cuurent_page}}">
+	<input type="hidden" id="current_page" value="{{current_page}}">
 	<input type="hidden" id="max_pages" value="{{max_pages}}">
 	<table>
 		<tr>
-			<td>
-				<button id="previous_button_top"> << </button>
-			</td>
-			<td id="previous_page_number" hidden>
-			</td>
-			<td id="total_pages_cell">
-			</td>
-			<td id="next_page_number" hidden>
-			</td>
-			<td>
-				<button id="next_button_top"> >> </button>
-			</td>
+            <td>
+                <button id="first_page_button_top"> << </button>
+            </td>
+            <td>
+                <button id="previous_button_top"> < </button>
+            </td>
+            <td>
+                <label id="current_page_label">&nbsp{{ lbl_current_page }} of </label>
+            </td>
+            <td id="total_pages_cell">
+                <label id="total_pages_label">{{ max_pages }}&nbsp</label>
+            </td>
+            <td>
+                <button id="next_button_top"> > </button>
+            </td>
+            <td>
+                <button id="last_page_button_top"> >> </button>
+            </td>
 		</tr>
 	</table>
 </div>
@@ -152,40 +158,85 @@
 <div>
 	<table>
 		<tr>
-			<td>
-				<button id="previous_button_bottom"> << </button>
-			</td>
-			<td>
-				<button id="next_button_bottom"> >> </button>
-			</td>
+            <td>
+                <button id="first_page_button_bottom"> << </button>
+            </td>
+            <td>
+                <button id="previous_button_bottom"> < </button>
+            </td>
+            <td>
+                <label id="current_page_label">&nbsp{{ lbl_current_page }} of </label>
+            </td>
+            <td id="total_pages_cell">
+                <label id="total_pages_label">{{ max_pages }}&nbsp</label>
+            </td>
+            <td>
+                <button id="next_button_bottom"> > </button>
+            </td>
+            <td>
+                <button id="last_page_button_bottom"> >> </button>
+            </td>
 		</tr>
 	</table>
 </div>
 
 <script>
-	document.getElementById("previous_button_bottom").addEventListener ("click", previousPage, false);
-	document.getElementById("previous_button_top").addEventListener ("click", previousPage, false);
-	document.getElementById("next_button_bottom").addEventListener ("click", nextPage, false);
-	document.getElementById("next_button_top").addEventListener ("click", nextPage, false);
-	document.getElementById("advanced_search_button").addEventListener("click", doAdvancedSearch, false);
+	navigationEnum = {
+	    FIRST: 'first',
+        PREVIOUS: 'previous',
+        NEXT: 'next',
+        LAST: 'last'
+    };
 
-	//
 	//var pageNumber = location.href.substr(location.href.indexOf("=") + 1); // werkt niet
 	var pageNumber = document.getElementById('current_page').value;
 	var maxPages = document.getElementById('max_pages').value;
 
-	$(document).ready(function(){
-	});
+    $(document).ready(function(){
+        $('#first_page_button_top').on('click', function(){
+            pageNavigation(navigationEnum.FIRST);
+        });
+        $('#first_page_button_bottom').on('click', function(){
+            pageNavigation(navigationEnum.FIRST);
+        });
+        $('#previous_button_top').on('click', function(){
+            pageNavigation(navigationEnum.PREVIOUS);
+        });
+        $('#previous_button_bottom').on('click', function(){
+            pageNavigation(navigationEnum.PREVIOUS);
+        });
+        $('#next_button_top').on('click', function(){
+            pageNavigation(navigationEnum.NEXT);
+        });
+        $('#next_button_bottom').on('click', function(){
+            pageNavigation(navigationEnum.NEXT);
+        });
+        $('#last_page_button_top').on('click', function(){
+            pageNavigation(navigationEnum.LAST);
+        });
+        $('#last_page_button_bottom').on('click', function(){
+            pageNavigation(navigationEnum.LAST);
+        });
 
-	// hide prev/next button
-	if ( pageNumber < 1 ) {
-		$('#previous_button_bottom').prop('disabled', true);
-		$('#previous_button_top').prop('disabled', true);
-	}
-	if ( pageNumber > maxPages - 2 ) {
-		$('#next_button_bottom').prop('disabled', true);
-		$('#next_button_top').prop('disabled', true);
-	}
+        // hide prev/next button
+        if ( pageNumber < 1 ) {
+            $('#previous_button_bottom').prop('disabled', true);
+            $('#previous_button_top').prop('disabled', true);
+            $('#first_page_button_top').prop('disabled', true);
+            $('#first_page_button_bottom').prop('disabled', true);
+        }
+        if ( pageNumber > maxPages - 2 ) {
+            $('#next_button_bottom').prop('disabled', true);
+            $('#next_button_top').prop('disabled', true);
+            $('#last_page_button_top').prop('disabled', true);
+            $('#last_page_button_bottom').prop('disabled', true);
+        }
+
+        $(function(){
+            $('#date_to_search').datepicker({ dateFormat: 'dd-mm-yy' });
+            $('#date_from_search').datepicker({ dateFormat: 'dd-mm-yy'});
+        });
+    });
 
 	function doAdvancedSearch(){
 		var kenmerk_value = $('#kenmerk_search').val();
@@ -223,84 +274,60 @@
 		;
 	}
 
-	$(function(){
-		$('#date_to_search').datepicker({ dateFormat: 'dd-mm-yy' });
-		$('#date_from_search').datepicker({ dateFormat: 'dd-mm-yy'});
-	});
+	function pageNavigation(nav){
+        switch(nav){
+            case navigationEnum.FIRST:
+                pageNumber = 0;
+                break;
+            case navigationEnum.LAST:
+                pageNumber = ({{ max_pages }} - 1);
+                break;
+            case navigationEnum.NEXT:
+                pageNumber++;
+                break;
+            case navigationEnum.PREVIOUS:
+                if(pageNumber >= 1) { pageNumber--; }
+                break;
+            default:
+                break;
+        }
 
-	//
-	function previousPage() {
-		if(pageNumber >= 1) { pageNumber--; }
-		var kenmerk_value = $('#kenmerk_search').val();
-		var date_from_value = $('#date_from_search').val();
-		var date_to_value = $('#date_to_search').val();
-		var sender_name_value = $('#sender_search').val();
-		var receiver_name_value = $('#receiver_search').val();
-		var in_uit_value = "";
-		var separator = "";
-		$("input:checkbox[name='in_uit_search']:checked").each(function(){
-			in_uit_value += separator + $(this).val();
-			separator = ",";
-		});
-		var type_of_document_value = "";
-		separator = "";
-		$("input:checkbox[name='type_of_document_search']:checked").each(function(){
-			type_of_document_value += separator + $(this).val();
-			separator = ",";
-		});
-		var department_value = $('#department_search').val(); // TODO: Wordt deze nog wel gebruikt?
-		var subject_value = $('#subject_search').val();
-		var remarks_value = $('#remarks_search').val();
-		var registered_by_value = $('#registered_by_search').val();
-		location = '?page=' + pageNumber + '&in_out=' + in_uit_value
-			+ '&kenmerk=' + kenmerk_value
-			+ '&date_from=' + date_from_value
-			+ '&date_to=' + date_to_value
-			+ '&sender_name=' + sender_name_value
-			+ '&receiver_name=' + receiver_name_value
-			+ '&type_of_document=' + type_of_document_value
-			+ '&department=' + department_value
-			+ '&subject=' + subject_value
-			+ '&remarks=' + remarks_value
-			+ '&registered_by=' + registered_by_value
-		;
-	}
-
-	//
-	function nextPage() {
-		pageNumber++;
-		var kenmerk_value = $('#kenmerk_search').val();
-		var date_from_value = $('#date_from_search').val();
-		var date_to_value = $('#date_to_search').val();
-		var sender_name_value = $('#sender_search').val();
-		var receiver_name_value = $('#receiver_search').val();
-		var in_uit_value = "";
+        var kenmerk_value = $('#kenmerk_search').val();
+        var date_from_value = $('#date_from_search').val();
+        var date_to_value = $('#date_to_search').val();
+        var sender_name_value = $('#sender_search').val();
+        var receiver_name_value = $('#receiver_search').val();
+        var in_uit_value = "";
         var separator = "";
-		$("input:checkbox[name='in_uit_search']:checked").each(function(){
-			in_uit_value += separator + $(this).val();
-			separator = ",";
-		});
-		var type_of_document_value = "";
-		separator = "";
-		$("input:checkbox[name='type_of_document_search']:checked").each(function(){
-			type_of_document_value += separator + $(this).val();
-			separator = ",";
-		});
-		var department_value = $('#department_search').val(); // TODO: Wordt deze nog wel gebruikt?
-		var subject_value = $('#subject_search').val();
-		var remarks_value = $('#remarks_search').val();
-		var registered_by_value = $('#registered_by_search').val();
-		location = '?page=' + pageNumber + '&in_out=' + in_uit_value
-			+ '&kenmerk=' + kenmerk_value
-			+ '&date_from=' + date_from_value
-			+ '&date_to=' + date_to_value
-			+ '&sender_name=' + sender_name_value
-			+ '&receiver_name=' + receiver_name_value
-			+ '&type_of_document=' + type_of_document_value
-			+ '&department=' + department_value
-			+ '&subject=' + subject_value
-			+ '&remarks=' + remarks_value
-			+ '&registered_by=' + registered_by_value
-		;
-	}
+        $("input:checkbox[name='in_uit_search']:checked").each(function(){
+            in_uit_value += separator + $(this).val();
+            separator = ",";
+        });
+        var type_of_document_value = "";
+        separator = "";
+        $("input:checkbox[name='type_of_document_search']:checked").each(function(){
+            type_of_document_value += separator + $(this).val();
+            separator = ",";
+        });
+        var department_value = $('#department_search').val(); // TODO: Wordt deze nog wel gebruikt?
+        var subject_value = $('#subject_search').val();
+        var remarks_value = $('#remarks_search').val();
+        var registered_by_value = $('#registered_by_search').val();
+        console.log("It runs through here!");
+        location = '?page=' + pageNumber + '&in_out=' + in_uit_value
+            + '&kenmerk=' + kenmerk_value
+            + '&date_from=' + date_from_value
+            + '&date_to=' + date_to_value
+            + '&sender_name=' + sender_name_value
+            + '&receiver_name=' + receiver_name_value
+            + '&type_of_document=' + type_of_document_value
+            + '&department=' + department_value
+            + '&subject=' + subject_value
+            + '&remarks=' + remarks_value
+            + '&registered_by=' + registered_by_value
+        ;
+    }
+
+    document.getElementById("advanced_search_button").addEventListener("click", doAdvancedSearch, false);
+
 </script>
