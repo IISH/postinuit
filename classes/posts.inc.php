@@ -95,11 +95,7 @@ class Posts{
 
 		$stmt->execute();
 
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $directory_to_save = Settings::get('windows_attachment_directory').$new_kenmerk."/";
-        } else {
-            $directory_to_save = Settings::get('linux_attachment_directory').$new_kenmerk."/";
-        }
+        $directory_to_save = Settings::get('attachment_directory').$new_kenmerk."/";
 		$numberOfFiles = count($files['documentInput']['name']);
 
 		if ( mkdir($directory_to_save, 0764, true ) ) {
@@ -161,11 +157,7 @@ class Posts{
 
 		$stmt->execute();
 
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            $directory_to_save = Settings::get('windows_attachment_directory').$data['kenmerk']."/";
-        } else {
-            $directory_to_save = Settings::get('linux_attachment_directory').$data['kenmerk']."/";
-        }
+        $directory_to_save = Settings::get('attachment_directory').$data['kenmerk']."/";
 		$numberOfFiles = count($files['documentInput']['name']);
 
 		if(is_dir($directory_to_save)) {
