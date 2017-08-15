@@ -76,7 +76,7 @@ function createZoekenContent( ) {
 		'title' => Translations::get('menu_zoeken')
 		, 'posts' => $posts
 		, 'document_types' => DocumentTypes::getDocumentTypes()
-		, 'cuurent_page' => $page
+		, 'current_page' => $page
 		, 'max_pages' => $arr['maxPages']
 		, 'search' => $search
 		, 'lbl_date' => Translations::get('lbl_date')
@@ -86,5 +86,6 @@ function createZoekenContent( ) {
 		, 'lbl_tegenpartij' => Translations::get('lbl_tegenpartij')
 		, 'lbl_onze_gegevens' => Translations::get('lbl_onze_gegevens')
 		, 'subject_lbl' => Translations::get('lbl_post_subject')
+        , 'lbl_current_page' => $page + 1
 	));
 }

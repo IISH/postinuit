@@ -93,7 +93,7 @@ function createGeavanceerdZoekenContent( ) {
 		'title' => Translations::get('menu_geavanceerd_zoeken')
 		, 'posts' => $posts
 		, 'document_types' => DocumentTypes::getDocumentTypes()
-		, 'cuurent_page' => $page
+		, 'current_page' => $page
 		, 'max_pages' => $arr['maxPages']
 		, 'search' => $_GET
 		, 'in_uit_lbl' => Translations::get('lbl_in_out')
@@ -116,5 +116,6 @@ function createGeavanceerdZoekenContent( ) {
 			)
 		, 'lbl_tegenpartij' => Translations::get('lbl_tegenpartij')
 		, 'lbl_onze_gegevens' => Translations::get('lbl_onze_gegevens')
+        , 'lbl_current_page' => $page + 1
 	));
 }
