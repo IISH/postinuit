@@ -360,6 +360,10 @@ div.border {
 	padding: 3px;
 }
 
+div.attachment {
+    word-wrap: break-word;
+}
+
 input[type=file] {
 	border: none;
 }
@@ -368,4 +372,9 @@ input[type=file] {
 	margin-top: 20px;
 	margin-bottom: 20px;
 	text-align: center;
+}
+
+.attachment_button_images{
+    max-height: 20px;
+    max-width: 20px;
 }
