@@ -60,7 +60,11 @@ function createPostinContent( ) {
             $selectedPost = $kenmerk;
             $kenmerk = $kenmerk['kenmerk'];
             $submitValue = "Pas aan";
-            $files_belonging_to_post = Misc::getListOfFiles( "./documenten/" . $kenmerk );
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                $files_belonging_to_post = Misc::getListOfFiles( Settings::get('windows_attachment_directory') . $kenmerk );
+            } else {
+                $files_belonging_to_post = Misc::getListOfFiles( Settings::get('linux_attachment_directory') . $kenmerk );
+            }
         }else{
             $currentDate = date('y');
             $characteristicsCount = (Settings::get('post_characteristic_last_used_counter') + 1);
