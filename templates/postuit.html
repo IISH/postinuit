@@ -17,7 +17,7 @@
 					<td>
 						<label for="dateSentInput">{{ dateSentInfo }}
 							<a href="#" class="required" data-toggle="popover" data-trigger="hover" data-content="{{ field_is_required }}" tabindex="-1">*</a>
-							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ dateSentInfo }}" tabindex="-1">?</a>
+							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ help_date }}" tabindex="-1">?</a>
 						</label>
 					</td>
 					<td><input class="input-sm col-xs-12 col-lg-12" id="dateSentInput" name="date" type="text" value="{{ selectedPost['date'] }}"></td>
@@ -26,7 +26,7 @@
 					<td>
 						<label for="senderNameInput">{{ senderNameInfo }}
 							<a href="#" class="required" data-toggle="popover" data-trigger="hover" data-content="{{ field_is_required }}" tabindex="-1">*</a>
-							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ senderNameInfo }}" tabindex="-1">?</a>
+							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ help_sender_name }}" tabindex="-1">?</a>
 						</label>
 					</td>
 					<td><input class="input-sm col-xs-12 col-lg-12" id="senderNameInput" name="our_name" type="text" value="{{ selectedPost['our_name'] }}"></td>
@@ -43,7 +43,7 @@
 					<td>
 						<label for="receiverNameInput">{{ receiverNameInfo }}
 							<a href="#" class="semiRequired" data-toggle="popover" data-trigger="hover" data-content="{{ field_is_semi_required_receiver_name_and_institute }}" tabindex="-1">*</a>
-							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ receiverNameInfo }}" tabindex="-1">?</a>
+							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ help_receiver_name }}" tabindex="-1">?</a>
 						</label>
 					</td>
 					<td><input class="input-sm col-xs-12 col-lg-12" id="receiverNameInput" name="their_name" type="text" value="{{ selectedPost['their_name'] }}"></td>
@@ -52,7 +52,7 @@
 					<td>
 						<label for="receiverInstituteInput">{{ receiverInstituteInfo }}
 							<a href="#" class="semiRequired" data-toggle="popover" data-trigger="hover" data-content="{{ field_is_semi_required_receiver_name_and_institute }}" tabindex="-1">*</a>
-							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ receiverInstituteInfo }}" tabindex="-1">?</a>
+							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ help_receiver_organisation }}" tabindex="-1">?</a>
 						</label>
 					</td>
 					<td><input class="input-sm col-xs-12 col-lg-12" id="receiverInstituteInput" name="their_organisation" type="text" value="{{ selectedPost['their_organisation'] }}"></td>
@@ -61,7 +61,7 @@
 					<td>
 						<label for="typeOfDocumentTD">{{ typeOfDocumentInfo }}
 							<a href="#" class="required" data-toggle="popover" data-trigger="hover" data-content="{{ field_is_required }}" tabindex="-1">*</a>
-							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ typeOfDocumentInfo }}" tabindex="-1">?</a>
+							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ help_type_of_document }}" tabindex="-1">?</a>
 						</label>
 					</td>
 					<td id="typeOfDocumentTD">
@@ -74,13 +74,13 @@
 					<td>
 						<label for="subjectInput">{{ subjectInputInfo }}
 							<a href="#" class="required" data-toggle="popover" data-trigger="hover" data-content="{{ field_is_required }}" tabindex="-1">*</a>
-							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ subjectInputInfo }}" tabindex="-1">?</a>
+							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ help_subject }}" tabindex="-1">?</a>
 						</label>
 					</td>
 					<td><textarea class="input-sm col-xs-12 ol-lg-12" id="subjectInput" name="subject">{{ selectedPost['subject'] }}</textarea></td>
 				</tr>
 				<tr>
-					<td><label for="commentsInput">{{ commentsInputInfo }} <a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ commentsInputInfo }}" tabindex="-1">?</a></label></td>
+					<td><label for="commentsInput">{{ commentsInputInfo }} <a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ help_remarks }}" tabindex="-1">?</a></label></td>
 					<td><textarea class="input-sm col-xs-12 col-lg-12" id="commentsInput" name="remarks">{{ selectedPost['remarks'] }}</textarea></td>
 				</tr>
 				<tr>
