@@ -84,7 +84,7 @@ function createPostinContent( ) {
 		, 'senderNameInfo' => Translations::get('lbl_post_sender_name')
 		, 'senderInstituteInfo' => Translations::get('lbl_post_sender_organisation')
 		, 'receiverNameInfo' => Translations::get('lbl_post_receiver_name')
-		, 'receiverInstituteInfo' => Translations::get('lbl_post_receiver_institute')
+		, 'receiverInstituteInfo' => Translations::get('lbl_post_receiver_organisation')
 		, 'receiverDepartmentInfo' => Translations::get('lbl_post_receiver_department')
 		, 'typeOfDocumentInfo' => Translations::get('lbl_post_document_type')
 		, 'subjectInputInfo' => Translations::get('lbl_post_subject')
@@ -101,5 +101,12 @@ function createPostinContent( ) {
 		, 'field_is_semi_required_sender_name_and_institute' => Translations::get('field_is_semi_required_sender_name_and_institute')
 		, 'files_from_post' => $files_belonging_to_post
         , 'submitError' => $submitError
+        , 'help_date' => Translations::get('help_date')
+        , 'help_sender_name' => Translations::get('help_sender_name')
+        , 'help_sender_organisation' => Translations::get('help_sender_organisation')
+        , 'help_receiver_name' => Translations::get('help_receiver_name')
+        , 'help_type_of_document' => Translations::get('help_type_of_document')
+        , 'help_subject' => Translations::get('help_subject')
+        , 'help_remarks' => Translations::get('help_remarks')
 	));
 }
