@@ -105,11 +105,20 @@
 			</div>
 
 			{% if files_from_post|length > 0 %}
-			<div class="border">
+			<div class="border attachment">
 				<label>Already uploaded documents</label>
 				<ul class="in_out">
 					{% for file in files_from_post %}
-					<li>{{ file }} <input id="openFileFromServer" name="openFileFromServer" type="submit" formaction="open_file_from_post.php" value="Open"> <input id="deleteFileFromServer" name="deleteFileFromServer" type="submit" formaction="remove_file_from_post.php" value="Delete"></li>
+                        <li id="attachment_list_item">
+                            <button type="submit" id="openFileFromServer" name="openFileFromServer" formaction="open_file_from_post.php" value="{{ file }}">
+                                <img class="attachment_button_images" src="./images/save.png">
+                            </button>
+                            <button type="submit" id="deleteFileFromServer" name="deleteFileFromServer" formaction="remove_file_from_post.php" value="{{ file }}">
+                                <img class="attachment_button_images" src="./images/delete.png">
+                            </button>
+                            {{ file }}
+                        </li>
+{#					    <li>{{ file }} <input id="openFileFromServer" name="openFileFromServer" type="submit" formaction="open_file_from_post.php" value="Open"> <input id="deleteFileFromServer" name="deleteFileFromServer" type="submit" formaction="remove_file_from_post.php" value="Delete"></li>#}
 					{% endfor %}
 				</ul>
 			</div>
