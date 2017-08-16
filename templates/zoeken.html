@@ -17,10 +17,7 @@ Zoek: <input type="text" id="search" value="{{ search }}"> <button id="zoek">Zoe
 				<button id="previous_button_top"> < </button>
 			</td>
             <td>
-                <label id="current_page_label">&nbsp{{ lbl_current_page }} of </label>
-            </td>
-			<td id="total_pages_cell">
-                <label id="total_pages_label">{{ max_pages }}&nbsp</label>
+                <label id="current_page_label">&nbsp{{ lbl_current_page }} {{ lbl_page_indicator_or }} {{ max_pages }}&nbsp</label>
 			</td>
 			<td>
 				<button id="next_button_top"> > </button>
@@ -67,10 +64,7 @@ Zoek: <input type="text" id="search" value="{{ search }}"> <button id="zoek">Zoe
 				<button id="previous_button_bottom"> < </button>
 			</td>
             <td>
-                <label id="current_page_label">&nbsp{{ lbl_current_page }} of </label>
-            </td>
-            <td id="total_pages_cell">
-                <label id="total_pages_label">{{ max_pages }}&nbsp</label>
+                <label id="current_page_label">&nbsp{{ lbl_current_page }} {{ lbl_page_indicator_or }} {{ max_pages }}&nbsp</label>
             </td>
 			<td>
 				<button id="next_button_bottom"> > </button>
