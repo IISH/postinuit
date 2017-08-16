@@ -125,6 +125,26 @@ class Posts{
 		unlink("./documenten/".$kenmerk."/".$filename);
 	}
 
+    /**
+     * Gets the file selected from the post
+     * @param $file
+     */
+	public static function getFileFromPost($file){
+        if (file_exists($file)) {
+            if (false !== ($handler = fopen($file, 'r'))) {
+                header('Content-Description: File Transfer');
+                header('Content-Disposition: attachment; filename=' . basename($file));
+                header('Content-Transfer-Encoding: binary');
+                header('Expires: 0');
+                header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+                header('Pragma: public');
+                header('Content-Length: ' . filesize($file)); //Remove
+
+                readfile($file);
+            }
+        }
+    }
+
 	/**
 	 * Edit the data in the database with the updated information from the post
 	 * @param $data array post data from the website

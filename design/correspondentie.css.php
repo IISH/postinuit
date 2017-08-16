@@ -378,3 +378,12 @@ input[type=file] {
     max-height: 20px;
     max-width: 20px;
 }
+
+#attachment_list_item{
+    list-style-type: none;
+    padding: 2px;
+}
+
+#attachment_list_item:hover{
+    background-color: #cfcfcf;
+}

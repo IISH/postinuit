@@ -109,11 +109,11 @@
 			<label>Already uploaded documents</label>
 			<ul class="in_out">
 				{% for file in files_from_post %}
-                    <li>
-                        <button type="submit" id="openFileFromServer" name="openFileFromServer" formaction="open_file_from_post.php" value="Open">
+                    <li id="attachment_list_item">
+                        <button type="submit" id="openFileFromServer" name="openFileFromServer" formaction="open_file_from_post.php" value="{{ file }}">
                             <img class="attachment_button_images" src="./images/save.png">
                         </button>
-                        <button type="submit" id="deleteFileFromServer" name="deleteFileFromServer" value="Delete" formaction="remove_file_from_post.php">
+                        <button type="submit" id="deleteFileFromServer" name="deleteFileFromServer" formaction="remove_file_from_post.php" value="{{ file }}">
                             <img class="attachment_button_images" src="./images/delete.png">
                         </button>
                         {{ file }}
