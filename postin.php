@@ -56,11 +56,21 @@ function createPostinContent( ) {
 
 	} else if($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ( $id !== "" ) {
-            $kenmerk = Posts::findPostById($id);
-            $selectedPost = $kenmerk;
-            $kenmerk = $kenmerk['kenmerk'];
+            // EXISTING
+
+            // find record
+	        $selectedPost = Posts::findPostById($id);
+
+			// find username
+            $a = new User( $selectedPost['registered_by'] );
+            $selectedPost['registered_by_name'] = $a->getName();
+
+			//
+            $kenmerk = $selectedPost['kenmerk'];
+	        $files_belonging_to_post = Misc::getListOfFiles( "./documenten/" . $kenmerk );
+
+			//
             $submitValue = "Pas aan";
-            $files_belonging_to_post = Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk );
         }else{
             $currentDate = date('y');
             $characteristicsCount = (Settings::get('post_characteristic_last_used_counter') + 1);
@@ -68,6 +78,10 @@ function createPostinContent( ) {
                 $currentDate.='0';
             }
             $kenmerk = $currentDate.$characteristicsCount;
+
+			//
+	        $selectedPost['registered_by_name'] = $oWebuser->getName();
+	        $selectedPost['registered_by'] = $oWebuser->getId();
         }
 	}
 
@@ -84,7 +98,7 @@ function createPostinContent( ) {
 		, 'senderNameInfo' => Translations::get('lbl_post_sender_name')
 		, 'senderInstituteInfo' => Translations::get('lbl_post_sender_organisation')
 		, 'receiverNameInfo' => Translations::get('lbl_post_receiver_name')
-		, 'receiverInstituteInfo' => Translations::get('lbl_post_receiver_organisation')
+		, 'receiverInstituteInfo' => Translations::get('lbl_post_receiver_institute')
 		, 'receiverDepartmentInfo' => Translations::get('lbl_post_receiver_department')
 		, 'typeOfDocumentInfo' => Translations::get('lbl_post_document_type')
 		, 'subjectInputInfo' => Translations::get('lbl_post_subject')

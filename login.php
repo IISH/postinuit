@@ -39,6 +39,7 @@ function createLoginPage() {
 			if ( $result_login_check == 1 ) {
 				// retain login name
 				$_SESSION["loginname"] = $fldLogin;
+				$_SESSION["name"] = $fldLogin; // TODO
 
 				//
 				$burl = getBackUrl();

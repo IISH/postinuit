@@ -33,11 +33,11 @@
 				</tr>
 				<tr>
 					<td><label for="senderInstituteInput">{{ senderInstituteInfo }}</label></td>
-					<td><input class="input-sm col-xs-12 col-lg-12 notYetDisabledField" id="senderInstituteInput" name="our_institute" type="text" value="{{ selectedPost['our_institute'] }}"></td><!--vrije tekst veld, moet later automatisch ingevuld worden, dan niet meer aanpasbaar-->
+					<td><input class="input-sm col-xs-12 col-lg-12 notYetDisabledField" id="senderInstituteInput" name="our_institute" type="text" value="{{ selectedPost['our_institute'] }}"></td>
 				</tr>
 				<tr>
 					<td><label for="senderDepartmentInput">{{ senderDepartmentInfo }}</label></td>
-					<td><input class="input-sm col-xs-12 col-lg-12 notYetDisabledField" id="senderDepartmentInput" name="our_department" type="text" value="{{ selectedPost['our_department'] }}"></td><!--vrije tekst veld, moet later automatisch ingevuld worden, dan niet meer aanpasbaar-->
+					<td><input class="input-sm col-xs-12 col-lg-12 notYetDisabledField" id="senderDepartmentInput" name="our_department" type="text" value="{{ selectedPost['our_department'] }}"></td>
 				</tr>
 				<tr>
 					<td>
@@ -85,7 +85,10 @@
 				</tr>
 				<tr>
 					<td><label for="registeredByInput" tabindex="-1">{{ registeredByInfo }}</label></td>
-					<td><input class="input-sm col-xs-12 col-lg-12 disabledField" id="registeredByInput" name="registered_by" type="text" readonly value="{{ selectedPost['registered_by'] }}" tabindex="-1"></td><!--vrije tekst veld, hier moet straks automatisch de naam van de ingelogde persoon komen-->
+					<td>
+						<input id="registeredByInput" name="registered_by" type="hidden" value="{{ selectedPost['registered_by'] }}">
+						<input class="input-sm col-xs-12 col-lg-12 disabledField" id="registeredByName" name="registered_by_name" type="text" readonly value="{{ selectedPost['registered_by_name'] }}" tabindex="-1">
+					</td>
 				</tr>
 			</table>
 
@@ -191,7 +194,7 @@
         }
 
         if(!isValid)
-            alert("Not all fields have been filled out!");
+            alert("Not all required fields have been filled out!");
         return isValid;
     }
 

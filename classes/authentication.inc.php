@@ -2,10 +2,53 @@
 
 class Authentication {
 	public static function authenticate( $login, $password ) {
-		global $active_directories;
-		return Authentication::check_ldap('iisgnet\\' . $login, $password, $active_directories);
+		global $active_directories,  $dbConn;
+
+		//
+		$login = trim($login);
+		$password = trim($password);
+
+		// default value is login correct
+		$ret = 0;
+
+		// find users
+		$query = "SELECT * FROM users WHERE loginname = :login ORDER BY ID desc ";
+		$stmt = $dbConn->getConnection()->prepare($query);
+		$stmt->bindParam(':login', $login, PDO::PARAM_STR);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		foreach ($result as $row) {
+			switch ( $row['authentication_server'] ) {
+				case "local":
+					$ret = Authentication::check_local($row['ID'], $password);
+					break;
+				case "knaw":
+					$ret = Authentication::check_ldap($login, $password, $active_directories);
+					break;
+			}
+
+			//
+			if ( $ret == 1 ) {
+				break;
+			}
+		}
+
+		return $ret;
 	}
 
+	//
+	public static function check_local( $id, $password ) {
+		$loginCorrect = 0;
+
+		$a = new User($id);
+		if ( $a->verifyPasswordIsCorrect($password) ) {
+			$loginCorrect = 1;
+		}
+
+		return $loginCorrect;
+	}
+
+	//
 	public static function check_ldap($user, $pw, $servers) {
 		$login_correct = 0;
 

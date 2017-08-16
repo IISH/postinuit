@@ -15,12 +15,15 @@ class Posts{
 
 		//
 		$query = 'SELECT * FROM ' . self::$settings_table . ' ORDER BY kenmerk DESC, ID DESC';
+//preprint($query);
 		$stmt = $dbConn->getConnection()->prepare($query);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		foreach ($result as $row) {
 			$arr[ $row["ID"] ] = $row; // or use kenmerk? -> has to be unique though!
 		}
+
+//preprint($arr);
 
 		self::$settings = $arr;
 		self::$is_loaded = true;
@@ -112,11 +115,7 @@ class Posts{
 	 * @param $kenmerk string the folder where the file exists
 	 */
 	public static function removeFileFromPost($filename, $kenmerk){
-        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-            unlink(Settings::get('windows_attachment_directory').$kenmerk."/".$filename);
-        } else {
-            unlink(Settings::get('linux_attachment_directory').$kenmerk."/".$filename);
-        }
+        unlink(Settings::get('attachment_directory').$kenmerk."/".$filename);
 	}
 
     /**
@@ -223,8 +222,8 @@ class Posts{
 			$type_of_document_query = " AND type_of_document IN (" . $data['type_of_documents'] . ") ";
 		}
 
-		// start query buildign
-		$query = "SELECT * FROM `post` WHERE 1 ";
+		// start query building
+		$query = "SELECT post.*, users.name FROM `post` LEFT JOIN users ON post.registered_by = users.ID WHERE 1 ";
 
 		// kenmerk
 		if ( $data['kenmerk'] != '' ) {
@@ -263,11 +262,11 @@ class Posts{
 
 		// registered by
 		if ( $data['registered_by'] != '' ) {
-			$query .= Generate_Query(array("registered_by"), explode(' ', $data['registered_by']));
+			$query .= Generate_Query(array("users.name"), explode(' ', $data['registered_by']));
 		}
 
 		// set order
-		$query .= " ORDER BY kenmerk DESC, ID DESC ";
+		$query .= " ORDER BY post.kenmerk DESC, post.ID DESC ";
 
 //preprint($query);
 
@@ -314,11 +313,11 @@ class Posts{
 		$arr = array();
 		$criterium = '';
 		if ( $search != '' ) {
-			$criterium = Generate_Query(array('kenmerk', 'date', 'their_name', 'their_organisation', 'our_loginname', 'our_name', 'our_institute', 'our_department', 'subject', 'remarks', 'registered_by'), explode(' ', $search));
+			$criterium = Generate_Query(array('kenmerk', 'date', 'their_name', 'their_organisation', 'our_loginname', 'our_name', 'our_institute', 'our_department', 'subject', 'remarks', 'users.name'), explode(' ', $search));
 		}
 
 		//
-		$query = "SELECT * FROM `post` WHERE 1=1 " . $criterium . " ORDER BY kenmerk DESC, ID DESC ";
+		$query = "SELECT post.*, users.name FROM `post` LEFT JOIN users ON post.registered_by = users.ID WHERE 1=1 " . $criterium . " ORDER BY post.kenmerk DESC, post.ID DESC ";
 		$stmt = $dbConn->getConnection()->prepare($query);
 		$stmt->execute();
 		$result = $stmt->fetchAll();

@@ -27,15 +27,15 @@ class Page {
 		$welcome = Translations::get('welcome');
 		$logout = '';
 		if ( $oWebuser->isLoggedIn() ) {
-			$niceName = trim($oWebuser->getNiceFirstLastname());
+			$niceName = trim($oWebuser->getName());
 			if ( $niceName == '' ) {
 				$niceName = '...';
 			}
-			$niceName = 'aaaa<a href="user.php">' . $niceName . '</a>';
+			$niceName = '<a href="user.php">' . $niceName . '</a>';
 
 			$welcome .= ', ' . $niceName;
 
-			$logout = 'xxxx<a href="logout.php" onclick="if (!confirm(\'' . Translations::get('confirm') . '\')) return false;">(' . Translations::get('logout') . ')</a>';
+			$logout = '<a href="logout.php" onclick="if (!confirm(\'' . Translations::get('confirm') . '\')) return false;">(' . Translations::get('logout') . ')</a>';
 		} else {
 			$logout = '<a href="login.php">(' . Translations::get('login') . ')</a>';;
 		}

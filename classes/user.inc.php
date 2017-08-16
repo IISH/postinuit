@@ -32,6 +32,7 @@ class staticUser {
 class User {
 	protected $id = 0;
 	protected $loginname = '';
+	protected $name = '';
 	protected $password = '';
 	protected $password_hash = '';
 	protected $roles = '';
@@ -63,17 +64,23 @@ class User {
 			$this->password = '';
 			$this->password_hash = trim($row['password_hash']);
 			$this->loginname = trim($row['loginname']);
+			$this->name = trim($row['name']);
 		}
 	}
 
+	//
 	public function getId() {
 		return $this->id;
 	}
 
+	//
 	public function getLoginname() {
-		$ret = trim($this->loginname);
+		return trim($this->loginname);
+	}
 
-		return $ret;
+	//
+	public function getName() {
+		return trim($this->name);
 	}
 
 	//
@@ -89,9 +96,11 @@ class User {
 		return false;
 	}
 
-	public function checkLoggedIn() {
-		return true; // TODO TIJDELIJK
+	public function verifyPasswordIsCorrect( $password ) {
+		return password_verify($password, $this->password_hash);
+	}
 
+	public function checkLoggedIn() {
 		global $protect;
 
 		// TODO: Opmerking: ook controleren of session loginname leeg is, want als de gebruiker wel in ActiveDirectory zit
@@ -109,9 +118,26 @@ class User {
 	public function saveHash() {
 		global $dbConn;
 
-		$query = "UPDATE users SET password_hash='" . Misc::cryptPassword($this->password) . "' WHERE ID=" . $this->id;
+		$query = "UPDATE users SET password_hash='" . $this->cryptPassword($this->password) . "' WHERE ID=" . $this->id;
 		$stmt = $dbConn->getConnection()->prepare($query);
 		$stmt->execute();
+	}
+
+	public function cryptPassword( $password ) {
+		// A higher "cost" is more secure but consumes more processing power
+		$cost = 10;
+
+		// Create a random salt
+		$salt = strtr(base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_URANDOM)), '+', '.');
+
+		// Prefix information about the hash so PHP knows how to verify it later.
+		// "$2a$" Means we're using the Blowfish algorithm. The following two digits are the cost parameter.
+		$salt = sprintf("$2a$%02d$", $cost) . $salt;
+
+		// Hash the password with the salt
+		$hash = crypt($password, $salt);
+
+		return $hash;
 	}
 
 	public function saveUserSetting($field, $value) {
