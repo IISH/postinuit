@@ -95,7 +95,7 @@ class Posts{
 
 		$stmt->execute();
 
-		$directory_to_save = "./documenten/".$new_kenmerk."/";
+        $directory_to_save = Settings::get('attachment_directory').$new_kenmerk."/";
 		$numberOfFiles = count($files['documentInput']['name']);
 
 		if ( mkdir($directory_to_save, 0764, true ) ) {
@@ -104,16 +104,6 @@ class Posts{
 				file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
 			}
 		}
-
-//		$directory_to_save = "./documenten/".$data['kenmerk']."/";
-//		$numberOfFiles = count($files['documentInput']['name']);
-//
-//		if(is_dir($directory_to_save)) {
-//			for ( $i = 0; $i < $numberOfFiles; $i++ ) {
-//				$fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
-//				file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
-//			}
-//		}
 	}
 
 	/**
@@ -122,7 +112,11 @@ class Posts{
 	 * @param $kenmerk string the folder where the file exists
 	 */
 	public static function removeFileFromPost($filename, $kenmerk){
-		unlink("./documenten/".$kenmerk."/".$filename);
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            unlink(Settings::get('windows_attachment_directory').$kenmerk."/".$filename);
+        } else {
+            unlink(Settings::get('linux_attachment_directory').$kenmerk."/".$filename);
+        }
 	}
 
     /**
@@ -183,7 +177,7 @@ class Posts{
 
 		$stmt->execute();
 
-		$directory_to_save = "./documenten/".$data['kenmerk']."/";
+        $directory_to_save = Settings::get('attachment_directory').$data['kenmerk']."/";
 		$numberOfFiles = count($files['documentInput']['name']);
 
 		if(is_dir($directory_to_save)) {

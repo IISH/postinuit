@@ -58,7 +58,7 @@ function createPostuitContent( ) {
             $selectedPost = $kenmerk;
             $kenmerk = $kenmerk['kenmerk'];
             $submitValue = "Pas aan";
-            $files_belonging_to_post = Misc::getListOfFiles( "./documenten/" . $kenmerk );
+            $files_belonging_to_post = Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk );
         } else {
             $currentDate = date('y');
             $characteristicsCount = (Settings::get('post_characteristic_last_used_counter') + 1);
