@@ -4,15 +4,7 @@ require_once "classes/start.inc.php";
 // check if an user is logged in
 $oWebuser->checkLoggedIn();
 
-//
-if ( $_POST['deleteFileFromServer'] !== "" ) {
-	Posts::removeFileFromPost($_POST['deleteFileFromServer'], $_POST['kenmerk']);
+$response = Posts::removeFileFromPost($_POST['file'], $_POST['kenmerk']);
 
-    if(!empty($_SERVER['HTTP_REFERER'])) {
-        Header("Location: {$_SERVER['HTTP_REFERER']}");
-        exit;
-    }else{
-        Header("Location: index.php");
-        exit;
-    }
-}
+// Send JSON Data to AJAX Request
+echo json_encode($response);
