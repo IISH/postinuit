@@ -387,3 +387,7 @@ input[type=file] {
 #attachment_list_item:hover{
     background-color: #cfcfcf;
 }
+
+#postOverview tr.no_files_present td{
+    background-color: yellow !important;
+}

@@ -71,10 +71,10 @@ class Posts{
 
 		$query = "INSERT INTO post (in_out, kenmerk, `date`, their_name, their_organisation, 
 			our_name, our_institute, our_department, type_of_document, 
-			subject, remarks, registered_by) 
+			subject, remarks, registered_by, number_of_files) 
 			VALUES (:in_out, :kenmerk, :date, :their_name, :their_organisation,
 			:our_name, :our_institute, :our_department, :type_of_document,
-			:subject, :remarks, :registered_by) ";
+			:subject, :remarks, :registered_by, :number_of_files) ";
 
 		//
 		$formattedDate = $data['date'];
@@ -95,6 +95,7 @@ class Posts{
 		$stmt->bindParam(':subject', $data['subject'], PDO::PARAM_STR);
 		$stmt->bindParam(':remarks', $data['remarks'], PDO::PARAM_STR);
 		$stmt->bindParam(':registered_by', $data['registered_by'], PDO::PARAM_STR);
+        $stmt->bindParam(':number_of_files', count($files['documentInput']['name']), PDO::PARAM_INT);
 
 		$stmt->execute();
 
@@ -117,6 +118,16 @@ class Posts{
 	public static function removeFileFromPost($filename, $kenmerk){
         unlink(Settings::get('attachment_directory').$kenmerk."/".$filename);
 	}
+
+    /**
+     * Gets the number of files from the post
+     * @param $subFolder String the subfolder to look in
+     * @return int Integer the number of files in the folder
+     */
+	public static function getNumberOfFilesFromPost($subFolder){
+        $fi = new FilesystemIterator(Settings::get('attachment_directory').$subFolder, FilesystemIterator::SKIP_DOTS);
+        return iterator_count($fi);
+    }
 
     /**
      * Gets the file selected from the post
@@ -145,6 +156,25 @@ class Posts{
 	public static function editPost($data, $files){
 		global $dbConn;
 
+        $directory_to_save = Settings::get('attachment_directory').$data['kenmerk']."/";
+        $numberOfFiles = count($files['documentInput']['name']);
+
+        if(is_dir($directory_to_save)) {
+            for ( $i = 0; $i < $numberOfFiles; $i++ ) {
+                $fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
+                file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
+            }
+        }else{
+            if ( mkdir($directory_to_save, 0764, true ) ) {
+                for ( $i = 0; $i < $numberOfFiles; $i++ ) {
+                    $fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
+                    file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
+                }
+            }
+        }
+
+		$number_of_existing_files = self::getNumberOfFilesFromPost($data['kenmerk']);
+
 		$stmt = $dbConn->getConnection()->prepare(
 			"UPDATE post 
 			SET in_out = :in_out,
@@ -158,7 +188,8 @@ class Posts{
 				type_of_document = :type_of_document,
 				subject = :subject,
 				remarks = :remarks,
-				registered_by = :registered_by
+				registered_by = :registered_by,
+				number_of_files = :number_of_files
 			WHERE ID = :ID");
 		$stmt->bindParam(':in_out', $data['in_out'], PDO::PARAM_STR);
 		$stmt->bindParam(':kenmerk', $data['kenmerk'], PDO::PARAM_INT);
@@ -173,25 +204,9 @@ class Posts{
 		$stmt->bindParam(':remarks', $data['remarks'], PDO::PARAM_STR);
 		$stmt->bindParam(':registered_by', $data['registered_by'], PDO::PARAM_STR);
 		$stmt->bindParam(':ID', $data['ID'], PDO::PARAM_INT);
+        $stmt->bindParam(':number_of_files', $number_of_existing_files, PDO::PARAM_INT);
 
 		$stmt->execute();
-
-        $directory_to_save = Settings::get('attachment_directory').$data['kenmerk']."/";
-		$numberOfFiles = count($files['documentInput']['name']);
-
-		if(is_dir($directory_to_save)) {
-			for ( $i = 0; $i < $numberOfFiles; $i++ ) {
-				$fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
-				file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
-			}
-		}else{
-            if ( mkdir($directory_to_save, 0764, true ) ) {
-                for ( $i = 0; $i < $numberOfFiles; $i++ ) {
-                    $fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
-                    file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
-                }
-            }
-        }
 	}
 
 	public static function findPostsAdvanced($data, $recordsPerPage, $page){
