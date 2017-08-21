@@ -117,5 +117,6 @@ function createPostuitContent( ) {
         , 'help_type_of_document' => Translations::get('help_type_of_document')
         , 'help_subject' => Translations::get('help_subject')
         , 'help_remarks' => Translations::get('help_remarks')
+        , 'nr_of_files_upload' => Translations::get('nr_of_files_upload')
 	));
 }
