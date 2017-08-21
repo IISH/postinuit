@@ -49,7 +49,7 @@ function stripDomainnameFromUrl( $url ) {
 }
 
 function goBack() {
-	$url = 'presentornot.php';
+	$url = 'index.php';
 
 	$referer = ( isset( $_SERVER['HTTP_REFERER'] ) ? $_SERVER['HTTP_REFERER'] : '' );
 	if ( $referer != '' ) {

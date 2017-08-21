@@ -5,4 +5,3 @@ session_unset();
 session_destroy();
 
 Header("Location: login.php");
-die();

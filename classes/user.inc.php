@@ -97,10 +97,13 @@ class User {
 	}
 
 	public function verifyPasswordIsCorrect( $password ) {
-		return password_verify($password, $this->password_hash);
+		return $this->password_hash == $password;
+//		return password_verify($password, $this->password_hash);
 	}
 
 	public function checkLoggedIn() {
+//		return 1;
+
 		global $protect;
 
 		// TODO: Opmerking: ook controleren of session loginname leeg is, want als de gebruiker wel in ActiveDirectory zit

@@ -44,7 +44,7 @@ function createLoginPage() {
 				//
 				$burl = getBackUrl();
 				if ( $burl == '' ) {
-					$burl = 'presentornot.php';
+					$burl = 'index.php';
 				}
 				Header("Location: " . $burl);
 				die(Translations::get('go_to') . " <a href=\"" . $burl . "\">next</a>");
@@ -70,6 +70,7 @@ function createLoginPage() {
 		, 'password_placeholder' => Translations::get('password_placeholder')
 		, 'lblPassword' => Translations::get('password')
 		, 'lblLoginname' => Translations::get('loginname')
+		// TODO: move to html template
 		, 'focusjavascriptcode' => "
 <script language=\"javascript\">
 <!--

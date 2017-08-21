@@ -13,7 +13,7 @@ class Post{
 	protected $subject = '';
 	protected $remarks = '';
 	protected $registered_by = '';
-	protected $number_of_files = '';
+	protected $number_of_files = 0;
 	protected $our_loginname = '';
 
 	function __construct( $row ) {

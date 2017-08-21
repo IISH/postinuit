@@ -23,8 +23,6 @@ class Posts{
 			$arr[ $row["ID"] ] = $row; // or use kenmerk? -> has to be unique though!
 		}
 
-//preprint($arr);
-
 		self::$settings = $arr;
 		self::$is_loaded = true;
 	}
@@ -82,7 +80,6 @@ class Posts{
 
 		$stmt = $dbConn->getConnection()->prepare($query);
 
-//preprint($formattedDate);
 		$stmt->bindParam(':in_out', $data['in_out'], PDO::PARAM_STR);
 		$stmt->bindParam(':kenmerk', $new_kenmerk, PDO::PARAM_STR);
 		$stmt->bindParam(':date', $formattedDate, PDO::PARAM_STR);
@@ -95,16 +92,25 @@ class Posts{
 		$stmt->bindParam(':subject', $data['subject'], PDO::PARAM_STR);
 		$stmt->bindParam(':remarks', $data['remarks'], PDO::PARAM_STR);
 		$stmt->bindParam(':registered_by', $data['registered_by'], PDO::PARAM_STR);
-    $stmt->bindParam(':number_of_files', count($files['documentInput']['name']), PDO::PARAM_INT);
-    $stmt->bindParam(':our_loginname', $data['our_loginname'], PDO::PARAM_STR);
+		// TODO: COUNT OF FILES WERKT NIET GOED, RETURNEERT ALTIJD MINIMAAL 1
+		// TRUC: EERST RECORD BEWAREN, DAN FILES BEWAREN, DAN KIJKEN HOEVEEL FILES IN DIRECTORY, EN DAN AANTAL IN RECORD AANPASSEN
+	    $stmt->bindParam(':number_of_files', count($files['documentInput']['name']), PDO::PARAM_INT);
+        $stmt->bindParam(':our_loginname', $data['our_loginname'], PDO::PARAM_STR);
 
 		$stmt->execute();
 
         $directory_to_save = Settings::get('attachment_directory').$new_kenmerk."/";
+		// TODO: COUNT OF FILES WERKT NIET GOED, RETURNEERT ALTIJD MINIMAAL 1
 		$numberOfFiles = count($files['documentInput']['name']);
 
-		if ( mkdir($directory_to_save, 0764, true ) ) {
-			for ( $i = 0; $i < $numberOfFiles; $i++ ) {
+		if ( !file_exists( $directory_to_save ) ) {
+			if ( !mkdir($directory_to_save, 0764, true ) ) {
+				die('Failed to create documents directory');
+			}
+		}
+
+		for ( $i = 0; $i < $numberOfFiles; $i++ ) {
+			if ( $files['documentInput']['tmp_name'][$i] != '' ) {
 				$fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
 				file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
 			}
@@ -166,27 +172,28 @@ class Posts{
         $directory_to_save = Settings::get('attachment_directory').$data['kenmerk']."/";
         $numberOfFiles = count($files['documentInput']['name']);
 
-        if(is_dir($directory_to_save)) {
-            for ( $i = 0; $i < $numberOfFiles; $i++ ) {
-                $fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
-                file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
-            }
-        }else{
-            if ( mkdir($directory_to_save, 0764, true ) ) {
-                for ( $i = 0; $i < $numberOfFiles; $i++ ) {
-                    $fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
-                    file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
-                }
-            }
-        }
+		if ( !file_exists( $directory_to_save ) ) {
+			if ( !mkdir($directory_to_save, 0764, true ) ) {
+				die('Failed to create documents directory');
+			}
+		}
 
+		for ( $i = 0; $i < $numberOfFiles; $i++ ) {
+			if ( $files['documentInput']['tmp_name'][$i] != '' ) {
+				$fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
+				file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
+			}
+		}
+
+		// count number of files in kenmerk directory
 		$number_of_existing_files = self::getNumberOfFilesFromPost($data['kenmerk']);
 
-		$stmt = $dbConn->getConnection()->prepare(
-			"UPDATE post 
+		//
+		$query = "
+			UPDATE `post` 
 			SET in_out = :in_out,
 				kenmerk = :kenmerk,
-				date = :date,
+				`date` = :date,
 				their_name = :their_name,
 				their_organisation = :their_organisation,
 				our_name = :our_name,
@@ -196,12 +203,20 @@ class Posts{
 				subject = :subject,
 				remarks = :remarks,
 				registered_by = :registered_by,
-				number_of_files = :number_of_files
+				number_of_files = :number_of_files,
 				our_loginname = :our_loginname
-			WHERE ID = :ID");
+			WHERE ID = :ID ";
+
+		$stmt = $dbConn->getConnection()->prepare( $query );
+
+		// format the date
+		$formattedDate = $data['date'];
+		$formattedDate = date("Y-m-d", strtotime($formattedDate));
+
+		//
 		$stmt->bindParam(':in_out', $data['in_out'], PDO::PARAM_STR);
-		$stmt->bindParam(':kenmerk', $data['kenmerk'], PDO::PARAM_INT);
-		$stmt->bindParam(':date', $data['date'], PDO::PARAM_INT);
+		$stmt->bindParam(':kenmerk', $data['kenmerk'], PDO::PARAM_STR);
+		$stmt->bindParam(':date', $formattedDate, PDO::PARAM_STR);
 		$stmt->bindParam(':their_name', $data['their_name'], PDO::PARAM_STR);
 		$stmt->bindParam(':their_organisation', $data['their_organisation'], PDO::PARAM_STR);
 		$stmt->bindParam(':our_name', $data['our_name'], PDO::PARAM_STR);
@@ -212,8 +227,8 @@ class Posts{
 		$stmt->bindParam(':remarks', $data['remarks'], PDO::PARAM_STR);
 		$stmt->bindParam(':registered_by', $data['registered_by'], PDO::PARAM_STR);
 		$stmt->bindParam(':ID', $data['ID'], PDO::PARAM_INT);
-    $stmt->bindParam(':number_of_files', $number_of_existing_files, PDO::PARAM_INT);
-    $stmt->bindParam(':our_loginname', $data['our_loginname'], PDO::PARAM_STR);
+	    $stmt->bindParam(':number_of_files', $number_of_existing_files, PDO::PARAM_INT);
+        $stmt->bindParam(':our_loginname', $data['our_loginname'], PDO::PARAM_STR);
 
 		$stmt->execute();
 	}

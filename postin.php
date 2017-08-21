@@ -72,6 +72,7 @@ function createPostinContent( ) {
 			//
             $submitValue = "Pas aan";
         }else{
+            // NEW
             $currentDate = date('y');
             $characteristicsCount = (Settings::get('post_characteristic_last_used_counter') + 1);
             for ( $i = strlen($characteristicsCount); $i < 3; $i++ ) {
@@ -80,8 +81,10 @@ function createPostinContent( ) {
             $kenmerk = $currentDate.$characteristicsCount;
 
 			//
+	        $selectedPost['kenmerk'] = $kenmerk;
 	        $selectedPost['registered_by_name'] = $oWebuser->getName();
 	        $selectedPost['registered_by'] = $oWebuser->getId();
+	        $selectedPost['date'] = date("Y-m-d");
         }
 	}
 
@@ -124,5 +127,7 @@ function createPostinContent( ) {
         , 'help_remarks' => Translations::get('help_remarks')
         , 'document_upload_comment' => Translations::get('document_upload_comment')
         , 'nr_of_files_upload' => Translations::get('nr_of_files_upload')
+		, 'lbl_upload_files' => Translations::get('lbl_upload_files')
+		, 'lbl_already_uploaded_files' => Translations::get('lbl_already_uploaded_files')
 	));
 }

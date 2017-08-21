@@ -96,21 +96,20 @@
 		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
 
 			<div class="border">
-				<label>Upload documents
+				<label>{{ lbl_upload_files }}
 					<a href="#" class="semiRequired" data-toggle="popover" data-trigger="hover" data-content="{{ field_is_semi_required }}" tabindex="-1">*</a><br>
 				</label><br>
                 <label class="button_add_document" id="button_add_document_label" for="documentInput">
                     <img class="attachment_add_button" src="images/add.png">
                 </label><h6 id="nr_of_files_field"> {{ nr_of_files_upload }} 0</h6>
-				<input class="input-sm col-xs-12 col-lg-12" id="documentInput" name="documentInput[]" type="file" multiple onchange="makeFileList();"><br>
+				<input class="input-sm col-xs-12 col-lg-12" id="documentInput" name="documentInput[]" type="file" multiple onchange="makeFileList();">
                 <h6>{{ document_upload_comment }}</h6>
 				<div id="fileList"></div>
-
 			</div>
 
 			{% if files_from_post|length > 0 %}
 			<div class="border attachment">
-                <label>Already uploaded documents</label>
+                <label>{{ lbl_already_uploaded_files }}</label>
                 <ul id="attachment_list" class="in_out">
                     {% for file in files_from_post %}
                         <li id="attachment_list_item" value="{{ file }}">
