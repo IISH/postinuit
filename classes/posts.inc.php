@@ -117,7 +117,13 @@ class Posts{
 	 * @param $kenmerk string the folder where the file exists
 	 */
 	public static function removeFileFromPost($filename, $kenmerk){
-        unlink(Settings::get('attachment_directory').$kenmerk."/".$filename);
+
+        if( file_exists(Settings::get('attachment_directory').$kenmerk."/".$filename) ) {
+            unlink(Settings::get('attachment_directory').$kenmerk."/".$filename);
+            return true;
+        }else{
+            return false;
+        }
 	}
 
     /**

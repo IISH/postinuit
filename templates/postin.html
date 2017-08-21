@@ -112,18 +112,17 @@
 			{% if files_from_post|length > 0 %}
 			<div class="border attachment">
 				<label>Already uploaded documents</label>
-				<ul class="in_out">
+				<ul id="attachment_list"class="in_out">
 					{% for file in files_from_post %}
-                        <li id="attachment_list_item">
-                            <button type="submit" id="openFileFromServer" name="openFileFromServer" formaction="open_file_from_post.php" value="{{ file }}">
+                        <li id="attachment_list_item" value="{{ file }}">
+                            <button type="submit" class="openFileFromServer" name="openFileFromServer" formaction="open_file_from_post.php" value="{{ file }}">
                                 <img class="attachment_button_images" src="./images/save.png">
                             </button>
-                            <button type="submit" id="deleteFileFromServer" name="deleteFileFromServer" formaction="remove_file_from_post.php" value="{{ file }}">
+                            <button type="button" class="deleteFileFromServer" name="deleteFileFromServer" value="{{ file }}">
                                 <img class="attachment_button_images" src="./images/delete.png">
                             </button>
                             {{ file }}
                         </li>
-{#					    <li>{{ file }} <input id="openFileFromServer" name="openFileFromServer" type="submit" formaction="open_file_from_post.php" value="Open"> <input id="deleteFileFromServer" name="deleteFileFromServer" type="submit" formaction="remove_file_from_post.php" value="Delete"></li>#}
 					{% endfor %}
 				</ul>
 			</div>
@@ -144,6 +143,11 @@
 <script>
 	$(document).ready(function() {
 
+    $('.deleteFileFromServer').on('click', function(){
+          if(confirm("Are you sure you want to delete the file?")){
+              deleteAttachment($(this).val());
+          }
+      });
 
     $('#documentInput').on('change', function(event){
             var nr_of_files = document.getElementById('nr_of_files_field');
@@ -199,6 +203,29 @@
 			autoComplete($(this), $(this).val(), 'our_institute');
 		});
 	});
+
+    // Function to delete the attachment selected to delete.
+    function deleteAttachment(filename){
+        $.ajax({
+            type: 'POST',
+            url: 'remove_file_from_post.php',
+            data: {
+                'file' : filename,
+                'kenmerk' : {{ selectedPost['kenmerk'] }}
+            },
+            success: function (response) {
+                if( response === "true" ) {
+                    var lis = document.querySelectorAll('#attachment_list li');
+                    for(var i=0; li=lis[i]; i++) {
+                        if(li.innerText.trim() === filename.trim()) {
+                            li.innerText = filename + " - " + "(removed)";
+                        }
+                    }
+                }
+                else alert('Something Went Wrong!');
+            }
+        });
+    }
 
 	function validateForm(){
 	    var isValid = true;
