@@ -407,6 +407,10 @@ input[type=file] {
     border-color: buttonface;
 }
 
-.button_add_document:hover{
+.button_add_document:hover {
     cursor: pointer;
+}
+
+#postOverview tr.no_files_present td {
+    background-color: yellow !important;
 }
