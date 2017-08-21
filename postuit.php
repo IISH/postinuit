@@ -123,5 +123,7 @@ function createPostuitContent( ) {
 		, 'nr_of_files_upload' => Translations::get('nr_of_files_upload')
 		, 'lbl_upload_files' => Translations::get('lbl_upload_files')
 		, 'lbl_already_uploaded_files' => Translations::get('lbl_already_uploaded_files')
+		, 'are_you_sure_delete' => Translations::get('are_you_sure_delete')
+		, 'removed' => Translations::get('removed')
 	));
 }

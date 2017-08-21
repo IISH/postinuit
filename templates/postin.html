@@ -143,7 +143,7 @@
 	$(document).ready(function() {
 
     $('.deleteFileFromServer').on('click', function(){
-          if(confirm("Are you sure you want to delete the file?")){
+          if(confirm("{{ are_you_sure_delete }}")){
               deleteAttachment($(this).val());
           }
       });
@@ -170,7 +170,7 @@
       });
 
 		$('#deleteFileFromServer').on('click', function(){
-			return confirm("Are you sure you want to delete the file?");
+			return confirm("{{ are_you_sure_delete }}");
 		});
 
 		$('[data-toggle="popover"]').popover();
@@ -217,7 +217,7 @@
                     var lis = document.querySelectorAll('#attachment_list li');
                     for(var i=0; li=lis[i]; i++) {
                         if(li.innerText.trim() === filename.trim()) {
-                            li.innerText = filename + " - " + "(removed)";
+                            li.innerText = filename + " ({{ removed }})";
                         }
                     }
                 }
