@@ -129,24 +129,30 @@
 <div>
 	<table id="postOverview" class="table-bordered table-condensed table-hover table-striped">
 		<tr id="postHeaderRow">
-			<th>{{ kenmerk_lbl }}</th>
-			<th>{{ in_uit_lbl }}</th>
-			<th>{{ lbl_date }}</th>
-			<th>{{ lbl_tegenpartij }}</th>
-			<th>{{ lbl_onze_gegevens }}</th>
-			<th>{{ type_of_document_lbl }}</th>
-			<th>{{ subject_lbl }}</th>
+            <th>{{ kenmerk_lbl }}</th>
+            <th>{{ in_uit_lbl }}</th>
+            <th>{{ lbl_date }}</th>
+            <th>{{ lbl_tegenpartij }}</th>
+            <th>{{ lbl_onze_gegevens }}</th>
+            <th>{{ type_of_document_lbl }}</th>
+            <th>{{ number_of_files_lbl }}</th>
+            <th>{{ subject_lbl }}</th>
 		</tr>
 
 		{% for post in posts %}
-			<tr>
-				<td><a href="{{post.url}}?ID={{post.ID}}">{{post.kenmerk}}</a></td>
-				<td>{{post.inOut}}</td>
-				<td>{{post.date}}</td>
-				<td>{{post.theirName}}<br><i>{{post.theirOrganisation}}</i></td>
-				<td>{{post.ourName}}<br><i>{{post.ourOrganisation}} ({{post.ourDepartment}})</i></td>
-				<td>{{post.typeOfDocument}}</td>
-				<td>{{post.subject}}</td>
+            {% if post.numberOfFiles <= 0 %}
+                <tr class="no_files_present">
+            {% else %}
+                <tr>
+            {% endif %}
+                <td><a href="{{post.url}}?ID={{post.ID}}">{{post.kenmerk}}</a></td>
+                <td>{{post.inOut}}</td>
+                <td>{{post.date}}</td>
+                <td>{{post.theirName}}<br><i>{{post.theirOrganisation}}</i></td>
+                <td>{{post.ourName}}<br><i>{{post.ourOrganisation}} ({{post.ourDepartment}})</i></td>
+                <td>{{post.typeOfDocument}}</td>
+                <td>{{post.numberOfFiles}}</td>
+                <td>{{post.subject}}</td>
 			</tr>
 		{% endfor %}
 
@@ -307,7 +313,6 @@
         var subject_value = $('#subject_search').val();
         var remarks_value = $('#remarks_search').val();
         var registered_by_value = $('#registered_by_search').val();
-        console.log("It runs through here!");
         location = '?page=' + pageNumber + '&in_out=' + in_uit_value
             + '&kenmerk=' + kenmerk_value
             + '&date_from=' + date_from_value

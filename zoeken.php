@@ -66,6 +66,7 @@ function createZoekenContent( ) {
 			, 'typeOfDocument' => $documentType
 			, 'subject' => $post->getSubject()
 			, 'remarks' => $post->getRemarks()
+            , 'numberOfFiles' => $post->getNumberOfFiles()
 		);
 	}
 
@@ -88,5 +89,6 @@ function createZoekenContent( ) {
 		, 'subject_lbl' => Translations::get('lbl_post_subject')
         , 'lbl_current_page' => $page + 1
         , 'lbl_page_indicator_or' => Translations::get('search_page_indicator_or')
+        , 'number_of_files_lbl' => Translations::get('number_of_files_lbl')
 	));
 }

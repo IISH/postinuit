@@ -387,3 +387,30 @@ input[type=file] {
 #attachment_list_item:hover{
     background-color: #cfcfcf;
 }
+
+.attachment_add_button{
+    max-height: 40px;
+    max-width: 40px;
+}
+
+.border > input{
+    display: none;
+}
+
+.button_add_document {
+    -webkit-appearance: button;
+    background-color: buttonface;
+    color: #333333;
+    border-radius: 2px;
+    border-width: 2px;
+    border-style: outset;
+    border-color: buttonface;
+}
+
+.button_add_document:hover {
+    cursor: pointer;
+}
+
+#postOverview tr.no_files_present td {
+    background-color: yellow !important;
+}

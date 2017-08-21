@@ -51,11 +51,11 @@
 				</tr>
 				<tr>
 					<td><label for="receiverInstituteInput">{{ receiverInstituteInfo }}</label></td>
-					<td><input class="input-sm col-xs-12 col-lg-12 notYetDisabledField" id="receiverInstituteInput" name="our_institute" type="text" value="{{ selectedPost['our_institute'] }}"></td>
+					<td><input class="input-sm col-xs-12 col-lg-12 disabledField" id="receiverInstituteInput" name="our_institute" type="text" readonly value="{{ selectedPost['our_institute'] }}" tabindex="-1"></td>
 				</tr>
 				<tr>
 					<td><label for="receiverDepartmentInput">{{ receiverDepartmentInfo }}</label></td>
-					<td><input class="input-sm col-xs-12 col-lg-12 notYetDisabledField" id="receiverDepartmentInput" name="our_department" type="text" value="{{ selectedPost['our_department'] }}"></td>
+					<td><input class="input-sm col-xs-12 col-lg-12 disabledField" id="receiverDepartmentInput" name="our_department" type="text" readonly value="{{ selectedPost['our_department'] }}" tabindex="-1"></td>
 				</tr>
 				<tr>
 					<td>
@@ -93,16 +93,18 @@
 			</table>
 
 		</div>
+        <!-- Somehow the layout doesnt fare good when the screen gets small -->
 		<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
 
 			<div class="border">
-				<label for="documentInput">Upload documents
+				<label>Upload documents
 					<a href="#" class="semiRequired" data-toggle="popover" data-trigger="hover" data-content="{{ field_is_semi_required }}" tabindex="-1">*</a><br>
-				</label>
-
+				</label><br>
+                <label class="button_add_document" id="button_add_document_label" for="documentInput">
+                    <img class="attachment_add_button" src="images/add.png">
+                </label><h6 id="nr_of_files_field"> {{ nr_of_files_upload }} 0</h6>
 				<input class="input-sm col-xs-12 col-lg-12" id="documentInput" name="documentInput[]" type="file" multiple onchange="makeFileList();"><br>
-				<br>
-				<br>
+                <h6>{{ document_upload_comment }}</h6>
 				<div id="fileList"></div>
 
 			</div>
@@ -132,6 +134,7 @@
 		<div class="col-xs-12 inputformsubmitbutton">
 			<input type="submit" name="submitValue" value="{{ submitValue }}">
 			<input type="text" name="ID" value="{{ selectedPost['ID'] }}" hidden>
+            <input type="text" id="our_loginname" name="our_loginname" value="{{ selectedPost['our_loginname'] }}" hidden>
 		</div>
 	</div>
 </form>
@@ -140,11 +143,36 @@
 <script>
 	$(document).ready(function() {
 
-        $('.deleteFileFromServer').on('click', function(){
-            if(confirm("Are you sure you want to delete the file?")){
-                deleteAttachment($(this).val());
-            }
-        });
+    $('.deleteFileFromServer').on('click', function(){
+          if(confirm("Are you sure you want to delete the file?")){
+              deleteAttachment($(this).val());
+          }
+      });
+
+    $('#documentInput').on('change', function(event){
+            var nr_of_files = document.getElementById('nr_of_files_field');
+            nr_of_files.innerText = '{{ nr_of_files_upload }}' + event.target.files.length;
+      });
+                           
+    $('#receiverNameInput').on('change', function(){
+          $.ajax({
+              url: 'handle_autocomplete_auto_fill.php',
+              type: 'GET',
+              data: {
+                  name: $(this).val()
+              },
+              dataType: 'json',
+              success: function(data) {
+                  $('#receiverInstituteInput').val(data[0]['clean_institute']);
+                  $('#receiverDepartmentInput').val(data[0]['clean_department']);
+                  $('#our_loginname').val(data[0]['clean_loginname']);
+              }
+          });
+      });
+
+		$('#deleteFileFromServer').on('click', function(){
+			return confirm("Are you sure you want to delete the file?");
+		});
 
 		$('[data-toggle="popover"]').popover();
 
