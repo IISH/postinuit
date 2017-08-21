@@ -67,7 +67,7 @@ function createPostinContent( ) {
 
 			//
             $kenmerk = $selectedPost['kenmerk'];
-	        $files_belonging_to_post = Misc::getListOfFiles( "./documenten/" . $kenmerk );
+	        $files_belonging_to_post = Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk );
 
 			//
             $submitValue = "Pas aan";
