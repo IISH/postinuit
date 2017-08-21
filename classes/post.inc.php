@@ -13,6 +13,7 @@ class Post{
 	protected $subject = '';
 	protected $remarks = '';
 	protected $registered_by = '';
+	protected $number_of_files = '';
 	protected $our_loginname = '';
 
 	function __construct( $row ) {
@@ -29,6 +30,7 @@ class Post{
 		$this->subject = $row["subject"];
 		$this->remarks = $row["remarks"];
 		$this->registered_by = $row["registered_by"];
+		$this->number_of_files = $row["number_of_files"];
 		$this->our_loginname = $row["our_loginname"];
 	}
 
@@ -84,7 +86,11 @@ class Post{
 		return $this->registered_by;
 	}
 
-	public function getOurLoginname(){
+	public function getNumberOfFiles() {
+	    return $this->number_of_files;
+  }
+
+  public function getOurLoginname() {
 	    return $this->our_loginname;
-    }
+  }
 }
