@@ -51,11 +51,11 @@
 				</tr>
 				<tr>
 					<td><label for="receiverInstituteInput">{{ receiverInstituteInfo }}</label></td>
-					<td><input class="input-sm col-xs-12 col-lg-12 notYetDisabledField" id="receiverInstituteInput" name="our_institute" type="text" value="{{ selectedPost['our_institute'] }}"></td>
+					<td><input class="input-sm col-xs-12 col-lg-12 disabledField" id="receiverInstituteInput" name="our_institute" type="text" readonly value="{{ selectedPost['our_institute'] }}" tabindex="-1"></td>
 				</tr>
 				<tr>
 					<td><label for="receiverDepartmentInput">{{ receiverDepartmentInfo }}</label></td>
-					<td><input class="input-sm col-xs-12 col-lg-12 notYetDisabledField" id="receiverDepartmentInput" name="our_department" type="text" value="{{ selectedPost['our_department'] }}"></td>
+					<td><input class="input-sm col-xs-12 col-lg-12 disabledField" id="receiverDepartmentInput" name="our_department" type="text" readonly value="{{ selectedPost['our_department'] }}" tabindex="-1"></td>
 				</tr>
 				<tr>
 					<td>
@@ -133,6 +133,7 @@
 		<div class="col-xs-12 inputformsubmitbutton">
 			<input type="submit" name="submitValue" value="{{ submitValue }}">
 			<input type="text" name="ID" value="{{ selectedPost['ID'] }}" hidden>
+            <input type="text" id="our_loginname" name="our_loginname" value="{{ selectedPost['our_loginname'] }}" hidden>
 		</div>
 	</div>
 </form>
@@ -140,6 +141,22 @@
 
 <script>
 	$(document).ready(function() {
+
+	    $('#receiverNameInput').on('change', function(){
+            $.ajax({
+                url: 'handle_autocomplete_auto_fill.php',
+                type: 'GET',
+                data: {
+                    name: $(this).val()
+                },
+                dataType: 'json',
+                success: function(data) {
+                    $('#receiverInstituteInput').val(data[0]['clean_institute']);
+                    $('#receiverDepartmentInput').val(data[0]['clean_department']);
+                    $('#our_loginname').val(data[0]['clean_loginname']);
+                }
+            });
+        });
 
 		$('#deleteFileFromServer').on('click', function(){
 			return confirm("Are you sure you want to delete the file?");

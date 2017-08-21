@@ -13,6 +13,7 @@ class Post{
 	protected $subject = '';
 	protected $remarks = '';
 	protected $registered_by = '';
+	protected $our_loginname = '';
 
 	function __construct( $row ) {
 		$this->ID = $row['ID'];
@@ -28,6 +29,7 @@ class Post{
 		$this->subject = $row["subject"];
 		$this->remarks = $row["remarks"];
 		$this->registered_by = $row["registered_by"];
+		$this->our_loginname = $row["our_loginname"];
 	}
 
 	public function getId() {
@@ -81,4 +83,8 @@ class Post{
 	public function getRegisteredBy() {
 		return $this->registered_by;
 	}
+
+	public function getOurLoginname(){
+	    return $this->our_loginname;
+    }
 }
