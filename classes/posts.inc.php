@@ -71,10 +71,10 @@ class Posts{
 
 		$query = "INSERT INTO post (in_out, kenmerk, `date`, their_name, their_organisation, 
 			our_name, our_institute, our_department, type_of_document, 
-			subject, remarks, registered_by, number_of_files) 
+			subject, remarks, registered_by, number_of_files, our_loginname) 
 			VALUES (:in_out, :kenmerk, :date, :their_name, :their_organisation,
 			:our_name, :our_institute, :our_department, :type_of_document,
-			:subject, :remarks, :registered_by, :number_of_files) ";
+			:subject, :remarks, :registered_by, :number_of_files, :our_loginname) ";
 
 		//
 		$formattedDate = $data['date'];
@@ -95,7 +95,8 @@ class Posts{
 		$stmt->bindParam(':subject', $data['subject'], PDO::PARAM_STR);
 		$stmt->bindParam(':remarks', $data['remarks'], PDO::PARAM_STR);
 		$stmt->bindParam(':registered_by', $data['registered_by'], PDO::PARAM_STR);
-        $stmt->bindParam(':number_of_files', count($files['documentInput']['name']), PDO::PARAM_INT);
+    $stmt->bindParam(':number_of_files', count($files['documentInput']['name']), PDO::PARAM_INT);
+    $stmt->bindParam(':our_loginname', $data['our_loginname'], PDO::PARAM_STR);
 
 		$stmt->execute();
 
@@ -190,6 +191,7 @@ class Posts{
 				remarks = :remarks,
 				registered_by = :registered_by,
 				number_of_files = :number_of_files
+				our_loginname = :our_loginname
 			WHERE ID = :ID");
 		$stmt->bindParam(':in_out', $data['in_out'], PDO::PARAM_STR);
 		$stmt->bindParam(':kenmerk', $data['kenmerk'], PDO::PARAM_INT);
@@ -204,10 +206,26 @@ class Posts{
 		$stmt->bindParam(':remarks', $data['remarks'], PDO::PARAM_STR);
 		$stmt->bindParam(':registered_by', $data['registered_by'], PDO::PARAM_STR);
 		$stmt->bindParam(':ID', $data['ID'], PDO::PARAM_INT);
-        $stmt->bindParam(':number_of_files', $number_of_existing_files, PDO::PARAM_INT);
+    $stmt->bindParam(':number_of_files', $number_of_existing_files, PDO::PARAM_INT);
+    $stmt->bindParam(':our_loginname', $data['our_loginname'], PDO::PARAM_STR);
 
 		$stmt->execute();
 	}
+
+    /**
+     * Gets the information needed from the employee to fill in the automatic fields
+     * @param $data
+     * @return mixed
+     */
+	public static function getEmployeeInformation($data){
+	    global $dbConn;
+
+        $statement = $dbConn->getConnection()->prepare("SELECT clean_loginname, clean_institute, clean_department FROM employees WHERE clean_name = :clean_name");
+        $statement->execute(array(':clean_name' => $data['name']));
+        $result = $statement->fetchAll();
+
+        return $result;
+    }
 
 	public static function findPostsAdvanced($data, $recordsPerPage, $page){
 		global $dbConn;
