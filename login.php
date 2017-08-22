@@ -39,7 +39,6 @@ function createLoginPage() {
 			if ( $result_login_check == 1 ) {
 				// retain login name
 				$_SESSION["loginname"] = $fldLogin;
-				$_SESSION["name"] = $fldLogin; // TODO
 
 				//
 				$burl = getBackUrl();
@@ -70,13 +69,5 @@ function createLoginPage() {
 		, 'password_placeholder' => Translations::get('password_placeholder')
 		, 'lblPassword' => Translations::get('password')
 		, 'lblLoginname' => Translations::get('loginname')
-		// TODO: move to html template
-		, 'focusjavascriptcode' => "
-<script language=\"javascript\">
-<!--
-document.frmA.fldLogin.focus();
-// -->
-</script>
-"
 	));
 }

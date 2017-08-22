@@ -2,17 +2,17 @@
 <div class="index_button_alignment">
 
 	<div class="index_button_margin">
-		<a class="btn btn-default btn-lg" role="button" href="zoeken.php">Zoeken</a>
-	</div>
-<!--
-	<div class="index_button_margin">
-		<a class="btn btn-default btn-lg" role="button" href="overzicht.php">Overzicht</a>
-	</div>
-// -->
-	<div class="index_button_margin">
-		<a class="btn btn-default btn-lg" role="button" href="postin.php">Post IN</a>
+		<a class="btn btn-default btn-lg" role="button" href="zoeken.php">{{ menu_zoeken }}</a>
 	</div>
 	<div class="index_button_margin">
-		<a class="btn btn-default btn-lg" role="button" href="postuit.php">Post UIT</a>
+		<a class="btn btn-default btn-lg" role="button" href="postin.php">{{ menu_postin }}</a>
 	</div>
+	<div class="index_button_margin">
+		<a class="btn btn-default btn-lg" role="button" href="postuit.php">{{ menu_postuit }}</a>
+	</div>
+	{% if isFunctioneelBeheerder == true %}
+	<div class="index_button_margin">
+		<a class="btn btn-default btn-lg" role="button" href="configuration.php">{{ menu_configuration }}</a>
+	</div>
+	{% endif %}
 </div>

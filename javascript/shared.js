@@ -36,11 +36,4 @@ function makeFileList() {
 
         list.appendChild(ul);
     }
-
-//		if(!list.hasChildNodes()) {
-//			var li = document.createElement('li');
-//			li.innerHTML = "No files Selected";
-//			list.appendChild(li);
-//		}
-
 }

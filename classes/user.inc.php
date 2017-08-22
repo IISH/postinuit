@@ -4,25 +4,24 @@ require_once "role_authorisation.inc.php";
 class staticUser {
 	public static function getUserByLoginName( $loginname ) {
 		global $dbConn;
-		$id = array();
+
+		//
+		$id = 0;
 
 		//
 		$loginname = trim($loginname);
 
 		if ( $loginname != '' ) {
 
-			// Remark: don't check date_out here, sometimes they make errors when a person is re-hired they forget to remove the date_out value
+			//
 			$query = "SELECT * FROM users WHERE loginname = '" . addslashes($loginname) . "' ORDER BY ID DESC ";
 			$stmt = $dbConn->getConnection()->prepare($query);
 			$stmt->execute();
 			$result = $stmt->fetchAll();
 			foreach ($result as $row) {
-				$id[] = $row['ID'];
+				$id = $row['ID'];
+				break;
 			}
-		}
-
-		if ( count( $id ) == 0 ) {
-			$id[] = 0;
 		}
 
 		return new User( $id );
@@ -35,27 +34,25 @@ class User {
 	protected $name = '';
 	protected $password = '';
 	protected $password_hash = '';
-	protected $roles = '';
-	protected $arrRoles = array();
-	protected $arrUserAuthorisation = array();
-	protected $is_admin = false;
+	protected $arrUserExtraAuthorisation = array();
+	protected $arrUserSettings = array();
 
 	function __construct($id) {
-		if ( !is_array( $id ) ) {
-			$id = array( $id );
-		}
-
-		if ( count( $id ) == 0 ) {
-			$id[] = 0;
-		}
-
+		// get user data for specified id
 		$this->getValues( $id );
+
+		// load user authorisation
+		$this->loadExtraAuthorisation();
+
+		// load user settings
+		$this->loadUserSettings();
 	}
 
 	public function getValues( $id ) {
 		global $dbConn;
-		// reset values
-		$query = "SELECT * FROM users WHERE ID IN ( " . implode(',', $id) . " ) ";
+
+		//
+		$query = "SELECT * FROM users WHERE ID=" . $id;
 		$stmt = $dbConn->getConnection()->prepare($query);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
@@ -85,9 +82,20 @@ class User {
 
 	//
 	public function isAdmin() {
-		return ( in_array('admin', $this->arrUserAuthorisation) );
+		return ( in_array('admin', $this->arrUserExtraAuthorisation) );
 	}
 
+	//
+	public function isFb() {
+		return ( in_array('fb', $this->arrUserExtraAuthorisation) || $this->isAdmin() );
+	}
+
+	//
+	public function hasExtraAuthorisation( $authorisation ) {
+		return ( in_array($authorisation, $this->arrUserExtraAuthorisation) );
+	}
+
+	//
 	public function isLoggedIn() {
 		if ( $_SESSION["loginname"] != '' ) {
 			return true;
@@ -96,28 +104,23 @@ class User {
 		return false;
 	}
 
-	public function verifyPasswordIsCorrect( $password ) {
-		return $this->password_hash == $password;
-//		return password_verify($password, $this->password_hash);
-	}
-
+	//
 	public function checkLoggedIn() {
-//		return 1;
-
 		global $protect;
 
-		// TODO: Opmerking: ook controleren of session loginname leeg is, want als de gebruiker wel in ActiveDirectory zit
-		// maar niet in protime, dan heeft men wel een loginname maar geen id
+		//
 		if ( $this->id < 1 && $_SESSION["loginname"] == '' ) {
 			Header("Location: login.php?burl=" . URLencode($protect->getShortUrl()));
 			die(Translations::get('go_to') . " <a href=\"login.php?burl=" . URLencode($protect->getShortUrl()) . "\">next</a>");
 		}
 	}
 
+	//
 	public function setPassword($password) {
 		$this->password = $password;
 	}
 
+	//
 	public function saveHash() {
 		global $dbConn;
 
@@ -126,6 +129,7 @@ class User {
 		$stmt->execute();
 	}
 
+	//
 	public function cryptPassword( $password ) {
 		// A higher "cost" is more secure but consumes more processing power
 		$cost = 10;
@@ -143,20 +147,55 @@ class User {
 		return $hash;
 	}
 
+	//
+	public function verifyPasswordIsCorrect( $password ) {
+		return hash_equals($this->password_hash, crypt($password, $this->password_hash));
+	}
+
+	//
 	public function saveUserSetting($field, $value) {
 		global $dbConn;
 
-		$field = addslashes($field);
-		$value = addslashes($value);
+		if ( $this->id > 0 ) {
+			$field = addslashes($field);
+			$value = addslashes($value);
 
-		$query_update = "INSERT INTO user_settings (`ID`, `setting`, `value`) VALUES (" . $this->id . ", '$field', '$value') ON DUPLICATE KEY UPDATE `value`='$value' ";
-		$stmt = $dbConn->getConnection()->prepare($query_update);
-		$stmt->execute();
+			$query_update = "INSERT INTO user_settings (`ID`, `setting`, `value`) VALUES (" . $this->id . ", '$field', '$value') ON DUPLICATE KEY UPDATE `value`='$value' ";
+			$stmt = $dbConn->getConnection()->prepare($query_update);
+			$stmt->execute();
+		}
 	}
 
-	// TODO
+	//
 	public function getUserSetting( $setting, $default = '' ) {
-		return '';
-		//		return ( isset($this->arrUserSettings[$setting]) ) ? $this->arrUserSettings[$setting] : $default;
+		return ( isset($this->arrUserSettings[$setting]) ) ? $this->arrUserSettings[$setting] : $default;
+	}
+
+	//
+	public function loadExtraAuthorisation() {
+		global $dbConn;
+
+		//
+		$query = "SELECT * FROM user_extra_authorisation WHERE ID=" . $this->id;
+		$stmt = $dbConn->getConnection()->prepare($query);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		foreach ($result as $row) {
+			$this->arrUserExtraAuthorisation[] = $row['authorisation'];
+		}
+	}
+
+	//
+	public function loadUserSettings() {
+		global $dbConn;
+
+		//
+		$query = "SELECT * FROM user_settings WHERE ID=" . $this->id;
+		$stmt = $dbConn->getConnection()->prepare($query);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		foreach ($result as $row) {
+			$this->arrUserSettings[$row['setting']] = $row['value'];
+		}
 	}
 }

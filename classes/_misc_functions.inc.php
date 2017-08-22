@@ -2,19 +2,16 @@
 function getLanguage() {
 	global $oWebuser;
 
-	$language = '';
-
 	//
 	if ( isset($_SESSION['language']) ) {
 		$language = trim($_SESSION['language']);
 	} else {
-		$language = 'nl';
+		$language = $oWebuser->getUserSetting('language');
+		if ( !in_array($language, array('en', 'nl') ) ) {
+			$language = 'nl';
+		}
+		$_SESSION['language'] = $language;
 	}
-
-	//
-//	if ( $language == '' ) {
-//		$language = $oWebuser->getUserSetting('language', 'nl');
-//	}
 
 	return $language;
 }
