@@ -50,22 +50,45 @@ class Posts{
 	public static function uploadPost($data, $files) {
 		global $dbConn;
 
+		// Update the characteristic in the database
 		$settingsQuery = 'UPDATE settings SET value = value+1 WHERE property = "post_characteristic_last_used_counter"';
 		$settingsStmt = $dbConn->getConnection()->prepare($settingsQuery);
 		$settingsStmt->execute();
 
-		// TODO: get latest value of post_characteristic_last_used_counter and insert in kenmerk
+		// Get the updated value of characteristic from the database
 		$last_used_counter_query = 'SELECT value FROM settings WHERE property = "post_characteristic_last_used_counter"';
 		$last_used_counter_query_stmt = $dbConn->getConnection()->prepare($last_used_counter_query);
 		$last_used_counter_query_stmt->execute();
 		$result = $last_used_counter_query_stmt->fetchAll();
 		$post_id = $result[0]['value'];
 
+		// Set a variable with the value from the form combined with the characteristic from the database
 		$new_kenmerk = substr($data['kenmerk'],0, 2);
 		for ( $i = strlen($post_id); $i < 3; $i++ ) {
 			$new_kenmerk .= '0';
 		}
 		$new_kenmerk .= $post_id;
+
+		// get the directory to which to save the documents included in the post
+        $directory_to_save = Settings::get('attachment_directory').$new_kenmerk."/";
+
+        // check to see if the directory exists, otherwise create it
+        if ( !file_exists( $directory_to_save ) ) {
+            if ( !mkdir($directory_to_save, 0764, true ) ) {
+                die('Failed to create documents directory');
+            }
+        }
+
+        // check to see if the array with files is empty or not
+        for ( $i = 0; $i < count($files['documentInput']['name']); $i++ ) {
+            if ( $files['documentInput']['tmp_name'][$i] != '' ) {
+                $fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
+                file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
+            }
+        }
+
+        // count number of files in kenmerk directory
+        $number_of_existing_files = self::getNumberOfFilesFromPost($data['kenmerk']);
 
 		$query = "INSERT INTO post (in_out, kenmerk, `date`, their_name, their_organisation, 
 			our_name, our_institute, our_department, type_of_document, 
@@ -92,35 +115,17 @@ class Posts{
 		$stmt->bindParam(':subject', $data['subject'], PDO::PARAM_STR);
 		$stmt->bindParam(':remarks', $data['remarks'], PDO::PARAM_STR);
 		$stmt->bindParam(':registered_by', $data['registered_by'], PDO::PARAM_STR);
-		// TODO: COUNT OF FILES WERKT NIET GOED, RETURNEERT ALTIJD MINIMAAL 1
-		// TRUC: EERST RECORD BEWAREN, DAN FILES BEWAREN, DAN KIJKEN HOEVEEL FILES IN DIRECTORY, EN DAN AANTAL IN RECORD AANPASSEN
-	    $stmt->bindParam(':number_of_files', count($files['documentInput']['name']), PDO::PARAM_INT);
+        $stmt->bindParam(':number_of_files', $number_of_existing_files, PDO::PARAM_INT);
         $stmt->bindParam(':our_loginname', $data['our_loginname'], PDO::PARAM_STR);
 
 		$stmt->execute();
-
-        $directory_to_save = Settings::get('attachment_directory').$new_kenmerk."/";
-		// TODO: COUNT OF FILES WERKT NIET GOED, RETURNEERT ALTIJD MINIMAAL 1
-		$numberOfFiles = count($files['documentInput']['name']);
-
-		if ( !file_exists( $directory_to_save ) ) {
-			if ( !mkdir($directory_to_save, 0764, true ) ) {
-				die('Failed to create documents directory');
-			}
-		}
-
-		for ( $i = 0; $i < $numberOfFiles; $i++ ) {
-			if ( $files['documentInput']['tmp_name'][$i] != '' ) {
-				$fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
-				file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
-			}
-		}
 	}
 
 	/**
 	 * Removes the given file from the given directory
 	 * @param $filename string the file to remove
 	 * @param $kenmerk string the folder where the file exists
+     * @return boolean
 	 */
 	public static function removeFileFromPost($filename, $kenmerk){
 

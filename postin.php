@@ -38,6 +38,37 @@ function createPostinContent( ) {
             $isValid = false;
         }
 
+        // This was used to check whether the error values in the array would return something, but alas
+//        file_put_contents('./log.txt', date('c')."\n", FILE_APPEND | LOCK_EX);
+//        file_put_contents('./log.txt', $_FILES["documentInput"]["error"], FILE_APPEND | LOCK_EX);
+//        file_put_contents('./log.txt', "\n", FILE_APPEND | LOCK_EX);
+//
+//        if($_FILES["documentInput"]["error"] == 4){
+//            file_put_contents('./log.txt', "A\n", FILE_APPEND | LOCK_EX);
+//        }
+//        else if($_FILES["documentInput"]["error"] == '4'){
+//            file_put_contents('./log.txt', "B\n", FILE_APPEND | LOCK_EX);
+//        }
+//        else if($_FILES["documentInput"]["error"] === '4'){
+//            file_put_contents('./log.txt', "C\n", FILE_APPEND | LOCK_EX);
+//        }
+//        else if(!isset($_FILES['documentInput']['name'])){
+//            file_put_contents('./log.txt', "D\n", FILE_APPEND | LOCK_EX);
+//        }
+//        else if($_FILES["documentInput"]["name"] == ''){
+//            file_put_contents('./log.txt', "F\n", FILE_APPEND | LOCK_EX);
+//        }
+//        else if($_FILES["documentInput"]["error"] != 0) {  // ------------ This is the one that works!!!! ------------
+//            file_put_contents('./log.txt', "E\n", FILE_APPEND | LOCK_EX);
+//            file_put_contents('./log.txt', $_FILES["documentInput"]["error"], FILE_APPEND | LOCK_EX);
+//            file_put_contents('./log.txt', "\n", FILE_APPEND | LOCK_EX);
+//        }
+//        else {
+//            file_put_contents('./log.txt', "MEH\n", FILE_APPEND | LOCK_EX);
+//            file_put_contents('./log.txt', $_FILES['documentInput']['name'], FILE_APPEND | LOCK_EX);
+//            file_put_contents('./log.txt', "\n", FILE_APPEND | LOCK_EX);
+//        }
+
         if($isValid){
             $next = "";
             $_POST['in_out'] = 'in';
