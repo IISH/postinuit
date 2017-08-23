@@ -152,7 +152,7 @@
         nr_of_files.innerText = '{{ nr_of_files_upload }}' + event.target.files.length;
       });
 
-    $('#senderNameInput').on('change', function(){
+    $('#senderNameInput').on('change onblur', function(){
             $.ajax({
                 url: 'handle_autocomplete_auto_fill.php',
                 type: 'GET',
@@ -161,9 +161,15 @@
                 },
                 dataType: 'json',
                 success: function(data) {
-                    $('#senderInstituteInput').val(data[0]['clean_institute']);
-                    $('#senderDepartmentInput').val(data[0]['clean_department']);
-                    $('#our_loginname').val(data[0]['clean_loginname']);
+                    if(data.length > 0) {
+                        $('#senderInstituteInput').val(data[0]['clean_institute']);
+                        $('#senderDepartmentInput').val(data[0]['clean_department']);
+                        $('#our_loginname').val(data[0]['clean_loginname']);
+                    }else{
+                        $('#senderInstituteInput').val('');
+                        $('#senderDepartmentInput').val('');
+                        $('#our_loginname').val('');
+                    }
                 }
             });
         });
