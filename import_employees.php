@@ -35,8 +35,7 @@ foreach($filesToImport as $fileToImport) {
 	echo 'File: ' . $fileToImport . "<br>";
 
 	//
-	$fldSource = explode('.', $fileToImport);
-	$fldSource = $fldSource[0];
+	$fldSource = pathinfo($fileToImport, PATHINFO_FILENAME);
 
 	/** Setting all the records to update_status 1 (current dataset), to mark it as being updated
 	 * This to see on the end which record is actually updated and which is not.
@@ -137,14 +136,39 @@ foreach($filesToImport as $fileToImport) {
                 } else {
                     // EXISTING EMPLOYEE
                     $updateCounter++;
-preprint('EXISTING EMPLOYEE');
-preprint('TODO: update existing employee');
-preprint( $data['dn'] );
-                    // TODO: update existing
-                    // OR COMBINE INSERT AND UPDATE
-                    // REMARK: dn is unique
-                    // REMARK: set import_status = 0
-preprint('<hr>');
+
+                    // Preparation of the query to run on the database.
+                    $stmt = $dbConn->getConnection()->prepare(
+                        "UPDATE employees SET
+                      dn = :dn, cn = :cn, sn = :sn, c = :c, l = :l, physicalDeliveryOfficeName = :physicalDeliveryOfficeName, telephoneNumber = :telephoneNumber, givenName = :givenName, company = :company,
+                      department = :department, sAMAccountName = :sAMAccountName, mail = :mail, original = :original, source = :source, clean_loginname = :clean_loginname, clean_name = :clean_name,
+                      clean_institute = :clean_institute, clean_department = :clean_department, import_status = :import_status
+                      WHERE dn = :dn");
+
+                    // Needed because not possible to pass parameter by reference
+                    $okayValue = updateEnum::OKAY;
+
+                    $stmt->bindParam(':dn', $data['dn'], PDO::PARAM_STR);
+                    $stmt->bindParam(':cn', $data['cn'], PDO::PARAM_STR);
+                    $stmt->bindParam(':sn', $data['sn'], PDO::PARAM_STR);
+                    $stmt->bindParam(':c', $data['c'], PDO::PARAM_STR);
+                    $stmt->bindParam(':l', $data['l'], PDO::PARAM_STR);
+                    $stmt->bindParam(':physicalDeliveryOfficeName', $data['physicalDeliveryOfficeName'], PDO::PARAM_STR);
+                    $stmt->bindParam(':telephoneNumber', $data['telephoneNumber'], PDO::PARAM_STR);
+                    $stmt->bindParam(':givenName', $data['givenName'], PDO::PARAM_STR);
+                    $stmt->bindParam(':company', $data['company'], PDO::PARAM_STR);
+                    $stmt->bindParam(':department', $data['department'], PDO::PARAM_STR);
+                    $stmt->bindParam(':sAMAccountName', $data['sAMAccountName'], PDO::PARAM_STR);
+                    $stmt->bindParam(':mail', $data['mail'], PDO::PARAM_STR);
+                    $stmt->bindParam(':original', $data['original'], PDO::PARAM_LOB);
+                    $stmt->bindParam(':source', $fldSource, PDO::PARAM_STR);
+                    $stmt->bindParam(':clean_loginname', $data['sAMAccountName'], PDO::PARAM_STR);
+                    $stmt->bindParam(':clean_name', $data['name'], PDO::PARAM_STR);
+                    $stmt->bindParam(':clean_institute', $data['company'], PDO::PARAM_STR);
+                    $stmt->bindParam(':clean_department', $data['department'], PDO::PARAM_STR);
+                    $stmt->bindParam(':import_status', $okayValue, PDO::PARAM_INT);
+
+                    $stmt->execute();
                 }
             }
         }
