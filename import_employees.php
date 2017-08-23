@@ -140,7 +140,7 @@ foreach($filesToImport as $fileToImport) {
                     // Preparation of the query to run on the database.
                     $stmt = $dbConn->getConnection()->prepare(
                         "UPDATE employees SET
-                      dn = :dn, cn = :cn, sn = :sn, c = :c, l = :l, physicalDeliveryOfficeName = :physicalDeliveryOfficeName, telephoneNumber = :telephoneNumber, givenName = :givenName, company = :company,
+                      cn = :cn, sn = :sn, c = :c, l = :l, physicalDeliveryOfficeName = :physicalDeliveryOfficeName, telephoneNumber = :telephoneNumber, givenName = :givenName, company = :company,
                       department = :department, sAMAccountName = :sAMAccountName, mail = :mail, original = :original, source = :source, clean_loginname = :clean_loginname, clean_name = :clean_name,
                       clean_institute = :clean_institute, clean_department = :clean_department, import_status = :import_status
                       WHERE dn = :dn");

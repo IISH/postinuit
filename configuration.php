@@ -4,6 +4,10 @@ require_once "classes/start.inc.php";
 // check if an user is logged in
 $oWebuser->checkLoggedIn();
 
+// only for functional maintainers and administrators
+if ( !$oWebuser->isBeheerder() ) {
+	die('Access denied. Only for functional maintainers and administrators.');
+}
 
 // create webpage
 $oPage = new Page();
@@ -14,10 +18,12 @@ $oPage->setContent(createAdminContent( ));
 echo $twig->render('design.html', $oPage->getPageAttributes() );
 
 function createAdminContent( ) {
-	global $oWebuser, $twig;
+	global $twig;
 
-	return $twig->render('admin.html', array(
+	return $twig->render('configuration.html', array(
 		'title' => Translations::get('menu_configuration')
-		, 'message' => 'Under construction'
+		, 'translations' => Translations::get('page_translations_title')
+		, 'users' => Translations::get('page_users_title')
+		, 'users_extra_authorisation' => Translations::get('page_users_extra_authorisation_title')
 	));
 }

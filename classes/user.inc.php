@@ -34,15 +34,13 @@ class User {
 	protected $name = '';
 	protected $password = '';
 	protected $password_hash = '';
-	protected $arrUserExtraAuthorisation = array();
 	protected $arrUserSettings = array();
+	protected $isBeheerder = 0;
+	protected $isAdmin = 0;
 
 	function __construct($id) {
 		// get user data for specified id
 		$this->getValues( $id );
-
-		// load user authorisation
-		$this->loadExtraAuthorisation();
 
 		// load user settings
 		$this->loadUserSettings();
@@ -62,6 +60,8 @@ class User {
 			$this->password_hash = trim($row['password_hash']);
 			$this->loginname = trim($row['loginname']);
 			$this->name = trim($row['name']);
+			$this->isBeheerder = $row['is_beheerder'];
+			$this->isAdmin = $row['is_admin'];
 		}
 	}
 
@@ -82,17 +82,17 @@ class User {
 
 	//
 	public function isAdmin() {
-		return ( in_array('admin', $this->arrUserExtraAuthorisation) );
+		return $this->isAdmin;
 	}
 
 	//
+	public function isBeheerder() {
+		return ( $this->isBeheerder || $this->isAdmin() );
+	}
+
+	// DEPRECATED
 	public function isFb() {
-		return ( in_array('fb', $this->arrUserExtraAuthorisation) || $this->isAdmin() );
-	}
-
-	//
-	public function hasExtraAuthorisation( $authorisation ) {
-		return ( in_array($authorisation, $this->arrUserExtraAuthorisation) );
+		return $this->isBeheerder();
 	}
 
 	//
@@ -169,20 +169,6 @@ class User {
 	//
 	public function getUserSetting( $setting, $default = '' ) {
 		return ( isset($this->arrUserSettings[$setting]) ) ? $this->arrUserSettings[$setting] : $default;
-	}
-
-	//
-	public function loadExtraAuthorisation() {
-		global $dbConn;
-
-		//
-		$query = "SELECT * FROM user_extra_authorisation WHERE ID=" . $this->id;
-		$stmt = $dbConn->getConnection()->prepare($query);
-		$stmt->execute();
-		$result = $stmt->fetchAll();
-		foreach ($result as $row) {
-			$this->arrUserExtraAuthorisation[] = $row['authorisation'];
-		}
 	}
 
 	//

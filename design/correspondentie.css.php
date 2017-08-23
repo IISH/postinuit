@@ -96,7 +96,6 @@ div.main {
 	max-width: 1200px;
 	margin-left: auto;
 	margin-right: auto;
-    xxxborder: 1px dashed red;
 }
 
 div.header {

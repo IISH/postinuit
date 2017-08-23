@@ -22,6 +22,7 @@ require_once dirname(__FILE__) . "/authentication.inc.php";
 require_once dirname(__FILE__) . "/date.inc.php";
 require_once dirname(__FILE__) . "/datetime.inc.php";
 require_once dirname(__FILE__) . "/menu.inc.php";
+require_once dirname(__FILE__) . "/misc.inc.php";
 require_once dirname(__FILE__) . "/page.inc.php";
 require_once dirname(__FILE__) . "/pdo.inc.php";
 require_once dirname(__FILE__) . "/user.inc.php";
@@ -52,7 +53,7 @@ $menu = array();
 $menu[] = new MenuItem(Translations::get('menu_zoeken'), 'zoeken.php');
 $menu[] = new MenuItem(Translations::get('menu_postin'), 'postin.php');
 $menu[] = new MenuItem(Translations::get('menu_postuit'), 'postuit.php');
-if ( $oWebuser->isFb() ) {
+if ( $oWebuser->isBeheerder() ) {
 	$menu[] = new MenuItem(Translations::get('menu_configuration'), 'configuration.php');
 }
 
@@ -64,3 +65,5 @@ $twig = new Twig_Environment( $loader);
 if ( !isset($settings) ) {
 	$settings = array();
 }
+
+$oMisc = new Misc();

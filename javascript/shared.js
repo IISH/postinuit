@@ -37,3 +37,23 @@ function makeFileList() {
         list.appendChild(ul);
     }
 }
+
+//
+function open_page(url) {
+	window.open(url, '_top');
+	return false;
+}
+
+//
+function open_page_blank(url) {
+	window.open(url, '_blank');
+	return false;
+}
+
+//
+function doc_submit(pressedbutton) {
+	document.getElementById("pressedbutton").value = pressedbutton;
+	document.getElementById("frmA").submit();
+
+	return true;
+}

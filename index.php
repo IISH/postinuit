@@ -20,6 +20,6 @@ function createZoekenContent( ) {
 		, 'menu_postin' => Translations::get('menu_postin')
 		, 'menu_postuit' => Translations::get('menu_postuit')
 		, 'menu_configuration' => Translations::get('menu_configuration')
-		, 'isFunctioneelBeheerder' => $oWebuser->isFb()
+		, 'isFunctioneelBeheerder' => $oWebuser->isBeheerder()
 		));
 }
