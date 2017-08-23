@@ -4,9 +4,9 @@ require_once "classes/start.inc.php";
 // check if an user is logged in
 $oWebuser->checkLoggedIn();
 
-// only for functional maintainers and administrators
-if ( !$oWebuser->isBeheerder() ) {
-	die('Access denied. Only for functional maintainers and administrators.');
+// only for administrators
+if ( !$oWebuser->isAdmin() ) {
+	die('Access denied. Only for administrators.');
 }
 
 // first
