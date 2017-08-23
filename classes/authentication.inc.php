@@ -11,8 +11,8 @@ class Authentication {
 		// default value is login correct
 		$ret = 0;
 
-		// find users
-		$query = "SELECT * FROM users WHERE loginname = :login ORDER BY ID desc ";
+		// find user
+		$query = "SELECT * FROM users WHERE loginname = :login AND is_disabled = 0 AND is_deleted = 0 ";
 		$stmt = $dbConn->getConnection()->prepare($query);
 		$stmt->bindParam(':login', $login, PDO::PARAM_STR);
 		$stmt->execute();
@@ -66,7 +66,8 @@ class Authentication {
 				ldap_set_option($ad, LDAP_OPT_REFERRALS, 0);
 
 				// bind to the ldap directory
-				$bd = @ldap_bind($ad, $user, $pw);
+				#$bd = @ldap_bind($ad, $user, $pw);
+				$bd = ldap_bind($ad, $user, $pw);
 
 				// verify binding, if binding succeeds then login is correct
 				if ($bd) {

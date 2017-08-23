@@ -1,6 +1,5 @@
 <?php
 /**
- * Created by IntelliJ IDEA.
  * User: Igor van der Bom
  * Date: 21-8-2017
  * Time: 10:52
@@ -11,33 +10,43 @@ require_once "classes/start.inc.php";
 // check if an user is logged in
 $oWebuser->checkLoggedIn();
 
+// only for administrators
+if ( !$oWebuser->isAdmin() ) {
+	die('Access denied. Only for administrators.');
+}
+
 // Generice variables
 class updateEnum {
-    const UPDATED = 0;
+    const OKAY = 0;
     const UPDATING = 1;
     const OLD = 2;
 };
+
 $filesToImport = array_diff(scandir(Settings::get('employee_import_directory')), array('..', '.'));
-global $dbConn;
 
-preprint("Starting importing...");
+echo "Starting importing...<br>";
 
-/** Setting all the records to update_status 1, to mark it as being updated
- * This to see on the end which record is actually updated and which is not.
- */
-$updateQuery = 'UPDATE employees SET import_status = ' . updateEnum::UPDATING;
-$updateStmt = $dbConn->getConnection()->prepare($updateQuery);
-$updateStmt->execute();
-
+$newCounter = 0;
+$updateCounter = 0;
 /**
  * Loop the files to be imported. For each of these files the data will be saved in the database.
  */
 foreach($filesToImport as $fileToImport) {
+	echo 'File: ' . $fileToImport . "<br>";
+
+	//
+	$fldSource = explode('.', $fileToImport);
+	$fldSource = $fldSource[0];
+
+	/** Setting all the records to update_status 1 (current dataset), to mark it as being updated
+	 * This to see on the end which record is actually updated and which is not.
+	 */
+	$updateQuery = 'UPDATE employees SET import_status = ' . updateEnum::UPDATING . ' WHERE import_status = ' . updateEnum::OKAY . ' AND source=\'' . $fldSource . '\' ';
+	$updateStmt = $dbConn->getConnection()->prepare($updateQuery);
+	$updateStmt->execute();
 
     // Load the file and put each user in the array as a separate value
-    $employees_impor_dir = Settings::get('employee_import_directory');
-    $fileName = $fileToImport;
-    $file_to_read = $employees_impor_dir . $fileToImport;
+    $file_to_read = Settings::get('employee_import_directory') . $fileToImport;
     $import_file = file_get_contents($file_to_read);
     $import_file = preg_split("#\n\s*\n#Uis", $import_file);
 
@@ -78,15 +87,16 @@ foreach($filesToImport as $fileToImport) {
         // Check if the data from the files is valid and usable for the database.
         if (isset($data['dn']) && isset($data['cn'])) {
             if ($data['dn'] !== 'None') {
-
                 // Check whether the data to be inserted already exists in the database.
                 // This by searching the database to a record that corresponds to the given value.
-                $query = 'SELECT * FROM employees WHERE cn = "' . $data['cn'] . '"';
+                $query = 'SELECT * FROM employees WHERE dn = "' . $data['dn'] . '" ';
                 $checkStmt = $dbConn->getConnection()->prepare($query);
                 $checkStmt->execute();
                 $result = $checkStmt->fetchAll();
                 // Check whether the query returns something
                 if (count($result) === 0) {
+                    // NEW EMPLOYEE
+                    $newCounter++;
 
                     // Preparation of the query to run on the database.
                     $stmt = $dbConn->getConnection()->prepare(
@@ -94,14 +104,14 @@ foreach($filesToImport as $fileToImport) {
                       (dn, cn, sn, c, l, physicalDeliveryOfficeName, telephoneNumber, givenName, company,
                       department, sAMAccountName, mail, original, source, clean_loginname, clean_name,
                       clean_institute, clean_department, import_status)
-                      VALUES(
+                      VALUES (
                       :dn, :cn, :sn, :c, :l, :physicalDeliveryOfficeName, :telephoneNumber, :givenName,
                       :company, :department, :sAMAccountName, :mail, :original, :source, :clean_loginname,
                       :clean_name, :clean_institute, :clean_department, :import_status
-                      )");
+                      ) ");
 
                     // Needed because not possible to pass parameter by reference
-                    $updatingValue = updateEnum::UPDATED;
+                    $okayValue = updateEnum::OKAY;
 
                     $stmt->bindParam(':dn', $data['dn'], PDO::PARAM_STR);
                     $stmt->bindParam(':cn', $data['cn'], PDO::PARAM_STR);
@@ -115,25 +125,37 @@ foreach($filesToImport as $fileToImport) {
                     $stmt->bindParam(':department', $data['department'], PDO::PARAM_STR);
                     $stmt->bindParam(':sAMAccountName', $data['sAMAccountName'], PDO::PARAM_STR);
                     $stmt->bindParam(':mail', $data['mail'], PDO::PARAM_STR);
-                    $stmt->bindParam(':original', $data['original'], PDO::PARAM_STR);
-                    $stmt->bindParam(':source', $fileName, PDO::PARAM_STR);
+                    $stmt->bindParam(':original', $data['original'], PDO::PARAM_LOB);
+                    $stmt->bindParam(':source', $fldSource, PDO::PARAM_STR);
                     $stmt->bindParam(':clean_loginname', $data['sAMAccountName'], PDO::PARAM_STR);
                     $stmt->bindParam(':clean_name', $data['name'], PDO::PARAM_STR);
                     $stmt->bindParam(':clean_institute', $data['company'], PDO::PARAM_STR);
                     $stmt->bindParam(':clean_department', $data['department'], PDO::PARAM_STR);
-                    $stmt->bindParam(':import_status', $updatingValue, PDO::PARAM_INT);
+                    $stmt->bindParam(':import_status', $okayValue, PDO::PARAM_INT);
 
-                    $stmt->execute();
+					$stmt->execute();
+                } else {
+                    // EXISTING EMPLOYEE
+                    $updateCounter++;
+preprint('EXISTING EMPLOYEE');
+preprint('TODO: update existing employee');
+preprint( $data['dn'] );
+                    // TODO: update existing
+                    // OR COMBINE INSERT AND UPDATE
+                    // REMARK: dn is unique
+                    // REMARK: set import_status = 0
+preprint('<hr>');
                 }
             }
         }
     }
-    preprint($fileName . " imported!");
+
+	// Set the value of import_status to 2 (for current dataset/source) if the import status hasn't been updated due to the record not being updated
+	$updateQuery = 'UPDATE employees SET import_status = '. updateEnum::OLD . ' WHERE import_status = ' . updateEnum::UPDATING . ' AND source=\'' . $fldSource . '\' ';
+	$updateStmt = $dbConn->getConnection()->prepare($updateQuery);
+	$updateStmt->execute();
 }
-// Set the value of import_status to 2 if the import status hasn't been updated due to the record not being updated.
-$updateQuery = 'UPDATE employees SET import_status = '. updateEnum::OLD . ' WHERE import_status = ' . updateEnum::UPDATING;
-$updateStmt = $dbConn->getConnection()->prepare($updateQuery);
-$updateStmt->execute();
 
-preprint("Script completed!");
-
+echo "New employees: " . $newCounter . "<br>";
+echo "Updated employees: " . $updateCounter . "<br>";
+echo "Script completed!";
