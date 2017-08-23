@@ -17,6 +17,7 @@ function createAdminContent( ) {
 	global $oWebuser, $twig;
 
 	return $twig->render('admin.html', array(
-		'title' => Translations::get('admin')
+		'title' => Translations::get('menu_configuration')
+		, 'message' => 'Under construction'
 	));
 }

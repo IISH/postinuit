@@ -1,10 +1,4 @@
 <?php
-function preprint( $object ) {
-	echo '<pre>';
-	print_r( $object );
-	echo '</pre>';
-}
-
 class Misc {
 
 	public static function getListOfFiles( $directory  ) {
