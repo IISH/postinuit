@@ -43,7 +43,7 @@ function createContent() {
 
 	$oView->add_field( new class_field_string ( array(
 		'fieldname' => 'loginname'
-		, 'fieldlabel' => Translations::get('loginname')
+		, 'fieldlabel' => Translations::get('knaw_loginname')
 		, 'view_max_length' => 30
 		, 'href' => 'users-edit.php?ID=[FLD:ID]&backurl=[BACKURL]'
 		, 'viewfilter' => array(
@@ -68,9 +68,9 @@ function createContent() {
 
 	$oView->add_field( new class_field_bit ( array(
 		'fieldname' => 'is_beheerder'
-		, 'fieldlabel' => '<a alt="Beheerder" title="Beheerder">B</a>'
+		, 'fieldlabel' => '<a alt="Data Beheerder" title="Data Beheerder">DB</a>'
 		, 'show_different_values' => 1
-		, 'different_true_value' => '<a alt="Beheerder" title="Beheerder">B</a>'
+		, 'different_true_value' => '<a alt="Data Beheerder" title="Data Beheerder">DB</a>'
 		, 'different_false_value' => ''
 		)));
 

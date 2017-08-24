@@ -52,19 +52,19 @@ function createContent() {
 
 	$oForm->add_field( new class_field_string ( array(
 		'fieldname' => 'loginname'
-		, 'fieldlabel' => 'Loginname'
+		, 'fieldlabel' => Translations::get('knaw_loginname')
 		, 'required' => 1
 		)));
 
 	$oForm->add_field( new class_field_string ( array(
 		'fieldname' => 'name'
-		, 'fieldlabel' => 'Name'
+		, 'fieldlabel' => Translations::get('name')
 		, 'required' => 0
 		)));
 
 	$oForm->add_field(new class_field_bit (array(
 		'fieldname' => 'is_beheerder'
-		, 'fieldlabel' => 'Is beheerder?'
+		, 'fieldlabel' => 'Is data beheerder?'
 		, 'required' => 0
 		, 'class' => ''
 		)));
