@@ -23,6 +23,7 @@ function createPostinContent( ) {
 	$selectedPost = array();
 	$files_belonging_to_post = array();
 	$submitError = "";
+    $hasRightsToEdit = true;
 
 	if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
         $isValid = true;
@@ -38,37 +39,6 @@ function createPostinContent( ) {
             $isValid = false;
         }
 
-        // This was used to check whether the error values in the array would return something, but alas
-//        file_put_contents('./log.txt', date('c')."\n", FILE_APPEND | LOCK_EX);
-//        file_put_contents('./log.txt', $_FILES["documentInput"]["error"], FILE_APPEND | LOCK_EX);
-//        file_put_contents('./log.txt', "\n", FILE_APPEND | LOCK_EX);
-//
-//        if($_FILES["documentInput"]["error"] == 4){
-//            file_put_contents('./log.txt', "A\n", FILE_APPEND | LOCK_EX);
-//        }
-//        else if($_FILES["documentInput"]["error"] == '4'){
-//            file_put_contents('./log.txt', "B\n", FILE_APPEND | LOCK_EX);
-//        }
-//        else if($_FILES["documentInput"]["error"] === '4'){
-//            file_put_contents('./log.txt', "C\n", FILE_APPEND | LOCK_EX);
-//        }
-//        else if(!isset($_FILES['documentInput']['name'])){
-//            file_put_contents('./log.txt', "D\n", FILE_APPEND | LOCK_EX);
-//        }
-//        else if($_FILES["documentInput"]["name"] == ''){
-//            file_put_contents('./log.txt', "F\n", FILE_APPEND | LOCK_EX);
-//        }
-//        else if($_FILES["documentInput"]["error"] != 0) {  // ------------ This is the one that works!!!! ------------
-//            file_put_contents('./log.txt', "E\n", FILE_APPEND | LOCK_EX);
-//            file_put_contents('./log.txt', $_FILES["documentInput"]["error"], FILE_APPEND | LOCK_EX);
-//            file_put_contents('./log.txt', "\n", FILE_APPEND | LOCK_EX);
-//        }
-//        else {
-//            file_put_contents('./log.txt', "MEH\n", FILE_APPEND | LOCK_EX);
-//            file_put_contents('./log.txt', $_FILES['documentInput']['name'], FILE_APPEND | LOCK_EX);
-//            file_put_contents('./log.txt', "\n", FILE_APPEND | LOCK_EX);
-//        }
-
         if($isValid){
             $next = "";
             $_POST['in_out'] = 'in';
@@ -76,15 +46,23 @@ function createPostinContent( ) {
                 Posts::uploadPost($_POST, $_FILES);
                 $next = 'postin.php';
             } else if ( $_POST['submitValue'] === "Pas aan" ) {
-                $next = $_SESSION['previous_location']; // gets the previous location (basic search)
-                Posts::editPost( $_POST, $_FILES);
+                if($oWebuser->getName() === $_POST['registered_by_name'] || $oWebuser->isFb()){
+                //if($oWebuser->getName() === $_POST['registered_by_name'] || $oWebuser->isBeheerder() ) //TODO: Uncomment this line with the new code!
+                    Posts::editPost( $_POST, $_FILES);
+                    $next = $_SESSION['previous_location']; // gets the previous location (basic search)
+                }else{
+                    $selectedPost = $_POST;
+                    $submitError = "* You don't have the rights to edit this post";
+                    $kenmerk = $selectedPost['kenmerk'];
+                    $submitValue = "Pas aan";
+                    $files_belonging_to_post = Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk );
+                }
             }
             Header("Location: " . $next);
         }else{
             $selectedPost = $_POST;
             $submitError = "* Not all fields have been filled in!";
         }
-
 	} else if($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ( $id !== "" ) {
             // EXISTING
@@ -95,6 +73,11 @@ function createPostinContent( ) {
 			// find username
             $a = new User( $selectedPost['registered_by'] );
             $selectedPost['registered_by_name'] = $a->getName();
+
+            $hasRightsToEdit = ($oWebuser->getName() === $selectedPost['registered_by_name'] || $oWebuser->isFb() ) ? true : false;
+            // TODO: Uncomment the line below with the new code from Gordan!
+//            $hasRightsToEdit = ($oWebuser->getName() === $selectedPost['registered_by_name'] || $oWebuser->isBeheerder() ) ? true : false;
+
 
 			//
             $kenmerk = $selectedPost['kenmerk'];
@@ -162,5 +145,6 @@ function createPostinContent( ) {
 		, 'lbl_already_uploaded_files' => Translations::get('lbl_already_uploaded_files')
 		, 'are_you_sure_delete' => Translations::get('are_you_sure_delete')
 		, 'removed' => Translations::get('removed')
+        , 'has_rights_to_edit' => $hasRightsToEdit
 	));
 }

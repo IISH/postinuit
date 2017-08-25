@@ -3,7 +3,11 @@
     <h3 id="errorHeader" style="color: red;">{{ submitError }}</h3>
 {% endif %}
 
-<form method="POST" onsubmit="return validateForm()" enctype="multipart/form-data">
+{% if has_rights_to_edit is defined %}
+    {% if has_rights_to_edit == true %}
+        <form method="POST" onsubmit="return validateForm()" enctype="multipart/form-data">
+    {% endif %}
+{% endif %}
 
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
@@ -20,7 +24,7 @@
 							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ help_date }}" tabindex="-1">?</a>
 						</label>
 					</td>
-					<td><input class="input-sm col-xs-12 col-lg-12" id="dateSentInput" name="date" type="text" value="{{ selectedPost['date'] }}"></td>
+					<td><input class="input-sm col-xs-12 col-lg-12" id="dateSentInput" name="date" type="text" value="{{ selectedPost['date'] }}" {% if has_rights_to_edit == false %}disabled{% endif %}></td>
 				</tr>
 				<tr>
 					<td>
@@ -29,7 +33,7 @@
 							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ help_sender_name }}" tabindex="-1">?</a>
 						</label>
 					</td>
-					<td><input class="input-sm col-xs-12 col-lg-12" id="senderNameInput" name="our_name" type="text" value="{{ selectedPost['our_name'] }}"></td>
+					<td><input class="input-sm col-xs-12 col-lg-12" id="senderNameInput" name="our_name" type="text" value="{{ selectedPost['our_name'] }}" {% if has_rights_to_edit == false %}disabled{% endif %}></td>
 				</tr>
 				<tr>
 					<td><label for="senderInstituteInput">{{ senderInstituteInfo }}</label></td>
@@ -46,7 +50,7 @@
 							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ help_receiver_name }}" tabindex="-1">?</a>
 						</label>
 					</td>
-					<td><input class="input-sm col-xs-12 col-lg-12" id="receiverNameInput" name="their_name" type="text" value="{{ selectedPost['their_name'] }}"></td>
+					<td><input class="input-sm col-xs-12 col-lg-12" id="receiverNameInput" name="their_name" type="text" value="{{ selectedPost['their_name'] }}" {% if has_rights_to_edit == false %}disabled{% endif %}></td>
 				</tr>
 				<tr>
 					<td>
@@ -55,7 +59,7 @@
 							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ help_receiver_organisation }}" tabindex="-1">?</a>
 						</label>
 					</td>
-					<td><input class="input-sm col-xs-12 col-lg-12" id="receiverInstituteInput" name="their_organisation" type="text" value="{{ selectedPost['their_organisation'] }}"></td>
+					<td><input class="input-sm col-xs-12 col-lg-12" id="receiverInstituteInput" name="their_organisation" type="text" value="{{ selectedPost['their_organisation'] }}" {% if has_rights_to_edit == false %}disabled{% endif %}></td>
 				</tr>
 				<tr>
 					<td>
@@ -66,7 +70,7 @@
 					</td>
 					<td id="typeOfDocumentTD">
 						{% for key, value in documentTypeOptions %}
-							<label for="{{ key }}" style="margin-right: 10px;"><input id="{{ key }}" value="{{ key }}" type="radio" name="type_of_document" {# % if selectedPost['type_of_document'] == key % #} checked { % endif #}> {{ value[0] }}</label>
+							<label for="{{ key }}" style="margin-right: 10px;"><input id="{{ key }}" value="{{ key }}" type="radio" name="type_of_document" {% if selectedPost['type_of_document'] == key %} checked {% else %} {% if has_rights_to_edit == false %} disabled {% endif %} {% endif %}> {{ value[0] }}</label>
 						{% endfor %}
 					</td>
 				</tr>
@@ -77,11 +81,11 @@
 							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ help_subject }}" tabindex="-1">?</a>
 						</label>
 					</td>
-					<td><textarea class="input-sm col-xs-12 ol-lg-12" id="subjectInput" name="subject">{{ selectedPost['subject'] }}</textarea></td>
+					<td><textarea class="input-sm col-xs-12 ol-lg-12" id="subjectInput" name="subject" {% if has_rights_to_edit == false %}disabled{% endif %}>{{ selectedPost['subject'] }}</textarea></td>
 				</tr>
 				<tr>
 					<td><label for="commentsInput">{{ commentsInputInfo }} <a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ help_remarks }}" tabindex="-1">?</a></label></td>
-					<td><textarea class="input-sm col-xs-12 col-lg-12" id="commentsInput" name="remarks">{{ selectedPost['remarks'] }}</textarea></td>
+                        <td><textarea class="input-sm col-xs-12 col-lg-12" id="commentsInput" name="remarks" {% if has_rights_to_edit == false %}disabled{% endif %}>{{ selectedPost['remarks'] }}</textarea></td>
 				</tr>
 				<tr>
 					<td><label for="registeredByInput" tabindex="-1">{{ registeredByInfo }}</label></td>
@@ -95,6 +99,7 @@
 		</div>
 		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
 
+            {% if has_rights_to_edit %}
 			<div class="border">
 				<label>{{ lbl_upload_files }}
 					<a href="#" class="semiRequired" data-toggle="popover" data-trigger="hover" data-content="{{ field_is_semi_required }}" tabindex="-1">*</a><br>
@@ -106,6 +111,7 @@
                 <h6>{{ document_upload_comment }}</h6>
 				<div id="fileList"></div>
 			</div>
+            {% endif %}
 
 			{% if files_from_post|length > 0 %}
 			<div class="border attachment">
@@ -113,12 +119,14 @@
                 <ul id="attachment_list" class="in_out">
                     {% for file in files_from_post %}
                         <li id="attachment_list_item" value="{{ file }}">
+                            {% if has_rights_to_edit %}
                             <button type="submit" class="openFileFromServer" name="openFileFromServer" formaction="open_file_from_post.php" value="{{ file }}">
                                 <img class="attachment_button_images" src="./images/save.png">
                             </button>
                             <button type="button" class="deleteFileFromServer" name="deleteFileFromServer" value="{{ file }}">
                                 <img class="attachment_button_images" src="./images/delete.png">
                             </button>
+                            {% endif %}
                             {{ file }}
                         </li>
                     {% endfor %}
@@ -130,7 +138,9 @@
 
 	<div class="row">
 		<div class="col-xs-12 inputformsubmitbutton">
+            {% if has_rights_to_edit %}
 			<input type="submit" name="submitValue" value="{{ submitValue }}">
+            {% endif %}
 			<input type="text" name="ID" value="{{ selectedPost['ID'] }}" hidden>
             <input type="text" id="our_loginname" name="our_loginname" value="{{ selectedPost['our_loginname'] }}" hidden>
 		</div>
@@ -141,18 +151,18 @@
 <script>
 	$(document).ready(function() {
 
-  $('.deleteFileFromServer').on('click', function(){
-    if(confirm("{{ are_you_sure_delete }}")){
-        deleteAttachment($(this).val());
-          }
-      });
+        $('.deleteFileFromServer').on('click', function(){
+        if(confirm("{{ are_you_sure_delete }}")){
+            deleteAttachment($(this).val());
+            }
+        });
 
-    $('#documentInput').on('change', function(event){
-        var nr_of_files = document.getElementById('nr_of_files_field');
-        nr_of_files.innerText = '{{ nr_of_files_upload }}' + event.target.files.length;
-      });
+        $('#documentInput').on('change', function(event){
+            var nr_of_files = document.getElementById('nr_of_files_field');
+            nr_of_files.innerText = '{{ nr_of_files_upload }}' + event.target.files.length;
+        });
 
-    $('#senderNameInput').on('change', function(){
+        $('#senderNameInput').on('change', function(){
             $.ajax({
                 url: 'handle_autocomplete_auto_fill.php',
                 type: 'GET',
