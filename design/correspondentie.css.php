@@ -380,11 +380,19 @@ input[type=file] {
 
 #attachment_list_item{
     list-style-type: none;
-    padding: 2px;
+    padding: 2px 0px;
 }
 
 #attachment_list_item:hover{
-    background-color: #cfcfcf;
+    background-color: #bfbfbf !important;
+}
+
+#attachment_list{
+    padding-left: 0;
+}
+
+#attachment_list li:nth-child(odd){
+    background-color: #dfdfdf;
 }
 
 .attachment_add_button{

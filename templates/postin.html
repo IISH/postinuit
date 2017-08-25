@@ -111,7 +111,7 @@
 			{% if files_from_post|length > 0 %}
 			<div class="border attachment">
 				<label>{{ lbl_already_uploaded_files }}</label>
-				<ul id="attachment_list"class="in_out">
+				<ul id="attachment_list" class="in_out">
 					{% for file in files_from_post %}
                         <li id="attachment_list_item" value="{{ file }}">
                             <button type="submit" class="openFileFromServer" name="openFileFromServer" formaction="open_file_from_post.php" value="{{ file }}">
