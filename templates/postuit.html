@@ -103,8 +103,8 @@
                     <img class="attachment_add_button" src="images/add.png">
                 </label><h6 id="nr_of_files_field"> {{ nr_of_files_upload }} 0</h6>
 				<input class="input-sm col-xs-12 col-lg-12" id="documentInput" name="documentInput[]" type="file" multiple onchange="makeFileList();">
+                <div class="attachment" id="fileList"></div>
                 <h6>{{ document_upload_comment }}</h6>
-				<div id="fileList"></div>
 			</div>
 
 			{% if files_from_post|length > 0 %}
