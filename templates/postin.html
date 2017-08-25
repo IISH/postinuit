@@ -101,7 +101,7 @@
 					<a href="#" class="semiRequired" data-toggle="popover" data-trigger="hover" data-content="{{ field_is_semi_required }}" tabindex="-1">*</a><br>
 				</label><br>
                 <label class="button_add_document" id="button_add_document_label" for="documentInput">
-                    <img class="attachment_add_button" src="images/add.png">
+                    <span class="glyphicon glyphicon-plus attachment_add_button" aria-hidden="true"></span>
                 </label><h6 id="nr_of_files_field"> {{ nr_of_files_upload }} 0</h6>
 				<input class="input-sm col-xs-12 col-lg-12" id="documentInput" name="documentInput[]" type="file" multiple onchange="makeFileList();">
                 <h6>{{ document_upload_comment }}</h6>
@@ -115,10 +115,10 @@
 					{% for file in files_from_post %}
                         <li id="attachment_list_item" value="{{ file }}">
                             <button type="submit" class="openFileFromServer" name="openFileFromServer" formaction="open_file_from_post.php" value="{{ file }}">
-                                <img class="attachment_button_images" src="./images/save.png">
+                                <span class="glyphicon glyphicon-save-file attachment_button_images" aria-hidden="true"></span>
                             </button>
                             <button type="button" class="deleteFileFromServer" name="deleteFileFromServer" value="{{ file }}">
-                                <img class="attachment_button_images" src="./images/delete.png">
+                                <span class="glyphicon glyphicon-remove attachment_button_images" aria-hidden="true"></span>
                             </button>
                             {{ file }}
                         </li>
