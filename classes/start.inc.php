@@ -53,7 +53,7 @@ $menu = array();
 $menu[] = new MenuItem(Translations::get('menu_zoeken'), 'zoeken.php');
 $menu[] = new MenuItem(Translations::get('menu_postin'), 'postin.php');
 $menu[] = new MenuItem(Translations::get('menu_postuit'), 'postuit.php');
-if ( $oWebuser->isBeheerder() ) {
+if ( $oWebuser->isAdmin() ) {
 	$menu[] = new MenuItem(Translations::get('menu_configuration'), 'configuration.php');
 }
 

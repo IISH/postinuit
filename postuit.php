@@ -45,8 +45,7 @@ function createPostuitContent( ) {
                 Posts::uploadPost($_POST, $_FILES);
                 $next = 'postuit.php';
             } elseif ($_POST['submitValue'] === "Pas aan") {
-                if($oWebuser->getName() === $_POST['registered_by_name'] || $oWebuser->isFb()) {
-                //if($oWebuser->getName() === $_POST['registered_by_name'] || $oWebuser->isBeheerder() ) //TODO: Uncomment this line with the new code!
+                if($oWebuser->getName() === $_POST['registered_by_name'] || $oWebuser->isBeheerder() ) {
                     Posts::editPost($_POST, $_FILES);
                     $next = $_SESSION['previous_location']; // gets the previous location (basic search)
                 }else{
@@ -71,9 +70,8 @@ function createPostuitContent( ) {
 	        $a = new User( $selectedPost['registered_by'] );
 	        $selectedPost['registered_by_name'] = $a->getName();
 
-            $hasRightsToEdit = ($oWebuser->getName() === $selectedPost['registered_by_name'] || $oWebuser->isFb() ) ? true : false;
-            // TODO: Uncomment the line below with the new code from Gordan!
-//            $hasRightsToEdit = ($oWebuser->getName() === $selectedPost['registered_by_name'] || $oWebuser->isBeheerder() ) ? true : false;
+            //
+            $hasRightsToEdit = ($oWebuser->getName() === $selectedPost['registered_by_name'] || $oWebuser->isBeheerder() ) ? true : false;
 
 			//
             $kenmerk = $selectedPost['kenmerk'];

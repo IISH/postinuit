@@ -108,7 +108,7 @@
                     <span class="glyphicon glyphicon-plus attachment_add_button" aria-hidden="true"></span>
                 </label><h6 id="nr_of_files_field"> {{ nr_of_files_upload }} 0</h6>
 				<input class="input-sm col-xs-12 col-lg-12" id="documentInput" name="documentInput[]" type="file" multiple onchange="makeFileList();">
-                <div class="attachment" id="fileList"></div>
+                <div class="attachment" id="fileList"> </div>
                 <h6>{{ document_upload_comment }}</h6>
 			</div>
             {% endif %}
@@ -205,13 +205,13 @@
 			autoComplete($(this), $(this).val(), 'our_name');
 		});
 
-		$('#senderInstituteInput').on('keyup', function(){
-			autoComplete($(this), $(this).val(), 'our_institute');
-		});
+//		$('#senderInstituteInput').on('keyup', function(){
+//			autoComplete($(this), $(this).val(), 'our_institute');
+//		});
 
-		$('#senderDepartmentInput').on('keyup', function(){
-			autoComplete($(this), $(this).val(), 'our_department');
-		});
+//		$('#senderDepartmentInput').on('keyup', function(){
+//			autoComplete($(this), $(this).val(), 'our_department');
+//		});
 
 		$('#receiverNameInput').on('keyup', function(){
 			autoComplete($(this), $(this).val(), 'their_name');

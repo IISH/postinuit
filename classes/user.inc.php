@@ -90,11 +90,6 @@ class User {
 		return ( $this->isBeheerder || $this->isAdmin() );
 	}
 
-	// DEPRECATED
-	public function isFb() {
-		return $this->isBeheerder();
-	}
-
 	//
 	public function isLoggedIn() {
 		if ( $_SESSION["loginname"] != '' ) {
