@@ -3,7 +3,6 @@
 <br>
 
 <table id="advanced_search_table">
-
 	<tr>
 		<td>
 			<label id="kenmerk_search_lbl" for="kenmerk_search">{{ kenmerk_lbl }}</label>
@@ -25,7 +24,6 @@
 			<label id="in_uit_search_lbl">{{ in_uit_lbl }}</label>
 		</td>
 		<td>
-
 			{% for in_out in in_outs %}
 
 				{% set selected = false %}
@@ -126,6 +124,7 @@
 		</tr>
 	</table>
 </div>
+
 <div>
 	<table id="postOverview" class="table-bordered table-condensed table-hover table-striped">
 		<tr id="postHeaderRow">
@@ -158,29 +157,30 @@
 
 	</table>
 </div>
+
 <div>
 	<table>
 		<tr>
             <td>
-                <button id="first_page_button_bottom"> << </button>
+                <button id="first_page_button_bottom"> &lt;&lt; </button>
             </td>
             <td>
-                <button id="previous_button_bottom"> < </button>
+                <button id="previous_button_bottom"> &lt; </button>
             </td>
             <td>
                 <label id="current_page_label">&nbsp{{ lbl_current_page }} {{ lbl_page_indicator_or }} {{ max_pages }}&nbsp</label>
             </td>
             <td>
-                <button id="next_button_bottom"> > </button>
+                <button id="next_button_bottom"> &gt; </button>
             </td>
             <td>
-                <button id="last_page_button_bottom"> >> </button>
+                <button id="last_page_button_bottom"> &gt;&gt; </button>
             </td>
 		</tr>
 	</table>
 </div>
 
-<script>
+<script language="JavaScript">
 	navigationEnum = {
 	    FIRST: 'first',
         PREVIOUS: 'previous',
@@ -188,7 +188,6 @@
         LAST: 'last'
     };
 
-	//var pageNumber = location.href.substr(location.href.indexOf("=") + 1); // werkt niet
 	var pageNumber = document.getElementById('current_page').value;
 	var maxPages = document.getElementById('max_pages').value;
 
@@ -256,7 +255,6 @@
 			type_of_document_value += separator +$(this).val();
 			separator = ",";
 		});
-//		var department_value = $('#department_search').val(); // TODO: Wordt deze nog wel gebruikt?
 		var subject_value = $('#subject_search').val();
 		var remarks_value = $('#remarks_search').val();
 		var registered_by_value = $('#registered_by_search').val();
@@ -267,11 +265,9 @@
 					+ '&sender_name=' + sender_name_value
 					+ '&receiver_name=' + receiver_name_value
 					+ '&type_of_document=' + type_of_document_value
-//					+ '&department=' + department_value
 					+ '&subject=' + subject_value
 					+ '&remarks=' + remarks_value
-					+ '&registered_by=' + registered_by_value
-		;
+					+ '&registered_by=' + registered_by_value;
 	}
 
 	function pageNavigation(nav){
@@ -309,7 +305,6 @@
             type_of_document_value += separator + $(this).val();
             separator = ",";
         });
-//        var department_value = $('#department_search').val(); // TODO: Wordt deze nog wel gebruikt?
         var subject_value = $('#subject_search').val();
         var remarks_value = $('#remarks_search').val();
         var registered_by_value = $('#registered_by_search').val();
@@ -320,11 +315,9 @@
             + '&sender_name=' + sender_name_value
             + '&receiver_name=' + receiver_name_value
             + '&type_of_document=' + type_of_document_value
-  //          + '&department=' + department_value
             + '&subject=' + subject_value
             + '&remarks=' + remarks_value
-            + '&registered_by=' + registered_by_value
-        ;
+            + '&registered_by=' + registered_by_value;
     }
 
     document.getElementById("advanced_search_button").addEventListener("click", doAdvancedSearch, false);

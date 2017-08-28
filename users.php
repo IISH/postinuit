@@ -29,8 +29,9 @@ function createContent() {
 
 	$oView = new class_view();
 
+//AND authentication_server='knaw'
 	$oView->set_view( array(
-		'query' => "SELECT * FROM `users` WHERE is_deleted=0 AND authentication_server='knaw' "
+		'query' => "SELECT * FROM `users` WHERE is_deleted=0 "
 		, 'count_source_type' => 'query'
 		, 'order_by' => 'loginname'
 		, 'anchor_field' => 'ID'

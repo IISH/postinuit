@@ -59,7 +59,8 @@ function createContent() {
 		)));
 
 	// indien geen ID of Admin dan mag je code aanpassen
-	if ( $id == 0 || $oWebuser->isAdmin() ) {
+//	if ( $id == 0 || $oWebuser->isAdmin() ) {
+	if ( $id == 0 ) {
 		$oForm->add_field( new class_field_string ( array(
 			'fieldname' => 'property'
 			, 'fieldlabel' => 'Code'

@@ -384,7 +384,7 @@ function onKeyDown(e) {
 		}
 
 		if ( $label == '' ) {
-			$label = 'Add new';
+			$label = Translations::get('add_new');
 		}
 
 		// place submit buttons

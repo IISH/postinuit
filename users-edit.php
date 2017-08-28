@@ -25,6 +25,7 @@ function createContent() {
 
 	require_once("./classes/class_form/class_form.inc.php");
 	require_once("./classes/class_form/fieldtypes/class_field_hidden.inc.php");
+	require_once("./classes/class_form/fieldtypes/class_field_readonly.inc.php");
 	require_once("./classes/class_form/fieldtypes/class_field_string.inc.php");
 	require_once("./classes/class_form/fieldtypes/class_field_bit.inc.php");
 
@@ -60,6 +61,13 @@ function createContent() {
 		'fieldname' => 'name'
 		, 'fieldlabel' => Translations::get('name')
 		, 'required' => 0
+		)));
+
+	$oForm->add_field(new class_field_readonly (array(
+		'fieldname' => 'authentication_server'
+		, 'fieldlabel' => Translations::get('authentication')
+		, 'required' => 0
+		, 'onNew' => 'knaw'
 		)));
 
 	$oForm->add_field(new class_field_bit (array(
