@@ -44,7 +44,7 @@ function createPostinContent( ) {
             $_POST['in_out'] = 'in';
             if ( $_POST['submitValue'] === "Bewaar" ) {
                 Posts::uploadPost($_POST, $_FILES);
-                $next = 'postin.php';
+                $next = 'zoeken.php';
             } else if ( $_POST['submitValue'] === "Pas aan" ) {
                 if($oWebuser->getName() === $_POST['registered_by_name'] || $oWebuser->isBeheerder() ) {
                     Posts::editPost( $_POST, $_FILES);

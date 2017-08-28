@@ -43,7 +43,7 @@ function createPostuitContent( ) {
             $_POST['in_out'] = 'out';
             if ($_POST['submitValue'] === "Bewaar") {
                 Posts::uploadPost($_POST, $_FILES);
-                $next = 'postuit.php';
+                $next = 'zoeken.php';
             } elseif ($_POST['submitValue'] === "Pas aan") {
                 if($oWebuser->getName() === $_POST['registered_by_name'] || $oWebuser->isBeheerder() ) {
                     Posts::editPost($_POST, $_FILES);
