@@ -22,7 +22,7 @@ function makeFileList() {
         list.removeChild(list.firstChild);
     }
 
-    if ( input.files.length > 1 ) {
+    if ( input.files.length > 0 ) {
         var ul = document.createElement('ul');
         ul.setAttribute('class', 'in_out');
 
