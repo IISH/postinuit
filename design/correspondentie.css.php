@@ -281,7 +281,6 @@ table.login td {
 }
 
 #postOverview tr td {
-	padding: 10px 5px 10px 0px;
 	border: 1px solid black;
 	padding: 5px;
 }
