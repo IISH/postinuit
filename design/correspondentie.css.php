@@ -376,6 +376,7 @@ input[type=file] {
 .attachment_button_images{
     max-height: 20px;
     max-width: 20px;
+    font-size: 20px;
 }
 
 #attachment_list_item{
@@ -388,8 +389,10 @@ input[type=file] {
 }
 
 .attachment_add_button{
-    max-height: 40px;
-    max-width: 40px;
+    max-height: 50px;
+    max-width: 50px;
+    font-size: 50px;
+    padding-left: 2px;
 }
 
 .border > input{
