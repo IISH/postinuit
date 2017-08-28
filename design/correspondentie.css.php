@@ -281,7 +281,6 @@ table.login td {
 }
 
 #postOverview tr td {
-	padding: 10px 5px 10px 0px;
 	border: 1px solid black;
 	padding: 5px;
 }
@@ -376,20 +375,31 @@ input[type=file] {
 .attachment_button_images{
     max-height: 20px;
     max-width: 20px;
+    font-size: 20px;
 }
 
 #attachment_list_item{
     list-style-type: none;
-    padding: 2px;
+    padding: 2px 0px;
 }
 
 #attachment_list_item:hover{
-    background-color: #cfcfcf;
+    background-color: #bfbfbf !important;
+}
+
+#attachment_list{
+    padding-left: 0;
+}
+
+#attachment_list li:nth-child(odd){
+    background-color: #dfdfdf;
 }
 
 .attachment_add_button{
-    max-height: 40px;
-    max-width: 40px;
+    max-height: 50px;
+    max-width: 50px;
+    font-size: 50px;
+    padding-left: 2px;
 }
 
 .border > input{
