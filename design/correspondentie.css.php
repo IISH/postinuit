@@ -423,3 +423,8 @@ input[type=file] {
 #postOverview tr.no_files_present td {
     background-color: yellow !important;
 }
+
+#postOverview tr:hover td, #postOverview tr:hover td a{
+    background-color: #3c3c3c !important;
+    color: whitesmoke;
+}
