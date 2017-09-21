@@ -119,6 +119,8 @@ class Posts{
         $stmt->bindParam(':our_loginname', $data['our_loginname'], PDO::PARAM_STR);
 
 		$stmt->execute();
+
+		return $new_kenmerk;
 	}
 
 	/**
@@ -236,6 +238,8 @@ class Posts{
         $stmt->bindParam(':our_loginname', $data['our_loginname'], PDO::PARAM_STR);
 
 		$stmt->execute();
+
+		return $data['kenmerk'];
 	}
 
     /**

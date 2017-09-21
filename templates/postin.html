@@ -100,6 +100,11 @@
         <!-- Somehow the layout doesnt fare good when the screen gets small -->
 		<div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
 
+            <div class="border">
+                <label>{{ lastTimeMailed }}:</label><br>
+                {{ lastTimeMailSent }}
+            </div>
+
             {% if has_rights_to_edit == true %}
 			<div class="border">
 				<label>{{ lbl_upload_files }}
@@ -141,6 +146,7 @@
 		<div class="col-xs-12 inputformsubmitbutton">
             {% if has_rights_to_edit %}
 			    <input type="submit" name="submitValue" value="{{ submitValue }}">
+                <input type="submit" name="submitValue" value="{{ submitAndMailValue }}">
             {% endif %}
 			<input type="text" name="ID" value="{{ selectedPost['ID'] }}" hidden>
             <input type="text" id="our_loginname" name="our_loginname" value="{{ selectedPost['our_loginname'] }}" hidden>
