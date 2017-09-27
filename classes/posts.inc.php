@@ -132,7 +132,7 @@ class Posts{
         if( file_exists(Settings::get('attachment_directory').$kenmerk."/".$filename) ) {
             unlink(Settings::get('attachment_directory').$kenmerk."/".$filename);
             return true;
-        }else{
+        } else {
             return false;
         }
 	}
@@ -453,7 +453,7 @@ class Posts{
 	/**
 	 * Returns the post corresponding to the id given
 	 * @param $id
-	 * @return string
+	 * @return object
 	 */
 	public static function findPostById($id) {
 		if(!self::$is_loaded) {
@@ -463,6 +463,28 @@ class Posts{
 		$value = isset(self::$settings[$id]) ? self::$settings[$id] : '';
 
 		return $value;
+	}
+
+	/**
+	 * Returns the post corresponding to the kenmerk given
+	 * @param $kenmerk
+	 * @return object
+	 */
+	public static function findPostByKenmerk($kenmerk) {
+		global $dbConn;
+
+		$ret = null;
+
+		//
+		$query = "SELECT * FROM `post` WHERE kenmerk='" . addslashes($kenmerk) . "' LIMIT 0,1 ";
+		$stmt = $dbConn->getConnection()->prepare($query);
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		foreach ($result as $row) {
+			$ret = new Post( $row );
+		}
+
+		return $ret;
 	}
 
 	/**

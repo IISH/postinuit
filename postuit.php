@@ -45,10 +45,10 @@ function createPostuitContent( ) {
                 Posts::uploadPost($_POST, $_FILES);
                 $next = 'zoeken.php';
             } elseif ($_POST['submitValue'] === "Pas aan") {
-                if($oWebuser->getName() === $_POST['registered_by_name'] || $oWebuser->isBeheerder() ) {
+                if ( $oWebuser->getId() === $_POST['registered_by'] || $oWebuser->isBeheerder() ) {
                     Posts::editPost($_POST, $_FILES);
                     $next = $_SESSION['previous_location']; // gets the previous location (basic search)
-                }else{
+                } else {
                     $selectedPost = $_POST;
                     $submitError = "* You don't have the rights to edit this post";
                     $kenmerk = $selectedPost['kenmerk'];
@@ -57,7 +57,7 @@ function createPostuitContent( ) {
                 }
             }
             Header("Location: " . $next);
-        }else{
+        } else {
             $selectedPost = $_POST;
             $submitError = "* Not all fields have been filled in!";
         }
@@ -71,7 +71,7 @@ function createPostuitContent( ) {
 	        $selectedPost['registered_by_name'] = $a->getName();
 
             //
-            $hasRightsToEdit = ($oWebuser->getName() === $selectedPost['registered_by_name'] || $oWebuser->isBeheerder() ) ? true : false;
+            $hasRightsToEdit = ($oWebuser->getId() === $selectedPost['registered_by'] || $oWebuser->isBeheerder() ) ? true : false;
 
 			//
             $kenmerk = $selectedPost['kenmerk'];
