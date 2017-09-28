@@ -3,11 +3,7 @@
     <h3 id="errorHeader" style="color: red;">{{ submitError }}</h3>
 {% endif %}
 
-{% if has_rights_to_edit is defined %}
-    {% if has_rights_to_edit == true %}
-        <form method="POST" onsubmit="return validateForm()" enctype="multipart/form-data">
-    {% endif %}
-{% endif %}
+<form method="POST" onsubmit="return validateForm()" enctype="multipart/form-data">
 
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-9 col-lg-9">
@@ -119,10 +115,10 @@
                 <ul id="attachment_list" class="in_out">
                     {% for file in files_from_post %}
                         <li id="attachment_list_item" value="{{ file }}">
-                            {% if has_rights_to_edit %}
                             <button type="submit" class="openFileFromServer" name="openFileFromServer" formaction="open_file_from_post.php" value="{{ file }}">
                                 <span class="glyphicon glyphicon-save-file attachment_button_images" aria-hidden="true"></span>
                             </button>
+                            {% if has_rights_to_edit %}
                             <button type="button" class="deleteFileFromServer" name="deleteFileFromServer" value="{{ file }}">
                                 <span class="glyphicon glyphicon-remove attachment_button_images" aria-hidden="true"></span>
                             </button>
@@ -156,6 +152,14 @@
             deleteAttachment($(this).val());
             }
         });
+
+        var requireds = document.getElementsByClassName('required');
+        var semi_requireds = document.getElementsByClassName('semiRequired');
+
+        {% if not has_rights_to_edit %}
+            $('.required').remove();
+            $('.semiRequired').remove();
+        {% endif %}
 
         $('#documentInput').on('change', function(event){
             var nr_of_files = document.getElementById('nr_of_files_field');
