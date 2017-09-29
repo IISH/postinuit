@@ -1,8 +1,7 @@
 correspondentie.settings.php
 correspondentie.settings.LOCAL.php
-bootstrap-3.3.7
-vendor
+vendor/
 .idea
-documenten
+documenten/
 test.php
-import
+import/

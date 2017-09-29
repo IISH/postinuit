@@ -61,14 +61,16 @@ class Authentication {
         $result = $stmt->fetch();
 
         $prefix = $result['prefix'];
-        $postfix = $result['postfix'];
+        #$postfix = $result['postfix'];
         $servers = $result['servers'];
         $protocol = $result['protocol'];
 
+		//
 		$user = str_replace('/', '\\', $user); // voor alle zekerheid
+		// add prefix
 		$user = $prefix . $user;
+		// remove double prefix
 		$user = str_replace($prefix . $prefix, $prefix, $user); // voor alle zekerheid
-// user: IA\VoornaamA
 
         $activeDirectoryServers = unserialize($servers);
 
@@ -77,7 +79,6 @@ class Authentication {
 			if ( $login_correct == 0 ) {
 
 				// try to connect to the ldap server
-// ldaps://10.24....:636
 				$ad = ldap_connect($protocol . $server['server'], $server['port']);
 
 				// set some variables
@@ -85,8 +86,8 @@ class Authentication {
 				ldap_set_option($ad, LDAP_OPT_REFERRALS, 0);
 
 				// bind to the ldap directory
-				#$bd = @ldap_bind($ad, $user, $pw);
-				$bd = ldap_bind($ad, $user, $pw);
+				$bd = @ldap_bind($ad, $user, $pw); // don't show bind error messages
+				#$bd = ldap_bind($ad, $user, $pw);
 
 				// verify binding, if binding succeeds then login is correct
 				if ($bd) {

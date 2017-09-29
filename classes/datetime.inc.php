@@ -1,8 +1,7 @@
 <?php 
-
 class class_datetime {
 
-	// todo protectie
+	// TODO add protectie on GET
 	public static function getQueryDate() {
 		if ( isset($_GET["d"]) ) {
 			$d = $_GET["d"];
@@ -117,29 +116,6 @@ class class_datetime {
 		return $date;
 	}
 
-//	public function formatDatePresentOrNot($date) {
-//		$retval = trim($date);
-//
-//		if ( $retval != '' ) {
-//			if ( $retval == date("Ymd") ) {
-//				$retval = 'Today';
-//			} else {
-//				//
-//				if ( strlen($retval) == 8 ) {
-//					$year = substr($retval, 0, 4);
-//					$month = substr($retval, 4, 2);
-//					$day = substr($retval, 6, 2);
-//
-//					$dag = mktime(0, 0, 0, $month, $day, $year);
-//
-//					$retval = date("D", $dag) . " " . date("d", $dag) . " " . date("M", $dag);
-//				}
-//			}
-//		}
-//
-//		return $retval;
-//	}
-
 	public function is_legacy($oDate, $max = 1) {
 		$isLegacy = false;
 
@@ -163,14 +139,6 @@ class class_datetime {
 
 		return $isFuture;
 	}
-
-//	public function formatDateAsString($datum) {
-//		$retval = $datum["y"];
-//		$retval .= substr('0' . $datum["m"], -2);
-//		$retval .= substr('0' . $datum["d"], -2);
-//
-//		return $retval;
-//	}
 
 	public static function formatDate($date) {
 		$retval = trim($date);

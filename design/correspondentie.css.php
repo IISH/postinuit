@@ -424,7 +424,9 @@ input[type=file] {
     background-color: yellow !important;
 }
 
-#postOverview tr:hover td, #postOverview tr:hover td a{
-    background-color: #3c3c3c !important;
-    color: whitesmoke;
+#postOverview tr:hover td, #postOverview tr:hover td a, #postOverview tr:hover td a:hover  {
+	background-color: #707070 !important;
+	color: whitesmoke;
+	text-decoration: none;
+	border-bottom: 1px dotted whitesmoke;
 }

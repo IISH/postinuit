@@ -40,8 +40,8 @@ class PostTest extends TestCase
             '2199-01-01',
             'Bill Gates',
             'Microsoft',
-            'GordanC',
-            'Gordan Cupac',
+            'FirstnameL',
+            'Firstname Lastname',
             'IISG',
             'DI',
             2,
@@ -81,8 +81,8 @@ class PostTest extends TestCase
         $this->assertEquals('Microsoft', $this->post->getTheirOrganisation());
     }
 
-    public function testOurNameOfPostEqualsGordanCupac(){
-        $this->assertEquals('Gordan Cupac', $this->post->getOurName());
+    public function testOurNameOfPostEqualsFirstnameLastname(){
+        $this->assertEquals('Firstname Lastname', $this->post->getOurName());
     }
 
     public function testOurInstituteFromPostNotEqualsKnaw(){
@@ -113,8 +113,7 @@ class PostTest extends TestCase
         $this->assertEquals(5, $this->post->getNumberOfFiles());
     }
 
-    public function testOurLoginNameOfPostEqualsGordanC(){
-        $this->assertEquals('GordanC', $this->post->getOurLoginname());
+    public function testOurLoginNameOfPostEqualsFirstnameL(){
+        $this->assertEquals('FirstnameL', $this->post->getOurLoginname());
     }
-
 }

@@ -50,8 +50,8 @@ Zoek: <input type="text" id="search" value="{{ search }}"> <button id="zoek">Zoe
                 <td><a href="{{post.url}}?ID={{post.ID}}">{{post.kenmerk}}</a></td>
                 <td>{{post.inOut}}</td>
                 <td>{{post.date}}</td>
-                <td>{{post.theirName}}{% if post.theirOrganisation %}<br><i>{{post.theirOrganisation}}</i>{% endif %}</td>
-                <td>{{post.ourName}}{% if post.ourOrganisation or post.ourDepartment %}<br><i>{{post.ourOrganisation}} {% if post.ourDepartment %}({{post.ourDepartment}}){% endif %}</i>{% endif %}</td>
+				<td><a href="{{post.url}}?ID={{post.ID}}">{{post.theirName}}{% if post.theirOrganisation %}<br><i>{{post.theirOrganisation}}</i>{% endif %}</a></td>
+				<td><a href="{{post.url}}?ID={{post.ID}}">{{post.ourName}}{% if post.ourOrganisation or post.ourDepartment %}<br><i>{{post.ourOrganisation}} {% if post.ourDepartment %}({{post.ourDepartment}}){% endif %}</i>{% endif %}</a></td>
                 <td>{{post.typeOfDocument}}</td>
                 <td>{{post.numberOfFiles}}</td>
                 <td>{{post.subject}}</td>

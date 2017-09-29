@@ -43,5 +43,4 @@ class MenuTest extends TestCase
     public function testMenuArrayContainsThreeMenuItems(){
         $this->assertEquals(3, count($this->menu));
     }
-
 }

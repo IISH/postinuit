@@ -9,12 +9,9 @@
 require_once "./classes/datetime.inc.php";
 require_once "./classes/date.inc.php";
 require_once "./classes/website_protection.inc.php";
-//require_once "./classes/translations.inc.php";
-//require_once "./classes/_misc_functions.inc.php";
 use PHPUnit\Framework\TestCase;
 
-class Class_DatetimeTest extends TestCase
-{
+class Class_DatetimeTest extends TestCase {
     protected $datetime;
 
     public function setUp(){
@@ -127,47 +124,23 @@ class Class_DatetimeTest extends TestCase
         $this->assertEquals($dateExpected, $this->datetime->get_date($protect));
     }
 
-//    /**
-//     * @runInSeparateProcess
-//     */
-//    public function testGetDateReturnsTheDateWithMonthAndDateBeingTooHighSetInParameterField(){
-//        $protect = new WebsiteProtection();
-//        $_GET['d'] = 20121935;
-//        $dateExpected['d'] = '04';
-//        $dateExpected['m'] = '05';
-//        $dateExpected['y'] = '2012';
-//        $dateExpected['Ym'] = $dateExpected['y'] . $dateExpected['m'];
-//        $dateExpected['Ymd'] = $dateExpected['y'] . $dateExpected['m'] . $dateExpected['d'];
-//
-//        $this->assertEquals($dateExpected, $this->datetime->get_date($protect));
-//    }
-
-//    public function testIsLegacyReturnsTrueWithYear2012(){
-//        $object = (object) ['Y' => '2012'];
-//
-//        $dateToCheck['Y'] = 2012;
-//        print_r($dateToCheck->get('Y'));
-//        $this->assertEquals(true, $this->datetime->is_legacy($object));
-//    }
-
     public function testFormatDateReturnsACorrectlyFormattedDate(){
-        $this->assertEquals('04-05-2012', $this->datetime->formatDate(20120504));
+        $this->assertEquals('31-05-2012', class_datetime::formatDate('20120531'));
     }
 
     public function testFormatDateReturnsQuestionMarkWithDateBeingEmpty(){
-        $this->assertEquals('?', $this->datetime->formatDate(''));
+        $this->assertEquals('?', class_datetime::formatDate(''));
     }
 
     public function testFormatDateReturnsQuestionMarkWithDateBeingZero(){
-        $this->assertEquals('?', $this->datetime->formatDate(0));
+        $this->assertEquals('?', class_datetime::formatDate(0));
     }
 
     public function testFormatDateReturnsQuestionMarkDueToLengthBeingLessThanEight(){
-        $this->assertEquals('?', $this->datetime->formatDate(201205));
+        $this->assertEquals('201205', class_datetime::formatDate('201205'));
     }
 
     public function testFormatDateReturnsQuestionMarkDueToLengthBeingMoreThanEight(){
-        $this->assertEquals('?', $this->datetime->formatDate(201205));
+        $this->assertEquals('2012053112', class_datetime::formatDate('2012053112'));
     }
-
 }

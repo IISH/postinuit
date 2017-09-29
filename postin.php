@@ -19,6 +19,7 @@ function createPostinContent( ) {
 	// get id from the url
 	$id = $protect->requestPositiveNumberOrEmpty('get', 'ID');
 	$kenmerk = null;
+	// TODO TODOGCU
 	$submitValue = "Bewaar";
 	$selectedPost = array();
 	$files_belonging_to_post = array();
@@ -42,10 +43,14 @@ function createPostinContent( ) {
         if($isValid){
             $next = "";
             $_POST['in_out'] = 'in';
+	        // TODO TODOGCU
             if ( $_POST['submitValue'] === "Bewaar" ) {
+	            // NEW
                 Posts::uploadPost($_POST, $_FILES);
                 $next = 'zoeken.php';
+            // TODO TODOGCU
             } else if ( $_POST['submitValue'] === "Pas aan" ) {
+	            // EXISTING
                 if ( $oWebuser->getId() === $_POST['registered_by'] || $oWebuser->isBeheerder() ) {
                     Posts::editPost( $_POST, $_FILES);
                     $next = $_SESSION['previous_location']; // gets the previous location (basic search)
@@ -53,6 +58,7 @@ function createPostinContent( ) {
                     $selectedPost = $_POST;
                     $submitError = "* You don't have the rights to edit this post";
                     $kenmerk = $selectedPost['kenmerk'];
+	                // TODO TODOGCU
                     $submitValue = "Pas aan";
                     $files_belonging_to_post = Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk );
                 }
@@ -81,6 +87,7 @@ function createPostinContent( ) {
 	        $files_belonging_to_post = Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk );
 
 			//
+	        // TODO TODOGCU
             $submitValue = "Pas aan";
         } else {
             // NEW
