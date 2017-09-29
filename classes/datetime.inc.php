@@ -1,10 +1,10 @@
-<?php 
-class class_datetime {
+<?php
+// DEPRECATED
 
-	// TODO add protectie on GET
+class class_datetime {
 	public static function getQueryDate() {
 		if ( isset($_GET["d"]) ) {
-			$d = $_GET["d"];
+			$d = substr(trim($_GET["d"]), 0, 10);
 		} else {
 			$d = '';
 		}
@@ -32,12 +32,12 @@ class class_datetime {
 		// snelle controle of maand/dag niet te hoog/laag zijn
 		if ( $date["m"] < 1 ) {
 			$date["m"] = 1;
-		} else if ( $date["m"] > 12 ) {
+		} elseif ( $date["m"] > 12 ) {
 			$date["m"] = 12;
 		}
 		if ( $date["d"] < 1 ) {
 			$date["d"] = 1;
-		} else if ( $date["d"] > 31 ) {
+		} elseif ( $date["d"] > 31 ) {
 			$date["d"] = 31;
 		}
 
@@ -75,12 +75,12 @@ class class_datetime {
 			// snelle controle of maand/dag niet te hoog/laag zijn
 			if ( $month < 1 ) {
 				$month = 1;
-			} else if ( $month > 12 ) {
+			} elseif ( $month > 12 ) {
 				$month = 12;
 			}
 			if ( $day < 1 ) {
 				$day = 1;
-			} else if ( $day > 31 ) {
+			} elseif ( $day > 31 ) {
 				$day = 31;
 			}
 
