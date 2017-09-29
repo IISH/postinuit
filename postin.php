@@ -19,8 +19,7 @@ function createPostinContent( ) {
 	// get id from the url
 	$id = $protect->requestPositiveNumberOrEmpty('get', 'ID');
 	$kenmerk = null;
-	// TODO TODOGCU
-	$submitValue = "Bewaar";
+	$submitValue = Translations::get('btn_new');
 	$selectedPost = array();
 	$files_belonging_to_post = array();
 	$submitError = "";
@@ -30,26 +29,25 @@ function createPostinContent( ) {
         $isValid = true;
         if($_POST['date'] === ""){
             $isValid = false;
-        }else if($_POST['their_name'] === "" && $_POST['their_organisation'] === ""){
+        }elseif($_POST['their_name'] === "" && $_POST['their_organisation'] === ""){
             $isValid = false;
-        }else if($_POST['our_name'] === ""){
+        }elseif($_POST['our_name'] === ""){
             $isValid = false;
-        }else if($_POST['type_of_document'] === ""){
+        }elseif($_POST['type_of_document'] === ""){
             $isValid = false;
-        }else if($_POST['subject'] === ""){
+        }elseif($_POST['subject'] === ""){
             $isValid = false;
         }
 
-        if($isValid){
+        if ( $isValid ) {
             $next = "";
             $_POST['in_out'] = 'in';
-	        // TODO TODOGCU
-            if ( $_POST['submitValue'] === "Bewaar" ) {
+
+	        if ( $id == '' || $id == '0' ) {
 	            // NEW
                 Posts::uploadPost($_POST, $_FILES);
                 $next = 'zoeken.php';
-            // TODO TODOGCU
-            } else if ( $_POST['submitValue'] === "Pas aan" ) {
+            } else {
 	            // EXISTING
                 if ( $oWebuser->getId() === $_POST['registered_by'] || $oWebuser->isBeheerder() ) {
                     Posts::editPost( $_POST, $_FILES);
@@ -58,8 +56,7 @@ function createPostinContent( ) {
                     $selectedPost = $_POST;
                     $submitError = "* You don't have the rights to edit this post";
                     $kenmerk = $selectedPost['kenmerk'];
-	                // TODO TODOGCU
-                    $submitValue = "Pas aan";
+                    $submitValue = Translations::get('btn_save');
                     $files_belonging_to_post = Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk );
                 }
             }
@@ -68,8 +65,8 @@ function createPostinContent( ) {
             $selectedPost = $_POST;
             $submitError = "* Not all fields have been filled in!";
         }
-	} else if($_SERVER['REQUEST_METHOD'] == 'GET') {
-        if ( $id !== "" ) {
+	} elseif($_SERVER['REQUEST_METHOD'] == 'GET') {
+        if ( $id !== '' && $id !== '0' ) {
             // EXISTING
 
             // find record
@@ -87,8 +84,7 @@ function createPostinContent( ) {
 	        $files_belonging_to_post = Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk );
 
 			//
-	        // TODO TODOGCU
-            $submitValue = "Pas aan";
+            $submitValue = Translations::get('btn_save');
         } else {
             // NEW
             $currentDate = date('y');
