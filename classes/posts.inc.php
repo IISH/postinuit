@@ -245,9 +245,10 @@ class Posts{
      * @return mixed
      */
 	public static function getEmployeeInformation($data){
-	    global $dbConn;
+		global $databases;
+		$dbEmployees = new class_pdo( $databases['sync_knaw_ad'] );
 
-        $statement = $dbConn->getConnection()->prepare("SELECT clean_loginname, clean_institute, clean_department FROM employees WHERE clean_name = :clean_name AND import_status IN (0,1) ");
+        $statement = $dbEmployees->getConnection()->prepare("SELECT clean_loginname, clean_institute, clean_department FROM employees WHERE clean_name = :clean_name AND import_status IN (0,1) ");
         $statement->execute(array(':clean_name' => $data['name']));
         $result = $statement->fetchAll();
 

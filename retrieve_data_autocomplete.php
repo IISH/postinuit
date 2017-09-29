@@ -16,14 +16,6 @@ switch ( $type ) {
 		$table = 'vw_filter_our_name';
 		$column = 'our_name';
 		break;
-	case "our_institute":
-		$table = 'vw_filter_our_institute';
-		$column = 'our_institute';
-		break;
-	case "our_department":
-		$table = 'vw_filter_our_department';
-		$column = 'our_department';
-		break;
 	case "their_name":
 		$table = 'vw_filter_their_name';
 		$column = 'their_name';
@@ -39,6 +31,13 @@ switch ( $type ) {
 
 // conroleer of zoek term voldoet aan minimale lengte
 if ( strlen($searchterm) >= $minLengthSearchTerm ) {
+	// use different database for employee (our) names
+	switch ( $type ) {
+		case "our_name":
+			$dbConn = new class_pdo( $databases['sync_knaw_ad'] );
+			break;
+	}
+
 	//
 	$query = "SELECT " . addslashes($column) . " FROM " . addslashes($table) . " WHERE " . addslashes($column) . " LIKE '%" . addslashes($searchterm) . "%' GROUP BY " . addslashes($column) . " LIMIT 0,15 ";
 	$stmt = $dbConn->getConnection()->prepare($query);

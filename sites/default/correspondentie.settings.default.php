@@ -12,4 +12,14 @@ $databases = array (
 			'driver' => 'mysql',
 			'prefix' => '',
 		),
+	'sync_knaw_ad' =>
+		array (
+			'database' => '',
+			'username' => '',
+			'password' => '',
+			'host' => '',
+			'port' => '',
+			'driver' => 'mysql',
+			'prefix' => '',
+		),
 );
