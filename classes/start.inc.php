@@ -20,7 +20,6 @@ if ( !isset($_SESSION["loginname"]) ) {
 require_once dirname(__FILE__) . "/_misc_functions.inc.php";
 require_once dirname(__FILE__) . "/authentication.inc.php";
 require_once dirname(__FILE__) . "/date.inc.php";
-//require_once dirname(__FILE__) . "/datetime.inc.php";
 require_once dirname(__FILE__) . "/menu.inc.php";
 require_once dirname(__FILE__) . "/misc.inc.php";
 require_once dirname(__FILE__) . "/page.inc.php";
@@ -37,7 +36,7 @@ require_once dirname(__FILE__) . "/posts.inc.php";
 //
 $protect = new WebsiteProtection();
 
-// connect to database
+// connect to databases
 $dbConn = new class_pdo( $databases['default'] );
 
 //
