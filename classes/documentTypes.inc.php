@@ -1,8 +1,6 @@
 <?php
 /** Class for loading and getting type of documents from the database... */
 
-//require_once dirname(__FILE__) . "/../classes/_misc_functions.inc.php";
-
 class DocumentTypes {
 	private static $is_loaded = false;
 	private static $settings = null;
@@ -18,7 +16,7 @@ class DocumentTypes {
 		$arr = array();
 
 		//
-		$query = 'SELECT * FROM ' . self::$document_types_table;
+		$query = 'SELECT * FROM ' . self::$document_types_table . ' ORDER BY sort_order, type_' . $language;
 		$stmt = $dbConn->getConnection()->prepare($query);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
