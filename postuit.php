@@ -18,7 +18,8 @@ function createPostuitContent( ) {
     // get id from the url
     $id = $protect->requestPositiveNumberOrEmpty('get', 'ID');
     $kenmerk = null;
-    $submitValue = Translations::get('btn_new');
+//    $submitValue = Translations::get('btn_new');
+    $submitValue = Translations::get('lbl_submit_post');
     $files_belonging_to_post = array();
     $selectedPost = array();
     $submitError = "";
@@ -54,7 +55,8 @@ function createPostuitContent( ) {
                     $selectedPost = $_POST;
                     $submitError = "* You don't have the rights to edit this post";
                     $kenmerk = $selectedPost['kenmerk'];
-                    $submitValue = Translations::get('btn_save');
+//                    $submitValue = Translations::get('btn_save');
+                    $submitValue = Translations::get('lbl_submit_post');
                     $files_belonging_to_post = Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk );
                 }
             }
@@ -77,7 +79,8 @@ function createPostuitContent( ) {
 
 			//
             $kenmerk = $selectedPost['kenmerk'];
-            $submitValue = Translations::get('btn_save');
+//            $submitValue = Translations::get('btn_save');
+            $submitValue = Translations::get('lbl_submit_post');
             $files_belonging_to_post = Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk );
         } else {
             // NEW
