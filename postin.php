@@ -18,14 +18,24 @@ function createPostinContent( ) {
 
 	// get id from the url
 	$id = $protect->requestPositiveNumberOrEmpty('get', 'ID');
+	// Setting the variables used during the function's runtime
 	$kenmerk = null;
-	$submitValue = Translations::get('btn_new');
+	// TODO: Check which submitValue to use!
+//	$submitValue = Translations::get('btn_new');
+	$submitValue = Translations::get('lbl_submit_post');
+	$submitAndMailValue = Translations::get('lbl_submit_and_mail_post');
 	$selectedPost = array();
 	$files_belonging_to_post = array();
 	$submitError = "";
     $hasRightsToEdit = true;
+    $lastTimeMailSent = Translations::get('lbl_not_yet_mailed');
 
+    /**
+     * The action coming from the postin page is a POST Action
+     */
 	if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+
+	    // Checking whether all required fields are filled
         $isValid = true;
         if($_POST['date'] === ""){
             $isValid = false;
@@ -39,33 +49,116 @@ function createPostinContent( ) {
             $isValid = false;
         }
 
-        if ( $isValid ) {
+
+//	        if ( $id == '' || $id == '0' ) {
+//	            // NEW
+//                Posts::uploadPost($_POST, $_FILES);
+//                $next = 'zoeken.php';
+//            } else {
+//	            // EXISTING
+//                if ( $oWebuser->getId() === $_POST['registered_by'] || $oWebuser->isBeheerder() ) {
+//                    Posts::editPost( $_POST, $_FILES);
+//                    $next = $_SESSION['previous_location']; // gets the previous location (basic search)
+//                } else {
+//                    $selectedPost = $_POST;
+//                    $submitError = "* You don't have the rights to edit this post";
+//                    $kenmerk = $selectedPost['kenmerk'];
+//                    $submitValue = Translations::get('btn_save');
+
+        // Check if all required fields have been filled in, by using the code above
+        if($isValid){
+
             $next = "";
             $_POST['in_out'] = 'in';
 
-	        if ( $id == '' || $id == '0' ) {
-	            // NEW
-                Posts::uploadPost($_POST, $_FILES);
+            /**
+             * The post is being saved to the database
+             */
+            if ( $_POST['submitValue'] === "Bewaar" || $_POST['submitValue'] === "Save" ) {
+                $kenmerk_of_post = Posts::uploadPost($_POST, $_FILES);
+                $_POST['user_sending'] = $oWebuser->getName(); // TODO: Is this needed in the initial save?
+                // Saves the data of the mail to the database with information to be set as not sent
+                Mail::uploadMail($_POST, $kenmerk_of_post, false);
+                // Set the location to go to on completion
                 $next = 'zoeken.php';
-            } else {
-	            // EXISTING
-                if ( $oWebuser->getId() === $_POST['registered_by'] || $oWebuser->isBeheerder() ) {
-                    Posts::editPost( $_POST, $_FILES);
-                    $next = $_SESSION['previous_location']; // gets the previous location (basic search)
-                } else {
+            }
+            /**
+             * The post is being adjusted and saved to the database
+             */
+            else if ( $_POST['submitValue'] === "Pas aan" || $_POST['submitValue'] === "Update" ) {
+                // Check is the user has the rights to adjust the post
+                if($oWebuser->getName() === $_POST['registered_by_name'] || $oWebuser->isBeheerder() ) {
+                    $kenmerk_of_post = Posts::editPost( $_POST, $_FILES);
+                    $_POST['user_sending'] = $oWebuser->getName(); // TODO: Is this needed in the initial save?
+                    // Updates the information of the mail to the database
+                    Mail::updateMail($_POST, $kenmerk_of_post);
+                    // gets the previous location (basic search)
+                    $next = $_SESSION['previous_location'];
+                }
+                // The user has no rights and will be notified on the page in case attempts are made (e.g. hacking)
+                else{
                     $selectedPost = $_POST;
                     $submitError = "* You don't have the rights to edit this post";
                     $kenmerk = $selectedPost['kenmerk'];
-                    $submitValue = Translations::get('btn_save');
+                    $submitValue = Translations::get('lbl_update_post');
+                    $submitAndMailValue = Translations::get('lbl_update_and_mail_post');
                     $files_belonging_to_post = Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk );
                 }
             }
+            /**
+             * The post is being saved to the database and mailed to the receiver of the post
+             */
+            else if ($_POST['submitValue'] === "Bewaar en mail" || $_POST['submitValue'] === "Save and mail") {
+                $kenmerk_of_post = Posts::uploadPost($_POST, $_FILES);
+                // Check if the mail has been sent before the data of the mail is adjusted to set being sent
+                if(Mail::mailPost($_POST, Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk_of_post), $kenmerk_of_post)){
+                    $_POST['user_sending'] = $oWebuser->getName();
+                    // Saves the data of the mail to the database with information to be set as sent
+                    Mail::uploadMail($_POST, $kenmerk_of_post, true);
+                }
+                // Set the location to go to on completion
+                $next = 'zoeken.php';
+            }
+            /**
+             * The post is being adjusted and saved to the database, and mailed to the receiver of the post
+             */
+            else if ($_POST['submitValue'] === "Pas aan en mail" || $_POST['submitValue'] === "Update and mail") {
+                // Check whether the user has the rights to adjust the post
+                if($oWebuser->getName() === $_POST['registered_by_name'] || $oWebuser->isBeheerder() ) {
+                    $kenmerk_of_post = Posts::editPost( $_POST, $_FILES);
+                    // Check if the mail has been sent before the data of the mail is adjusted to set being sent
+                    if(Mail::mailPost($_POST, Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk_of_post), $kenmerk_of_post)){
+                        $_POST['user_sending'] = $oWebuser->getName();
+                        // Updates the information of the mail to the database
+                        Mail::updateMailSent($_POST, $kenmerk_of_post);
+                    }
+                    // gets the previous location (basic search)
+                    $next = $_SESSION['previous_location'];
+                }
+                // The user has no rights and will be notified on the page in case attempts are made (e.g. hacking)
+                else{
+                    $selectedPost = $_POST;
+                    $submitError = "* You don't have the rights to edit this post";
+                    $kenmerk = $selectedPost['kenmerk'];
+                    $submitValue = Translations::get('lbl_update_post');
+                    $submitAndMailValue = Translations::get('lbl_update_and_mail_post');
+                    $files_belonging_to_post = Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk );
+                }
+            }
+            // Set the Location header to the given location in the code above
             Header("Location: " . $next);
-        } else {
+        }
+        // Not all required fields have been filled with data
+        else{
             $selectedPost = $_POST;
             $submitError = "* Not all fields have been filled in!";
         }
-	} elseif($_SERVER['REQUEST_METHOD'] == 'GET') {
+	}
+	/**
+     * The action coming from the postin page is a GET Action
+     */
+	else if($_SERVER['REQUEST_METHOD'] == 'GET') {
+	    // Check if the id given is not empty, thus an existing post
         if ( $id !== '' && $id !== '0' ) {
             // EXISTING
 
@@ -84,8 +177,15 @@ function createPostinContent( ) {
 	        $files_belonging_to_post = Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk );
 
 			//
-            $submitValue = Translations::get('btn_save');
-        } else {
+//            $submitValue = "Pas aan";
+            $submitValue = Translations::get('lbl_update_post');
+            $submitAndMailValue = Translations::get('lbl_update_and_mail_post');
+
+            $lastTimeMailSent = Mail::getLastTimeMailed($id) ? Mail::getLastTimeMailed($id) : Translations::get('lbl_not_yet_mailed');
+
+        }
+        // The post is non existing, thus setting the information according to a new post
+        else{
             // NEW
             $currentDate = date('y');
             $characteristicsCount = (Settings::get('post_characteristic_last_used_counter') + 1);
@@ -146,5 +246,8 @@ function createPostinContent( ) {
 		, 'are_you_sure_delete' => Translations::get('are_you_sure_delete')
 		, 'removed' => Translations::get('removed')
         , 'has_rights_to_edit' => $hasRightsToEdit
+        , 'submitAndMailValue' => $submitAndMailValue
+        , 'lastTimeMailed' => Translations::get('lbl_last_time_mailed')
+        , 'lastTimeMailSent' => $lastTimeMailSent
 	));
 }

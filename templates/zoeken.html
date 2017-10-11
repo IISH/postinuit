@@ -39,6 +39,7 @@ Zoek: <input type="text" id="search" value="{{ search }}"> <button id="zoek">Zoe
 			<th>{{ type_of_document_lbl }}</th>
             <th>{{ number_of_files_lbl }}</th>
 			<th>{{ subject_lbl }}</th>
+            <th>{{ is_mailed_lbl }}</th>
 		</tr>
 
 		{% for post in posts %}
@@ -55,6 +56,12 @@ Zoek: <input type="text" id="search" value="{{ search }}"> <button id="zoek">Zoe
                 <td>{{post.typeOfDocument}}</td>
                 <td>{{post.numberOfFiles}}</td>
                 <td>{{post.subject}}</td>
+                <td>{% if post.isMailed %}
+                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                    {% else %}
+                    <a href="mail_post.php?ID={{ post.ID }}"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
+                    {% endif %}
+                </td>
 			</tr>
 		{% endfor %}
 

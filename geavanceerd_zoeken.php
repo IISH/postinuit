@@ -77,6 +77,7 @@ function createGeavanceerdZoekenContent( ) {
 			, 'subject' => $post->getSubject()
 			, 'remarks' => $post->getRemarks()
             , 'numberOfFiles' => $post->getNumberOfFiles()
+            , 'isMailed' => Mail::isSent($post->getId())[0] ? true : false
 		);
 	}
 
@@ -120,5 +121,6 @@ function createGeavanceerdZoekenContent( ) {
         , 'lbl_current_page' => $page + 1
         , 'lbl_page_indicator_or' => Translations::get('search_page_indicator_or')
         , 'number_of_files_lbl' => Translations::get('number_of_files_lbl')
+        , 'is_mailed_lbl' => Translations::get('lbl_is_mailed')
 	));
 }
