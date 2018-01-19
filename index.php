@@ -18,8 +18,9 @@ function createZoekenContent( ) {
 	return $twig->render('index.html', array(
 		'menu_zoeken' => Translations::get('menu_zoeken')
 		, 'menu_postin' => Translations::get('menu_postin')
-		, 'menu_postuit' => Translations::get('menu_postuit')
+		, 'menu_postout' => Translations::get('menu_postout')
 		, 'menu_configuration' => Translations::get('menu_configuration')
+		, 'menu_wiki' => Translations::get('menu_wiki')
 		, 'isAdmin' => $oWebuser->isAdmin()
 		));
 }

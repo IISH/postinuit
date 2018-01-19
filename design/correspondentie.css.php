@@ -27,7 +27,19 @@ html, body, input, select {
 }
 
 .error {
+	display: block;
 	color: red;
+	font-size: 110%;
+	font-weight: bold;
+	margin-bottom: 20px;
+}
+
+.warning {
+	display: block;
+	color: orange;
+	font-size: 110%;
+	font-weight: bold;
+	margin-bottom: 20px;
 }
 
 a
@@ -74,7 +86,7 @@ input, select {
 
 h1 {
 	margin-top: 0px;
-	margin-bottom: 0px;
+	margin-bottom: 20px;
 	font-size: 24px;
 }
 
@@ -312,19 +324,29 @@ label {
 	white-space: nowrap;
 }
 
-.required {
+.required
+, .required:visited
+, .required:active
+, .required:hover {
 	color: red;
 	font-size: 85%;
 	vertical-align: super;
 }
 
-.semiRequired {
+.semiRequired
+, .semiRequired:visited
+, .semiRequired:active
+, .semiRequired:hover {
 	color: orange;
 	font-size: 85%;
 	vertical-align: super;
 }
 
-.help {
+.help
+, .help:visited
+, .help:active
+, .help:hover {
+	color: black;
 	font-size: 85%;
 	vertical-align: super;
 }
@@ -429,4 +451,28 @@ input[type=file] {
 	color: whitesmoke;
 	text-decoration: none;
 	border-bottom: 1px dotted whitesmoke;
+}
+
+.input-group-addon {
+	background-color: white;
+	border-color: white;
+	font-weight: bold;
+}
+
+.translation-edit {
+	width: 600px;
+	height: 120px;
+}
+
+.onder_voorbehoud {
+	font-size: 85%;
+	font-style:italic;
+	margin-left: 10px;
+}
+
+.btnOverzicht {
+	padding: 0;
+	border: 0;
+	background-color: #dfdfdf;
+	border-bottom:1px dashed black;
 }

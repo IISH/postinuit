@@ -35,7 +35,7 @@ class DocumentTypes {
 	 * @return string
 	 */
 	public static function get($document_type) {
-		if(!self::$is_loaded) {
+		if ( !self::$is_loaded ) {
 			self::load();
 		}
 
@@ -45,7 +45,7 @@ class DocumentTypes {
 	}
 
 	public static function getDocumentTypes() {
-		if(!self::$is_loaded) {
+		if ( !self::$is_loaded ) {
 			self::load();
 		}
 

@@ -1,7 +1,11 @@
 <h1>{{title}}</h1>
-{% if submitError %}
-    <h3 id="errorHeader" style="color: red;">{{ submitError }}</h3>
-{% endif %}
+
+{% if recordIsFound == 0 %}
+	{{ record_not_found|raw }}
+{% else %}
+
+	{% include 'error.html' %}
+	{% include 'warning.html' %}
 
 <form method="POST" onsubmit="return validateForm()" enctype="multipart/form-data">
 
@@ -11,11 +15,17 @@
 			<table id="post_uit_table">
 				<tr>
 					<td><label for="characteristicInput">{{ characteristicsInfo }}</label></td>
-					<td><input class="input-sm col-xs-12 col-lg-12 disabledField" id="characteristicInput" name="kenmerk" type="text" readonly value="{{ characteristicsValue }}" tabindex="-1"> </td>
+					<td>
+						<div class="input-group">
+							<span class="input-group-addon">#</span>
+							<input class="input-sm col-xs-2 col-lg-2 disabledField" id="characteristicInput" name="kenmerk" type="text" readonly value="{{ characteristicsValue }}" tabindex="-1">
+							{% if onder_voorbehoud != '' %}<span class="onder_voorbehoud">({{ onder_voorbehoud }})</span>{% endif %}
+						</div>
+					</td>
 				</tr>
 				<tr>
 					<td>
-						<label for="dateSentInput">{{ dateSentInfo }}
+						<label for="dateSentInput">{{ dateInfo }}
 							<a href="#" class="required" data-toggle="popover" data-trigger="hover" data-content="{{ field_is_required }}" tabindex="-1">*</a>
 							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ help_date }}" tabindex="-1">?</a>
 						</label>
@@ -27,6 +37,7 @@
 						<label for="senderNameInput">{{ senderNameInfo }}
 							<a href="#" class="required" data-toggle="popover" data-trigger="hover" data-content="{{ field_is_required }}" tabindex="-1">*</a>
 							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ help_sender_name }}" tabindex="-1">?</a>
+							<a href="#" class="help" data-toggle="popover" data-trigger="hover" data-content="{{ will_be_mailed_to_sender }}" tabindex="-1"><img src="images/mail.png" border="0"></a>
 						</label>
 					</td>
 					<td><input class="input-sm col-xs-12 col-lg-12" id="senderNameInput" name="our_name" type="text" value="{{ selectedPost['our_name'] }}" {% if has_rights_to_edit == false %}disabled{% endif %}></td>
@@ -90,59 +101,27 @@
 						<input class="input-sm col-xs-12 col-lg-12 disabledField" id="registeredByName" name="registered_by_name" type="text" readonly value="{{ selectedPost['registered_by_name'] }}" tabindex="-1">
 					</td>
 				</tr>
+				<tr>
+					<td colspan="2" align="center">
+						<div class="inputformsubmitbutton">
+							{% if has_rights_to_edit %}
+								<input type="submit" name="submitValue" value="{{ submitValue }}">
+								<input type="submit" name="submitValue2" value="{{ submitAndMailValue }}">
+							{% endif %}
+							<input type="text" name="ID" value="{{ selectedPost['ID'] }}" hidden>
+							<input type="text" id="our_loginname" name="our_loginname" value="{{ selectedPost['our_loginname'] }}" hidden>
+						</div>
+					</td>
+				</tr>
 			</table>
 
 		</div>
 		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
-
-            {% if has_rights_to_edit %}
-			<div class="border">
-				<label>{{ lbl_upload_files }}
-					<a href="#" class="semiRequired" data-toggle="popover" data-trigger="hover" data-content="{{ field_is_semi_required }}" tabindex="-1">*</a><br>
-				</label><br>
-                <label class="button_add_document" id="button_add_document_label" for="documentInput">
-                    <span class="glyphicon glyphicon-plus attachment_add_button" aria-hidden="true"></span>
-                </label><h6 id="nr_of_files_field"> {{ nr_of_files_upload }} 0</h6>
-				<input class="input-sm col-xs-12 col-lg-12" id="documentInput" name="documentInput[]" type="file" multiple onchange="makeFileList();">
-                <div class="attachment" id="fileList"> </div>
-                <h6>{{ document_upload_comment }}</h6>
-			</div>
-            {% endif %}
-
-			{% if files_from_post|length > 0 %}
-			<div class="border attachment">
-                <label>{{ lbl_already_uploaded_files }}</label>
-                <ul id="attachment_list" class="in_out">
-                    {% for file in files_from_post %}
-                        <li id="attachment_list_item" value="{{ file }}">
-                            <button type="submit" class="openFileFromServer" name="openFileFromServer" formaction="open_file_from_post.php" value="{{ file }}">
-                                <span class="glyphicon glyphicon-save-file attachment_button_images" aria-hidden="true"></span>
-                            </button>
-                            {% if has_rights_to_edit %}
-                            <button type="button" class="deleteFileFromServer" name="deleteFileFromServer" value="{{ file }}">
-                                <span class="glyphicon glyphicon-remove attachment_button_images" aria-hidden="true"></span>
-                            </button>
-                            {% endif %}
-                            {{ file }}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-			{% endif %}
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-xs-12 inputformsubmitbutton">
-            {% if has_rights_to_edit %}
-			<input type="submit" name="submitValue" value="{{ submitValue }}">
-            {% endif %}
-			<input type="text" name="ID" value="{{ selectedPost['ID'] }}" hidden>
-            <input type="text" id="our_loginname" name="our_loginname" value="{{ selectedPost['our_loginname'] }}" hidden>
+			{% include 'lasttimesent.html' %}
+			{% include 'uploadfiles.html' %}
 		</div>
 	</div>
 </form>
-
 
 <script>
 	$(document).ready(function() {
@@ -177,7 +156,11 @@
                 success: function(data) {
                     if(data.length > 0) {
                         $('#senderInstituteInput').val(data[0]['clean_institute']);
-                        $('#senderDepartmentInput').val(data[0]['clean_department']);
+                        if ( data[0]['clean_department'] != 'n.v.t.') {
+	                        $('#senderDepartmentInput').val(data[0]['clean_department']);
+                        } else {
+	                        $('#senderDepartmentInput').val('');
+                        }
                         $('#our_loginname').val(data[0]['clean_loginname']);
                     } else {
                         $('#senderInstituteInput').val('');
@@ -231,33 +214,35 @@
                 if( response === "true" ) {
                     var lis = document.querySelectorAll('#attachment_list li');
                     for(var i=0; li=lis[i]; i++) {
-                        if(li.innerText.trim() === filename.trim()) {
+	                    if(li.getAttribute('value') === filename.trim()) {
                             li.innerText = filename + " ({{ removed }})";
                         }
                     }
                 }
-                else alert('Something Went Wrong!');
             }
         });
     }
 
     function validateForm(){
         var isValid = true;
-        if($('#dateSentInput').val() === ""){
+        if ( $('#dateSentInput').val() === "" ) {
             isValid = false;
-        }else if($('#senderNameInput').val() === ""){
+        }else if ( $('#senderNameInput').val() === "" ) {
             isValid = false;
-        }else if($('#receiverNameInput').val() === "" && $('#receiverInstituteInput').val() === ""){
+        }else if ( $('#receiverNameInput').val() === "" && $('#receiverInstituteInput').val() === "" ) {
             isValid = false;
-        }else if($('[name="type_of_document"]').selected === false){
+        }else if ( $('[name="type_of_document"]').selected === false ) {
             isValid = false;
-        }else if($('#subjectInput').val() === ""){
+        }else if ( $('#subjectInput').val() === "" ) {
             isValid = false;
         }
 
-        if(!isValid)
-            alert("Not all required fields have been filled out!");
+        if ( !isValid )
+            alert("{{ not_all_required_fields_have_been_filled_out }}");
+
         return isValid;
     }
 
 </script>
+
+{% endif %}

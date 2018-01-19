@@ -15,7 +15,6 @@ class Posts{
 
 		//
 		$query = 'SELECT * FROM ' . self::$settings_table . ' ORDER BY kenmerk DESC, ID DESC';
-//preprint($query);
 		$stmt = $dbConn->getConnection()->prepare($query);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
@@ -64,7 +63,7 @@ class Posts{
 
 		// Set a variable with the value from the form combined with the characteristic from the database
 		$new_kenmerk = substr($data['kenmerk'],0, 2);
-		for ( $i = strlen($post_id); $i < 3; $i++ ) {
+		for ( $i = strlen($post_id); $i < 3; $i++ ) { // TODO TODOGCU hard lengte van kenmerk (zonder jaartal)
 			$new_kenmerk .= '0';
 		}
 		$new_kenmerk .= $post_id;
@@ -90,12 +89,15 @@ class Posts{
         // count number of files in kenmerk directory
         $number_of_existing_files = self::getNumberOfFilesFromPost($data['kenmerk']);
 
-		$query = "INSERT INTO post (in_out, kenmerk, `date`, their_name, their_organisation, 
-			our_name, our_institute, our_department, type_of_document, 
-			subject, remarks, registered_by, number_of_files, our_loginname) 
-			VALUES (:in_out, :kenmerk, :date, :their_name, :their_organisation,
-			:our_name, :our_institute, :our_department, :type_of_document,
-			:subject, :remarks, :registered_by, :number_of_files, :our_loginname) ";
+        //
+		$query = "INSERT INTO `post` (in_out, kenmerk, `date`, their_name, their_organisation, our_name, our_institute,
+			our_department, type_of_document, 	subject, remarks, registered_by, number_of_files, our_loginname,
+			calculated_ontvanger, calculated_afzender) 
+			VALUES (:in_out, :kenmerk, :date, :their_name, :their_organisation, :our_name, :our_institute,
+			:our_department, :type_of_document,	:subject, :remarks, :registered_by, :number_of_files, :our_loginname,
+			:calculated_ontvanger, :calculated_afzender) ";
+
+		$calculated = Misc::calculateOntvangerAfzender($data);
 
 		//
 		$formattedDate = $data['date'];
@@ -116,7 +118,9 @@ class Posts{
 		$stmt->bindParam(':remarks', $data['remarks'], PDO::PARAM_STR);
 		$stmt->bindParam(':registered_by', $data['registered_by'], PDO::PARAM_STR);
         $stmt->bindParam(':number_of_files', $number_of_existing_files, PDO::PARAM_INT);
-        $stmt->bindParam(':our_loginname', $data['our_loginname'], PDO::PARAM_STR);
+		$stmt->bindParam(':our_loginname', $data['our_loginname'], PDO::PARAM_STR);
+		$stmt->bindParam(':calculated_ontvanger', $calculated['ontvanger'], PDO::PARAM_STR);
+		$stmt->bindParam(':calculated_afzender', $calculated['afzender'], PDO::PARAM_STR);
 
 		$stmt->execute();
 
@@ -145,8 +149,14 @@ class Posts{
      * @return int Integer the number of files in the folder
      */
 	public static function getNumberOfFilesFromPost($subFolder){
-        $fi = new FilesystemIterator(Settings::get('attachment_directory').$subFolder, FilesystemIterator::SKIP_DOTS);
-        return iterator_count($fi);
+		$ret = 0;
+
+		if ( file_exists( Settings::get('attachment_directory') . $subFolder ) ) {
+			$fi = new FilesystemIterator(Settings::get('attachment_directory') . $subFolder, FilesystemIterator::SKIP_DOTS);
+			$ret = iterator_count($fi);
+		}
+
+		return $ret;
     }
 
     /**
@@ -167,8 +177,32 @@ class Posts{
 
                 readfile($file);
             }
+        } else {
+            echo "Cannot find file: " . basename($file);
         }
     }
+
+	/**
+	 * Save the number of files for the post
+	 */
+	public static function saveNumberOfFiles( $data, $numberOfFiles = 0 ) {
+		global $dbConn;
+
+		if ( $data['ID'] == '' || $data['ID'] == '0' ) {
+			return false;
+		}
+
+		//
+		$query = "UPDATE `post` SET number_of_files = :number_of_files WHERE ID = :ID ";
+
+		$stmt = $dbConn->getConnection()->prepare( $query );
+
+		$stmt->bindParam(':number_of_files', $numberOfFiles, PDO::PARAM_INT);
+		$stmt->bindParam(':ID', $data['ID'], PDO::PARAM_INT);
+		$stmt->execute();
+
+		return true;
+	}
 
 	/**
 	 * Edit the data in the database with the updated information from the post
@@ -180,6 +214,8 @@ class Posts{
         $directory_to_save = Settings::get('attachment_directory').$data['kenmerk']."/";
         $numberOfFiles = count($files['documentInput']['name']);
 
+		// TODO TODOGCU EERST DOCUMENT BEWAREN EN DAN PAS FILES UPLOADEN
+		// AANTAL FILES KAN OOK ACHTERAF GEUPDATE WORDEN
 		if ( !file_exists( $directory_to_save ) ) {
 			if ( !mkdir($directory_to_save, 0764, true ) ) {
 				die('Failed to create documents directory');
@@ -197,8 +233,7 @@ class Posts{
 		$number_of_existing_files = self::getNumberOfFilesFromPost($data['kenmerk']);
 
 		//
-		$query = "
-			UPDATE `post` 
+		$query = "UPDATE `post` 
 			SET in_out = :in_out,
 				kenmerk = :kenmerk,
 				`date` = :date,
@@ -212,10 +247,14 @@ class Posts{
 				remarks = :remarks,
 				registered_by = :registered_by,
 				number_of_files = :number_of_files,
-				our_loginname = :our_loginname
+				our_loginname = :our_loginname,
+				calculated_ontvanger = :calculated_ontvanger, 
+				calculated_afzender = :calculated_afzender 
 			WHERE ID = :ID ";
 
 		$stmt = $dbConn->getConnection()->prepare( $query );
+
+		$calculated = Misc::calculateOntvangerAfzender($data);
 
 		// format the date
 		$formattedDate = $data['date'];
@@ -237,6 +276,8 @@ class Posts{
 		$stmt->bindParam(':ID', $data['ID'], PDO::PARAM_INT);
 	    $stmt->bindParam(':number_of_files', $number_of_existing_files, PDO::PARAM_INT);
         $stmt->bindParam(':our_loginname', $data['our_loginname'], PDO::PARAM_STR);
+		$stmt->bindParam(':calculated_ontvanger', $calculated['ontvanger'], PDO::PARAM_STR);
+		$stmt->bindParam(':calculated_afzender', $calculated['afzender'], PDO::PARAM_STR);
 
 		$stmt->execute();
 
@@ -259,10 +300,12 @@ class Posts{
         return $result;
     }
 
-	public static function findPostsAdvanced($data, $recordsPerPage, $page){
+	public static function findPostsAdvanced($data, $recordsPerPage, $page, $orderBy = ''){
 		global $dbConn;
 
 		$arr = array();
+
+		$orderByCriterium = Misc::createOrderByCriterium($orderBy);
 
 		// date from to
 		$dateFrom = !empty($data['date_from']) ? " AND date >= '" . date('Y-m-d', strtotime($data['date_from'])) . "'" : "";
@@ -288,7 +331,12 @@ class Posts{
 		}
 
 		// start query building
-		$query = "SELECT post.*, users.name FROM `post` LEFT JOIN users ON post.registered_by = users.ID WHERE 1 ";
+		$query = "
+				SELECT post.*, users.name
+				FROM `post`
+					LEFT JOIN users ON post.registered_by = users.ID
+					LEFT JOIN type_of_document ON post.type_of_document = type_of_document.ID
+					WHERE 1 ";
 
 		// kenmerk
 		if ( $data['kenmerk'] != '' ) {
@@ -302,14 +350,26 @@ class Posts{
 		$query .= $dateFrom;
 		$query .= $dateTo;
 
-		// tegenpartij
+		// afzender
 		if ( $data['tegenpartij'] != '' ) {
-			$query .= Generate_Query(array("their_name", "their_organisation"), explode(' ', $data['tegenpartij']));
+			// als we de afzender controleren
+			// dan moeten we bij Post IN berichten controleren of 'tegenpartij' in de velden 'their_..." zitten
+			// en dan moeten we ook controleren of bij Post UIT 'tegenpartij' in de velden 'our_...' zitten
+			// dit heeft te maken met de feit dat de bij Post IN de afzender de externe partij is, en bij Post UIT de ontvangende
+			$tmpAfzender = " (" . Generate_Query(array("their_name", "their_organisation"), explode(' ', $data['tegenpartij']), '') . " AND in_out='in' ) ";
+			$tmpOntvanger = " (" . Generate_Query(array("our_name", "our_institute", "our_department"), explode(' ', $data['tegenpartij']), '') . " AND in_out='out' ) ";
+			$query .= ' AND ( ' . $tmpAfzender . ' OR ' . $tmpOntvanger . ' ) ';
 		}
 
-		// onze gegevens
+		// ontvanger
 		if ( $data['onze_gegevens'] != '' ) {
-			$query .= Generate_Query(array("our_name", "our_institute", "our_department"), explode(' ', $data['onze_gegevens']));
+			// als we de ontvanger controleren
+			// dan moeten we bij Post UIT berichten controleren of 'onze_gegevens' in de velden 'their_..." zitten
+			// en dan moeten we ook controleren of bij Post IN 'onze_gegevens' in de velden 'our_...' zitten
+			// dit heeft te maken met de feit dat de bij Post IN de ontvanger wij zijn, en bij Post UIT de afzender
+			$tmpAfzender = " (" . Generate_Query(array("their_name", "their_organisation"), explode(' ', $data['onze_gegevens']), '') . " AND in_out='out' ) ";
+			$tmpOntvanger = " (" . Generate_Query(array("our_name", "our_institute", "our_department"), explode(' ', $data['onze_gegevens']), '') . " AND in_out='in' ) ";
+			$query .= ' AND ( ' . $tmpAfzender . ' OR ' . $tmpOntvanger . ' ) ';
 		}
 
 		// type of document
@@ -331,9 +391,7 @@ class Posts{
 		}
 
 		// set order
-		$query .= " ORDER BY post.kenmerk DESC, post.ID DESC ";
-
-//preprint($query);
+		$query .= " ORDER BY $orderByCriterium";
 
 		//
 		$stmt = $dbConn->getConnection()->prepare($query);
@@ -370,7 +428,7 @@ class Posts{
 	 * Find the posts
 	 * @return array
 	 */
-	public static function findPosts($search, $recordsPerPage, $page) {
+	public static function findPosts($search, $recordsPerPage, $page, $orderBy = '') {
 		global $dbConn;
 
 		$search = trim($search);
@@ -381,8 +439,17 @@ class Posts{
 			$criterium = Generate_Query(array('kenmerk', 'date', 'their_name', 'their_organisation', 'our_loginname', 'our_name', 'our_institute', 'our_department', 'subject', 'remarks', 'users.name'), explode(' ', $search));
 		}
 
+		$orderByCriterium = Misc::createOrderByCriterium($orderBy);
+
 		//
-		$query = "SELECT post.*, users.name FROM `post` LEFT JOIN users ON post.registered_by = users.ID WHERE 1=1 " . $criterium . " ORDER BY post.kenmerk DESC, post.ID DESC ";
+		$query = "
+			SELECT post.*, users.name
+			FROM `post`
+				LEFT JOIN users ON post.registered_by = users.ID
+				LEFT JOIN type_of_document ON post.type_of_document = type_of_document.ID
+			WHERE 1=1 " . $criterium . "
+			ORDER BY $orderByCriterium
+			";
 		$stmt = $dbConn->getConnection()->prepare($query);
 		$stmt->execute();
 		$result = $stmt->fetchAll();
@@ -461,7 +528,7 @@ class Posts{
 	 * @return object
 	 */
 	public static function findPostById($id) {
-		if(!self::$is_loaded) {
+		if ( !self::$is_loaded ) {
 			self:self::load();
 		}
 
@@ -490,6 +557,16 @@ class Posts{
 		}
 
 		return $ret;
+	}
+
+	public static function decreaseNumberOfFiles( $kenmerk ) {
+		global $dbConn;
+
+		//
+		$query = "UPDATE `post` SET number_of_files = number_of_files - 1 WHERE kenmerk = :kenmerk AND number_of_files > 0 ";
+		$stmt = $dbConn->getConnection()->prepare( $query );
+		$stmt->bindParam(':kenmerk', $kenmerk, PDO::PARAM_STR);
+		$stmt->execute();
 	}
 
 	/**

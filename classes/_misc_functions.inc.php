@@ -97,7 +97,7 @@ function getAndProtectSearch($field = 's') {
 	return $s;
 }
 
-function Generate_Query($arrField, $arrSearch) {
+function Generate_Query($arrField, $arrSearch, $concat = ' AND ') {
 	$retval = '';
 	$separatorBetweenValues = '';
 
@@ -115,7 +115,7 @@ function Generate_Query($arrField, $arrSearch) {
 	}
 
 	if ( $retval != '' ) {
-		$retval = " AND " . $retval;
+		$retval = " $concat " . $retval;
 	}
 
 	return $retval;
@@ -133,7 +133,7 @@ function createDateAsString($year, $month, $day = '') {
 	return $ret;
 }
 
-function getBackUrl() {
+function getBackUrl( $defaultUrl = '' ) {
 	global $protect;
 
 	$ret = '';
@@ -164,6 +164,10 @@ function getBackUrl() {
 	$ret = trim($ret);
 
 	$ret = $protect->get_left_part($ret);
+
+	if ( $ret == '' ) {
+		$ret = $defaultUrl;
+	}
 
 	return $ret;
 }

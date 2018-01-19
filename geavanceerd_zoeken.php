@@ -4,9 +4,14 @@ require_once "classes/start.inc.php";
 // check if an user is logged in
 $oWebuser->checkLoggedIn();
 
+// only for data entry
+if ( !$oWebuser->isData() ) {
+	die('Access denied. Only for data entry or higher.');
+}
+
 // create webpage
 $oPage = new Page();
-$oPage->setTitle(Translations::get('website_name') . ' | ' . Translations::get('geavanceerd_zoeken'));
+$oPage->setTitle(Translations::get('website_name') . ' | ' . Translations::get('menu_geavanceerd_zoeken'));
 $oPage->setContent(createGeavanceerdZoekenContent( ));
 
 // show page
@@ -14,6 +19,9 @@ echo $twig->render('design.html', $oPage->getPageAttributes() );
 
 function createGeavanceerdZoekenContent( ) {
 	global $oWebuser, $twig, $protect;
+
+	//
+	$backurl  = Misc::createBackurl('&backurl=');
 
 	// get search value
 	$search = array();
@@ -28,11 +36,13 @@ function createGeavanceerdZoekenContent( ) {
 	$search['remarks'] = str_replace(array('\\', '/', '%'), '',isset($_GET['remarks'])?trim($_GET['remarks']) : '');
 	$search['registered_by'] = str_replace(array('\\', '/', '%'), '',isset($_GET['registered_by'])?trim($_GET['registered_by']) : '');
 
-    $type_of_documents_array = explode(',',$search['type_of_documents']);
+	$orderBy = Misc::getAndProtectOrderBy();
+
+    $type_of_documents_array = explode(',', $search['type_of_documents']);
     $in_or_out_array = explode(",", $search['in_or_out']);
 
 	// records per page
-	$recordsPerPage = Settings::get('post_records_per_page');
+	$recordsPerPage = Settings::get('records_per_page');
 
 	// current page
 	$page = $protect->requestPositiveNumberOrEmpty('get', 'page');
@@ -44,7 +54,7 @@ function createGeavanceerdZoekenContent( ) {
 	$documentTypes = DocumentTypes::getDocumentTypes();
 
 	//
-	$arr = Posts::findPostsAdvanced($search, $recordsPerPage,$page);
+	$arr = Posts::findPostsAdvanced($search, $recordsPerPage, $page, $orderBy);
 
 	$documentType = '';
 	$posts = array();
@@ -62,7 +72,7 @@ function createGeavanceerdZoekenContent( ) {
 			$url = 'postuit.php';
 		}
 
-		$posts[] = array(
+		$tmp = array(
 			'ID' => $post->getId()
 			, 'url' => $url
 			, 'inOut' => Translations::get($post->getInOut())
@@ -77,8 +87,27 @@ function createGeavanceerdZoekenContent( ) {
 			, 'subject' => $post->getSubject()
 			, 'remarks' => $post->getRemarks()
             , 'numberOfFiles' => $post->getNumberOfFiles()
-            , 'isMailed' => Mail::isSent($post->getId())[0] ? true : false
+            , 'isMailed' => $post->getIsMailed() >= 1 ? true : false
 		);
+
+		//
+		if ( $post->getInOut() == 'in' ) {
+			$tmp['senderName'] = $post->getTheirName();
+			$tmp['senderOrganisation'] = $post->getTheirOrganisation();
+			$tmp['senderDepartment'] = '';
+			$tmp['receiverName'] = $post->getOurName();
+			$tmp['receiverOrganisation'] = $post->getOurOrganisation();
+			$tmp['receiverDepartment'] = $post->getOurDepartment();
+		} else {
+			$tmp['receiverName'] = $post->getTheirName();
+			$tmp['receiverOrganisation'] = $post->getTheirOrganisation();
+			$tmp['receiverDepartment'] = '';
+			$tmp['senderName'] = $post->getOurName();
+			$tmp['senderOrganisation'] = $post->getOurOrganisation();
+			$tmp['senderDepartment'] = $post->getOurDepartment();
+		}
+
+		$posts[] = $tmp;
 	}
 
 	// To save the location to go to for when an Post is updated.
@@ -88,7 +117,7 @@ function createGeavanceerdZoekenContent( ) {
         $_GET,
         array_keys($_GET)
     ));
-    $_SESSION['previous_location'] = 'geavanceerd_zoeken.php?'.$output;
+//    $_SESSION['previous_location'] = 'geavanceerd_zoeken.php?'.$output;
 
 	//
 	return $twig->render('geavanceerd_zoeken.html', array(
@@ -96,14 +125,13 @@ function createGeavanceerdZoekenContent( ) {
 		, 'posts' => $posts
 		, 'document_types' => DocumentTypes::getDocumentTypes()
 		, 'current_page' => $page
+		, 'backurl' => $backurl
 		, 'max_pages' => $arr['maxPages']
 		, 'search' => $_GET
 		, 'in_uit_lbl' => Translations::get('lbl_in_out')
 		, 'lbl_date' => Translations::get('lbl_date')
 		, 'kenmerk_lbl' => Translations::get('lbl_post_characteristic')
 		, 'date_search_lbl' => Translations::get('lbl_date_search')
-		, 'sender_name_lbl' => Translations::get('lbl_tegenpartij')
-		, 'receiver_name_lbl' => Translations::get('lbl_onze_gegevens')
 		, 'type_of_document_lbl' => Translations::get('lbl_post_document_type')
 		, 'department_lbl' => Translations::get('lbl_post_receiver_department')
 		, 'subject_lbl' => Translations::get('lbl_post_subject')
@@ -116,11 +144,20 @@ function createGeavanceerdZoekenContent( ) {
 				array('key' => "in", 'label' => Translations::get('in'))
 				, array('key' => "out", 'label' => Translations::get('out'))
 			)
-		, 'lbl_tegenpartij' => Translations::get('lbl_tegenpartij')
-		, 'lbl_onze_gegevens' => Translations::get('lbl_onze_gegevens')
+		, 'lbl_sender' => Translations::get('lbl_sender')
+		, 'lbl_receiver' => Translations::get('lbl_receiver')
         , 'lbl_current_page' => $page + 1
         , 'lbl_page_indicator_or' => Translations::get('search_page_indicator_or')
         , 'number_of_files_lbl' => Translations::get('number_of_files_lbl')
         , 'is_mailed_lbl' => Translations::get('lbl_is_mailed')
+		, 'or_go_to' => Translations::get('or_go_to')
+		, 'btn_simple_search' => Translations::get('btn_simple_search')
+		, 'number_of_uploaded_files' => Translations::get('number_of_uploaded_files')
+		, 'already_mailed' => Translations::get('already_mailed')
+		, 'are_you_sure_you_want_to_mail_this' => Translations::get('are_you_sure_you_want_to_mail_this')
+		, 'click_to_mail_this_correspondence_to' => Translations::get('click_to_mail_this_correspondence_to')
+		, 'yes' => Translations::get('yes')
+		, 'no' => Translations::get('no')
+		, 'order_by' => $orderBy
 	));
 }

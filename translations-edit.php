@@ -77,24 +77,15 @@ function createContent() {
 		'fieldname' => 'lang_nl'
 		, 'fieldlabel' => Translations::get('dutch')
 		, 'required' => 0
-		, 'class' => ''
+		, 'class' => 'translation-edit'
 		)));
 
 	$oForm->add_field( new class_field_textarea ( array(
 		'fieldname' => 'lang_en'
 		, 'fieldlabel' => Translations::get('english')
 		, 'required' => 0
-		, 'class' => ''
+		, 'class' => 'translation-edit'
 		)));
-
-	if ( $oWebuser->isAdmin() ) {
-		$oForm->add_field(new class_field_bit (array(
-			'fieldname' => 'is_deprecated'
-			, 'fieldlabel' => 'Is deprecated?'
-			, 'required' => 0
-			, 'class' => ''
-			)));
-	}
 
 	// generate form
 	$ret = $oForm->generate_form();

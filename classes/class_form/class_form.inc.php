@@ -247,7 +247,7 @@ class class_form {
 </tr>
 ";
 		$template_form = "
-<form name=\"frmA\"  id=\"frmA\" action=\"::ACTION::\" method=\"POST\" onchange=\"setIsChanged();\">
+<form name=\"frmA\"  id=\"frmA\" action=\"::ACTION::\" method=\"POST\">
 <input type=\"hidden\" name=\"issubmitted\"  id=\"issubmitted\" value=\"1\">
 <input type=\"hidden\" name=\"pressedbutton\" id=\"pressedbutton\" value=\"\">
 

@@ -1,0 +1,103 @@
+<input type="hidden" id="current_page" value="{{current_page}}">
+<input type="hidden" id="max_pages" value="{{max_pages}}">
+<input type="hidden" id="order_by" value="{{ order_by }}">
+
+{% if posts|length == 0 %}
+	{{ nothing_found|raw }}
+{% else %}
+
+<div>
+	<table>
+		<tr>
+			<td>
+				<button id="first_page_button_top"> << </button>
+			</td>
+			<td>
+				<button id="previous_button_top"> < </button>
+			</td>
+			<td>
+				<label id="current_page_label">&nbsp{{ lbl_current_page }} {{ lbl_page_indicator_or }} {{ max_pages }}&nbsp</label>
+			</td>
+			<td>
+				<button id="next_button_top"> > </button>
+			</td>
+			<td>
+				<button id="last_page_button_top"> >> </button>
+			</td>
+		</tr>
+	</table>
+</div>
+<div>
+	<table id="postOverview" class="table-bordered table-condensed table-striped">
+		<tr id="postHeaderRow">
+			<th><button class="btnOverzicht" id="btnKenmerk">{{ kenmerk_lbl }}</button><br>& <button class="btnOverzicht" id="btnDate">{{ lbl_date }}</button></th>
+			<th>{{ in_uit_lbl }}<br><span class="glyphicon glyphicon-duplicate" aria-hidden="true" title="{{ number_of_uploaded_files }}"></span> <span class="glyphicon glyphicon-envelope" aria-hidden="true" title="{{ already_mailed }}"></span></th>
+			<th><button class="btnOverzicht" id="btnAfzender">{{ lbl_sender }}</button></th>
+			<th><button class="btnOverzicht" id="btnOntvanger">{{ lbl_receiver }}</button></th>
+			<th><button class="btnOverzicht" id="btnType">{{ type_of_document_lbl }}</button></th>
+			<th>{{ subject_lbl }}</th>
+		</tr>
+
+		{% for post in posts %}
+			{% if post.numberOfFiles <= 0 %}
+				<tr class="no_files_present">
+			{% else %}
+				<tr>
+			{% endif %}
+		<td><a name="A{{post.ID}}" href="{{post.url}}?ID={{post.ID}}{{ backurl }}">#{{post.kenmerk}}</a><br>{{post.date}}</td>
+		<td>
+			{{post.inOut}}
+
+			<br><span class="glyphicon glyphicon-duplicate" aria-hidden="true" title="{{ number_of_uploaded_files }}"></span>:
+			<span title="{{ number_of_uploaded_files }}">{{post.numberOfFiles}}</span>
+
+			{% if post.numberOfFiles > 0 %}
+				<br><a href="mail_post.php?ID={{ post.ID }}{{ backurl }}" onclick="return confirm('{{ are_you_sure_you_want_to_mail_this }} {{post.ourName}}?');" title="{{ click_to_mail_this_correspondence_to }} {{post.ourName}}">
+				<span class="glyphicon glyphicon-envelope" aria-hidden="true" title="{{ already_mailed }}"></span></a>:
+
+				<a href="mail_post.php?ID={{ post.ID }}{{ backurl }}" onclick="return confirm('{{ are_you_sure_you_want_to_mail_this }} {{post.ourName}}?');" title="{{ click_to_mail_this_correspondence_to }} {{post.ourName}}">
+				{% if post.isMailed %}
+					{{ yes }}
+				{% else %}
+					{{ no }}
+				{% endif %}
+			{% endif %}
+			</a>
+		</td>
+		<td>
+			<a href="{{post.url}}?ID={{post.ID}}{{ backurl }}">{{post.senderName}}{% if post.senderOrganisation or post.senderDepartment %}<br>
+			<i>{{post.senderOrganisation}} {% if post.senderDepartment %}({{post.senderDepartment}}){% endif %}</i>{% endif %}</a>
+		</td>
+		<td>
+			<a href="{{post.url}}?ID={{post.ID}}{{ backurl }}">{{post.receiverName}}{% if post.receiverOrganisation or post.receiverDepartment %}<br>
+			<i>{{post.receiverOrganisation}} {% if post.receiverDepartment %}({{post.receiverDepartment}}){% endif %}</i>{% endif %}</a>
+		</td>
+		<td>{{post.typeOfDocument}}</td>
+		<td>{{post.subject}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+<div>
+	<table>
+		<tr>
+			<td>
+				<button id="first_page_button_bottom"> &lt;&lt; </button>
+			</td>
+			<td>
+				<button id="previous_button_bottom"> &lt; </button>
+			</td>
+			<td>
+				<label id="current_page_label">&nbsp{{ lbl_current_page }} {{ lbl_page_indicator_or }} {{ max_pages }}&nbsp</label>
+			</td>
+			<td>
+				<button id="next_button_bottom"> &gt; </button>
+			</td>
+			<td>
+				<button id="last_page_button_bottom"> &gt;&gt; </button>
+			</td>
+		</tr>
+	</table>
+</div>
+
+{% endif %}

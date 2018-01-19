@@ -14,5 +14,9 @@ if ( !$hasRightsToEdit ) {
 // remove file from post
 $response = Posts::removeFileFromPost($_POST['file'], $_POST['kenmerk']);
 
+if ( $response ) {
+	Posts::decreaseNumberOfFiles( $_POST['kenmerk'] );
+}
+
 // Send JSON Data to AJAX Request
 echo json_encode($response);

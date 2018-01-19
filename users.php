@@ -61,25 +61,33 @@ function createContent() {
 
 	$oView->add_field( new class_field_bit ( array(
 		'fieldname' => 'is_disabled'
-		, 'fieldlabel' => '<a alt="Disabled" title="Disabled">X</a>'
+		, 'fieldlabel' => '<a alt="Disabled" title="Disabled">Disabled</a>'
 		, 'show_different_values' => 1
-		, 'different_true_value' => '<a alt="Disabled" title="Disabled">X</a>'
+		, 'different_true_value' => '<a alt="Disabled" title="Disabled">Disabled</a>'
+		, 'different_false_value' => ''
+		)));
+
+	$oView->add_field( new class_field_bit ( array(
+		'fieldname' => 'is_data'
+		, 'fieldlabel' => '<a alt="Data Invoerder" title="Data Invoerder">Invoerder</a>'
+		, 'show_different_values' => 1
+		, 'different_true_value' => '<a alt="Data Invoerder" title="Data Invoerder">Invoerder</a>'
 		, 'different_false_value' => ''
 		)));
 
 	$oView->add_field( new class_field_bit ( array(
 		'fieldname' => 'is_beheerder'
-		, 'fieldlabel' => '<a alt="Data Beheerder" title="Data Beheerder">DB</a>'
+		, 'fieldlabel' => '<a alt="Data Beheerder" title="Data Beheerder">Beheerder</a>'
 		, 'show_different_values' => 1
-		, 'different_true_value' => '<a alt="Data Beheerder" title="Data Beheerder">DB</a>'
+		, 'different_true_value' => '<a alt="Data Beheerder" title="Data Beheerder">Beheerder</a>'
 		, 'different_false_value' => ''
 		)));
 
 	$oView->add_field( new class_field_bit ( array(
 		'fieldname' => 'is_admin'
-		, 'fieldlabel' => '<a alt="Administrator" title="Administrator">A</a>'
+		, 'fieldlabel' => '<a alt="Admin" title="Admin">Admin</a>'
 		, 'show_different_values' => 1
-		, 'different_true_value' => '<a alt="Administrator" title="Administrator">A</a>'
+		, 'different_true_value' => '<a alt="Admin" title="Admin">Admin</a>'
 		, 'different_false_value' => ''
 		)));
 

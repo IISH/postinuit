@@ -15,6 +15,7 @@ class Post{
 	protected $registered_by = '';
 	protected $number_of_files = 0;
 	protected $our_loginname = '';
+	protected $is_mailed = 0;
 
 	function __construct( $row ) {
 		$this->ID = $row['ID'];
@@ -32,6 +33,7 @@ class Post{
 		$this->registered_by = $row["registered_by"];
 		$this->number_of_files = $row["number_of_files"];
 		$this->our_loginname = $row["our_loginname"];
+		$this->is_mailed = $row["is_mailed"];
 	}
 
 	public function getId() {
@@ -88,9 +90,13 @@ class Post{
 
 	public function getNumberOfFiles() {
 	    return $this->number_of_files;
-  }
+    }
 
-  public function getOurLoginname() {
+    public function getOurLoginname() {
 	    return $this->our_loginname;
-  }
+    }
+
+	public function getIsMailed() {
+		return $this->is_mailed;
+	}
 }

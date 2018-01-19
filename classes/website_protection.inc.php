@@ -1,4 +1,6 @@
 <?php
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
 class WebsiteProtection {
 
@@ -6,36 +8,56 @@ class WebsiteProtection {
 		$message = '';
 
 		$recipients = trim(Settings::get("admin_email"));
-
 		$recipients = str_replace(array(';', ':', ' '), ',', $recipients);
-
 		// fix multiple commas
 		if ( strpos($recipients, ',,') !== false ) {
 			$recipients = str_replace(',,', ',', $recipients);
 		}
+		$arrRecipients = explode(',', $recipients);
 
 		if ( $recipients != '' ) {
-
-			$fromname = trim(Settings::get("email_sender_name"));
-			$fromaddress = trim(Settings::get("email_sender_email"));
-			$eol = "\n";
-
-			$headers = "From: " . $fromname . " <" . $fromaddress . ">";
-
-			$subject = "IISG Website warning";
+			$subject = trim(Settings::get("application_name")) . " warning";
 
 			$iplocator = "http://www.aboutmyip.com/AboutMyXApp/IP2Location.jsp?ip=";
 
-			$message .= "Date: " . date("Y-m-d") . $eol;
-			$message .= "Time: " . date("H:i:s") . $eol;
-			$message .= "URL: " . $this->getLongUrl() . $eol;
-			$message .= "IP address: " . Misc::get_remote_addr() . $eol;
-			$message .= "IP Location: " . $iplocator . Misc::get_remote_addr() . $eol . $eol;
+			$message .= "Date: " . date("Y-m-d") . PHP_EOL;
+			$message .= "Time: " . date("H:i:s") . PHP_EOL;
+			$message .= "URL: " . $this->getLongUrl() . PHP_EOL;
+			$message .= "IP address: " . Misc::get_remote_addr() . PHP_EOL;
+			$message .= "IP Location: " . $iplocator . Misc::get_remote_addr() . PHP_EOL . PHP_EOL;
 			$message .= "Warning: " . $tekst;
 
-			// send email
-			// TODO: temporary disabled
-//			mail($recipients, $subject, $message, $headers);
+			// try to send email
+			$mail = new PHPMailer(true);
+			try {
+				// server settings for the mail
+				$mail->SMTPDebug = 0;                                         // Enable verbose debug output
+				$mail->isSMTP();                                              // Set mailer to use SMTP
+	            $mail->Host = Settings::get('mail_server_host');              // Specify main and backup SMTP servers
+	            $mail->SMTPAuth = true;                                       // Enable SMTP authentication
+	            $mail->Username = Settings::get('mail_server_smtp_username'); // SMTP username
+	            $mail->Password = Settings::get('mail_server_smtp_password'); // SMTP password
+				//$mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
+				$mail->Port = Settings::get('mail_server_port');              // TCP port to connect to
+
+				// set recipients and senders on the mail
+				$mail->setFrom(trim(Settings::get("from_email")), trim(Settings::get("application_name")));
+				foreach ( $arrRecipients as $rec ) {
+					$mail->addAddress($rec);
+				}
+				$mail->isHTML(false);
+				$mail->Subject = $subject;
+				$mail->Body    = $message;
+
+				if ( !$mail->send() ) {
+					// log error
+					error_log('Error 954278: failed sending mail to: ' . '...');
+				} else {
+				}
+			} catch (Exception $e) {
+				// log exception
+				error_log( 'Caught exception (error 347283): ' . $e->getMessage() );
+			}
 		}
 	}
 
@@ -136,6 +158,7 @@ class WebsiteProtection {
 				break;
 
 			default:
+				error_log('Error 85163274. Unknown type: ' . $type);
 				die('Error 85163274. Unknown type: ' . $type);
 		}
 
@@ -149,6 +172,7 @@ class WebsiteProtection {
 			if ($pattern != '') {
 				if ( preg_match($pattern, $retval) == 0) {
 					// niet goed
+					error_log("ERROR 8564125 - command: " . $type . " - value: " . $retval);
 					$this->sendErrorToBrowser("ERROR 8564125");
 					$this->sendWarningMail("ERROR 8564125 - command: " . $type . " - value: " . $retval);
 					die('');
@@ -170,6 +194,7 @@ class WebsiteProtection {
 
 			if ( preg_match($pattern, $retval) == 0) {
 				// niet goed
+				error_log("ERROR 5474582 - command: " . $type . " - value: " . $retval);
 				$this->sendErrorToBrowser("ERROR 5474582");
 				$this->sendWarningMail("ERROR 5474582 - command: " . $type . " - value: " . $retval);
 				die('');
@@ -190,6 +215,7 @@ class WebsiteProtection {
 
 			if ( preg_match($pattern, $retval) == 0) {
 				// niet goed
+				error_log("ERROR 9456725 - command: " . $type . " - value: " . $retval);
 				$this->sendErrorToBrowser("ERROR 9456725");
 				$this->sendWarningMail("ERROR 9456725 - command: " . $type . " - value: " . $retval);
 				die('');

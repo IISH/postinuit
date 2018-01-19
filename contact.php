@@ -14,9 +14,9 @@ function createContactContent( ) {
 
 	$message = Translations::get('questions_bugs_comments');
 	if ( $oWebuser->isLoggedIn() ) {
-		$message = str_replace('::NAME::', "<a href=\"mailto:" . Settings::get("functional_maintainer_email") . "\">" . Settings::get("functional_maintainer_name") . "</a>", $message);
+		$message = str_replace('::NAME::', "<a href=\"mailto:" . Settings::get("contact_email") . "\">" . Settings::get("contact_name") . "</a>", $message);
 	} else {
-		$message = str_replace('::NAME::', Settings::get("functional_maintainer_name"), $message);
+		$message = str_replace('::NAME::', Settings::get("contact_name"), $message);
 	}
 
 	return $twig->render('contact.html', array(

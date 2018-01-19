@@ -35,8 +35,11 @@ class User {
 	protected $password = '';
 	protected $password_hash = '';
 	protected $arrUserSettings = array();
+	protected $isData = 0;
 	protected $isBeheerder = 0;
 	protected $isAdmin = 0;
+	protected $isDisabled = 0;
+	protected $isDeleted = 0;
 
 	function __construct($id) {
 		// get user data for specified id
@@ -60,8 +63,11 @@ class User {
 			$this->password_hash = trim($row['password_hash']);
 			$this->loginname = trim($row['loginname']);
 			$this->name = trim($row['name']);
+			$this->isData = $row['is_data'];
 			$this->isBeheerder = $row['is_beheerder'];
 			$this->isAdmin = $row['is_admin'];
+			$this->isDisabled = $row['is_disabled'];
+			$this->isDeleted = $row['is_deleted'];
 		}
 	}
 
@@ -87,7 +93,12 @@ class User {
 
 	//
 	public function isBeheerder() {
-		return ( $this->isBeheerder || $this->isAdmin() );
+		return ( $this->isBeheerder || $this->isAdmin );
+	}
+
+	//
+	public function isData() {
+		return ( $this->isData || $this->isBeheerder || $this->isAdmin );
 	}
 
 	//

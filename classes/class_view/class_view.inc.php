@@ -294,6 +294,7 @@ function onKeyDown(e) {
 		}
 
 		// execute query
+		//preprint( $this->m_view["query"] );
 		$stmt = $dbConn->getConnection()->prepare( $this->m_view["query"] );
 		$stmt->execute();
 

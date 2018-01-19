@@ -71,6 +71,13 @@ function createContent() {
 		)));
 
 	$oForm->add_field(new class_field_bit (array(
+		'fieldname' => 'is_data'
+		, 'fieldlabel' => 'Is data invoerder?'
+		, 'required' => 0
+		, 'class' => ''
+		)));
+
+	$oForm->add_field(new class_field_bit (array(
 		'fieldname' => 'is_beheerder'
 		, 'fieldlabel' => 'Is data beheerder?'
 		, 'required' => 0

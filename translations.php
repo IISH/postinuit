@@ -58,14 +58,6 @@ function createContent() {
 			)
 		)));
 
-	$oView->add_field( new class_field_bit ( array(
-		'fieldname' => 'is_deprecated'
-		, 'fieldlabel' => '<a alt="Deprecated" title="Deprecated">X</a>'
-		, 'show_different_values' => 1
-		, 'different_true_value' => '<a alt="Deprecated" title="Deprecated">X</a>'
-		, 'different_false_value' => ''
-		)));
-
 	$oView->add_field( new class_field_string ( array(
 		'fieldname' => 'lang_nl'
 		, 'fieldlabel' => Translations::get('dutch')

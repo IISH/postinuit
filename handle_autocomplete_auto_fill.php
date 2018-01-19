@@ -1,6 +1,5 @@
 <?php
 /**
- * Created by IntelliJ IDEA.
  * User: Igor van der Bom
  * Date: 18-8-2017
  * Time: 14:19

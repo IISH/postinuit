@@ -55,22 +55,23 @@ class Settings {
 		}
 
 		if ( $setting_name != '' ) {
-
+			//
 			$query = "SELECT * FROM $settingsTable WHERE property='" . $setting_name . "' ";
 			$stmt = $dbConn->getConnection()->prepare($query);
 			$stmt->execute();
-			if ( $row = $stmt->fetch() ) {
 
-//			if ($num_rows > 0) {
+			if ( $row = $stmt->fetch() ) {
 				$query = "UPDATE $settingsTable SET value='" . addslashes($value) . "' WHERE property='" . $setting_name . "' ";
 				$stmt = $dbConn->getConnection()->prepare($query);
 				$stmt->execute();
-			}
-			else {
+			} else {
 				$query = "INSERT INTO $settingsTable (value, property) VALUES ( '" . addslashes($value) . "', '" . $setting_name . "' ) ";
 				$stmt = $dbConn->getConnection()->prepare($query);
 				$stmt->execute();
 			}
+
+			//
+			self::$settings[$setting_name] = $value;
 		}
 	}
 

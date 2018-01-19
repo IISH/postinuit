@@ -1,6 +1,5 @@
 <?php
 /**
- * Created by IntelliJ IDEA.
  * User: Igor van der Bom
  * Date: 18-9-2017
  * Time: 15:55
@@ -42,7 +41,7 @@ class Mail{
      * @return string
      */
     public static function get($mail_name){
-        if(!self::$is_loaded){
+        if ( !self::$is_loaded ){
             self::load();
         }
 
@@ -58,27 +57,19 @@ class Mail{
      */
     public static function getLastTimeMailed($postID){
         global $dbConn;
-        $query = "SELECT date_sent FROM mail WHERE post_id = " . $postID;
+
+        $res = '';
+
+        $query = "SELECT date_sent FROM mail WHERE post_id = " . $postID . " ORDER BY ID DESC ";
         $stmt = $dbConn->getConnection()->prepare($query);
         $stmt->execute();
         $result = $stmt->fetch();
 
-        return $result[0];
-    }
+		if ( $result ) {
+			$res = $result[0];
+		}
 
-    /**
-     * Returns whether the mail has been sent or not
-     * @param $postID integer the ID of the post it belongs to
-     * @return mixed boolean the state of the is_sent variable
-     */
-    public static function isSent($postID){
-        global $dbConn;
-        $query = "SELECT is_sent FROM mail WHERE post_id = " . $postID;
-        $stmt = $dbConn->getConnection()->prepare($query);
-        $stmt->execute();
-        $result = $stmt->fetch();
-
-        return $result;
+        return $res;
     }
 
     /**
@@ -87,92 +78,25 @@ class Mail{
      * @param $kenmerk_of_post string The characteristic of the post that corresponds to the mail
      * @param $mail_sent boolean Whether the mail is already sent
      */
-    public static function uploadMail($data, $kenmerk_of_post, $mail_sent){
-        global $dbConn;
+    public static function insertIntoMailLog($data){
+        global $dbConn, $oWebuser;
 
-        $post_query = "SELECT ID FROM post WHERE kenmerk LIKE '" . $kenmerk_of_post . "'";
+        $post_query = "SELECT ID FROM post WHERE kenmerk='" . $data['kenmerk'] . "'";
         $post_stmt = $dbConn->getConnection()->prepare($post_query);
         $post_stmt->execute();
-        $post_id =$post_stmt->fetch();
+        $post_id = $post_stmt->fetch();
 
-        $query = "INSERT INTO mail (is_sent, sent_by, sent_to, sending_user, post_id, 
-			              post_kenmerk, post_link) 
-			              VALUES (:is_sent, :sent_by, :sent_to, :sending_user, :post_id,
-			              :post_kenmerk, :post_link) ";
+        $query = "INSERT INTO mail (date_sent, sent_by, sent_to, sending_user, post_id, post_kenmerk) 
+			              VALUES (:date_sent, :sent_by, :sent_to, :sending_user, :post_id, :post_kenmerk) ";
 
         $stmt = $dbConn->getConnection()->prepare($query);
 
-        $post_link = $_SERVER['REQUEST_URI'].'?ID='.$post_id[0];
-        $stmt->bindParam(':is_sent', $mail_sent, PDO::PARAM_BOOL);
+        $stmt->bindParam(':date_sent', date("Y-m-d H:i:s"), PDO::PARAM_BOOL);
         $stmt->bindParam(':sent_by', $data['their_name'], PDO::PARAM_STR);
         $stmt->bindParam(':sent_to', $data['our_name'], PDO::PARAM_STR);
-        $stmt->bindParam(':sending_user', $data['user_sending'], PDO::PARAM_STR);
+        $stmt->bindParam(':sending_user', $oWebuser->getName(), PDO::PARAM_STR);
         $stmt->bindParam(':post_id', $post_id[0], PDO::PARAM_INT);
-        $stmt->bindParam(':post_kenmerk', $kenmerk_of_post, PDO::PARAM_STR);
-        $stmt->bindParam(':post_link', $post_link, PDO::PARAM_STR);
-
-        $stmt->execute();
-
-        if($mail_sent){
-            self::updateMailSent($data, $kenmerk_of_post);
-        }
-    }
-
-    /**
-     * Updates the data of the mail in the database
-     * @param $data array The data needed to be saved in the database
-     * @param $kenmerk_of_post string The characteristic of the post that corresponds to the mail
-     */
-    public static function updateMail($data, $kenmerk_of_post){
-        global $dbConn;
-
-        $query = "UPDATE mail 
-        SET sent_by = :sent_by,
-            sent_to = :sent_to,
-            sending_user = :sending_user  
-        WHERE post_kenmerk = :post_kenmerk";
-
-        $stmt = $dbConn->getConnection()->prepare($query);
-
-        $stmt->bindParam(':sent_by', $data['their_name'], PDO::PARAM_BOOL);
-        $stmt->bindParam(':sent_to', $data['our_name'], PDO::PARAM_STR);
-        $stmt->bindParam(':sending_user', $data['user_sending'], PDO::PARAM_STR);
-        $stmt->bindParam(':post_kenmerk', $kenmerk_of_post, PDO::PARAM_STR);
-
-        $stmt->execute();
-    }
-
-    /**
-     * Updates the data of the mail in the database for the mail has been sent
-     * @param $data array The data needed to be saved in the database
-     * @param $kenmerk_of_post string The characteristic of the post that corresponds to the mail
-     */
-    public static function updateMailSent($data, $kenmerk_of_post){
-        global $dbConn;
-
-        $times_sent_query = "SELECT times_sent FROM mail WHERE post_kenmerk = '" . $kenmerk_of_post . "'";
-        $times_sent_stmt = $dbConn->getConnection()->prepare($times_sent_query);
-        $times_sent_stmt->execute();
-        $times_sent = $times_sent_stmt->fetch();
-
-        $times_sent = $times_sent[0] + 1;
-
-        $query = "UPDATE mail 
-        SET is_sent = :is_sent,
-            date_sent = :date_sent,
-            sending_user = :sending_user,
-            times_sent = :times_sent
-        WHERE post_kenmerk = :post_kenmerk";
-
-        $stmt = $dbConn->getConnection()->prepare($query);
-
-        $isSent = 1;
-        $currentDate = date('Y-m-d H:i:s');
-        $stmt->bindParam(':is_sent', $isSent, PDO::PARAM_BOOL);
-        $stmt->bindParam(':date_sent', $currentDate, PDO::PARAM_STR);
-        $stmt->bindParam(':sending_user', $data['user_sending'], PDO::PARAM_STR);
-        $stmt->bindParam(':times_sent', $times_sent, PDO::PARAM_INT);
-        $stmt->bindParam(':post_kenmerk', $kenmerk_of_post, PDO::PARAM_STR);
+        $stmt->bindParam(':post_kenmerk', $data['kenmerk'], PDO::PARAM_STR);
 
         $stmt->execute();
     }
@@ -182,118 +106,133 @@ class Mail{
      * @param $data array The information about the post to be sent to the person
      * @return bool Whether the mail has been sent successfully
      */
-    public static function mailPost($data, $files, $kenmerk_of_post){
-        $mail = new PHPMailer(true);
-        $mailSent = false;
+    public static function sendEmailPost($data, $kenmerk_of_post){
+	    global $dbConn, $databases;
 
-        global $dbConn;
+		// statusses
+	    // 0 - not sent
+	    // 1 - sent
+	    // 2 - not sent due to no email address
+	    $mailSent = 0;
+
+	    $files = Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk_of_post);
 
         // get the mail address of the employee
-        $query = "SELECT mail FROM employees WHERE cn LIKE '" . $data['our_name'] . "'";
-        $stmt = $dbConn->getConnection()->prepare($query);
+	    $dbEmployees = new class_pdo( $databases['sync_knaw_ad'] );
+        $query = "SELECT mail FROM employees WHERE cn='" . $data['our_name'] . "' ";
+        $stmt = $dbEmployees->getConnection()->prepare($query);
         $stmt->execute();
         $result = $stmt->fetch();
 
-        // Get the post id corresponding to the given kenmerk
-        $post_query = "SELECT ID FROM post WHERE kenmerk LIKE '" . $kenmerk_of_post . "'";
-        $post_stmt = $dbConn->getConnection()->prepare($post_query);
-        $post_stmt->execute();
-        $post_id =$post_stmt->fetch();
+	    // controleer of email veld niet leeg is
+		if ( trim($result['mail'] == '' ) ) {
+			return 2;
+		}
 
-        try{
-            /**
-             * Server settings for the mail
-             */
-            $mail->SMTPDebug = 0;                                 // Enable verbose debug output
-            $mail->isSMTP();                                      // Set mailer to use SMTP
-//            $mail->Host = 'localhost';  // Specify main and backup SMTP servers
-//            $mail->SMTPAuth = true;                               // Enable SMTP authentication
-//            $mail->Username = 'user@example.com';                 // SMTP username
-//            $mail->Password = 'secret';                           // SMTP password
-//            $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
-            $mail->Port = 2525;                                   // TCP port to connect to
+		//
+		if ( $data['ID'] == '' ) {
+			// Get the post id corresponding to the given kenmerk
+			$post_query = "SELECT ID FROM post WHERE kenmerk='" . $kenmerk_of_post . "' ";
+			$post_stmt = $dbConn->getConnection()->prepare($post_query);
+			$post_stmt->execute();
+			$post_id = $post_stmt->fetch();
+			$data['ID'] = $post_id['ID'];
+		}
 
-            /**
-             * Set recipients and senders on the mail
-             */
-            $mail->setFrom('from@example.com', $data['their_name']);
-            $mail->addAddress($result['mail'], $data['our_name']);     // Add a recipient
-//            $mail->addReplyTo('info@example.com', 'Information');
-//            $mail->addCC('cc@example.com');
-//            $mail->addBCC('bcc@example.com');
+	    // try to send email
+	    $mail = new PHPMailer(true);
+        try {
+	        // server settings for the mail
+	        $mail->SMTPDebug = 0;                                         // Enable verbose debug output
+	        $mail->isSMTP();                                              // Set mailer to use SMTP
+	        $mail->Host = Settings::get('mail_server_host');              // Specify main and backup SMTP servers
+	        $mail->SMTPAuth = true;                                       // Enable SMTP authentication
+	        $mail->Username = Settings::get('mail_server_smtp_username'); // SMTP username
+	        $mail->Password = Settings::get('mail_server_smtp_password'); // SMTP password
+	        //$mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
+	        $mail->Port = Settings::get('mail_server_port');              // TCP port to connect to
+
+            // set recipients and senders on the mail
+	        $mail->setFrom(trim(Settings::get("from_email")), trim(Settings::get("application_name")));
+	        $mail->addAddress($result['mail']);
+			if ( Settings::get("bcc_email") != '' ) {
+				$mail->addBCC(Settings::get("bcc_email"));
+			}
 
             /**
              * Add attachments to the mail
              */
+	        $maxMailSize = Settings::get('max_mail_size') * 1024 * 1024;
+			$attachmentsSize = 0;
+	        $skippedAttachments = array();
+	        $attachmentsInMail = array();
+
             foreach($files as $file){
-                $mail->addAttachment(Settings::get('attachment_directory') . $data['kenmerk'] . "/". $file);
+				$fileSize = filesize( Settings::get('attachment_directory') . $data['kenmerk'] . "/". $file );
+				if ( $fileSize + $attachmentsSize < $maxMailSize ) {
+					$mail->addAttachment(Settings::get('attachment_directory') . $data['kenmerk'] . "/". $file);
+					$attachmentsSize += $fileSize;
+					$attachmentsInMail[] = "$file";
+				} else {
+					$skippedAttachments[] = "$file";
+				}
             }
 
-            /**
-             * Preparing the content for the Body and altBody
-             */
-            $subjectHeader = Translations::get('lbl_mail_header_subject');
-            $openingLine = Translations::get('lbl_mail_openingline');
-            $dateOfArrival = Translations::get('lbl_mail_date_of_arrival');
-            $senderOrganisation = Translations::get('lbl_mail_sender_organisation');
-            $senderName = Translations::get('lbl_mail_sender_name');
-            $typeOfDocument = Translations::get('lbl_mail_type_of_document');
-            $subject = Translations::get('lbl_mail_subject');
-            $postLink = Translations::get('lbl_mail_post_link');
-            $closingLine = Translations::get('lbl_mail_closing_line');
-            $kindRegards = Translations::get('lbl_mail_kind_regards');
-            $mailIISG = Translations::get('lbl_mail_IISG');
+	        if ( count($skippedAttachments) > 0 ) {
+		        $sk1 = Translations::get('email_skipped_attachments_1') . "<br />\n";
 
-            /**
-             * Content of the mail
-             */
-            $mail->isHTML(true);    // Set email format to HTML
-            $mail->Subject = $subjectHeader;
-            $type_of_document = DocumentTypes::get($data['type_of_document'])[0];
+		        $sk2 = Translations::get('email_skipped_attachments_2');
+				if ( $sk2 != '' ) {
+					$sk2 = str_replace('{s}', ( count($attachmentsInMail) > 1 ? 's': ''), $sk2);
+					$sk2 = "<br />\n" . $sk2 . "<br />\n";
+	//"In this e-mail you can find the following file" . ( count($attachmentsInMail) > 1 ? 's': '') . " as attachment.
+					foreach ( $attachmentsInMail as $file ) {
+						$sk2 .= "- $file<br />\n";
+					}
+				}
 
-            /**
-             * Setting the Body of the mail
-             */
-            $mail->Body    = $openingLine.'<br>'.'<br>'.
-                $dateOfArrival .': ' . $data['date'] . '<br>'.
-                $senderOrganisation . ': ' . $data['their_organisation'].'<br>'.
-                $senderName . ': ' . $data['their_name'].'<br>'.
-                $typeOfDocument . ': ' . $type_of_document . '<br>'.
-                $subject . ': '. $data['subject'] . '<br>'.
-                $postLink . ': ' . $_SERVER['REQUEST_URI'].'?ID='.$post_id[0] .'<br>' . '<br>'.
-                $closingLine .'<br>'.'<br>'.
-                $kindRegards .'<br>'.
-                $mailIISG;
+		        $sk3 = Translations::get('email_skipped_attachments_3');
+		        if ( $sk3 != '' ) {
+			        $sk3 = str_replace('{s}', ( count($skippedAttachments) > 1 ? 's': ''), $sk3);
+			        $sk3 = "<br />\n" . $sk3 . "<br />\n";
+      //"In this e-mail you can find the following file" . ( count($attachmentsInMail) > 1 ? 's': '') . " as attachment.
+			        foreach ( $skippedAttachments as $file ) {
+//				        $sk3 .= "- $file<br />\n";
+				        $sk3 .= "- <a href=\"" . Settings::get('url') . "download.php?ID=" . $data['ID'] . "&file=" . urlencode($file) . "\">$file</a><br />\n";
+			        }
+		        }
+//				$sk3 = "The other file" . ( count($skippedAttachments) > 1 ? 's': '') . " you can download from the website.<br />\n";
+//		        foreach ( $skippedAttachments as $file ) {
+//			        $sk3 .= "- <a href=\"" . Settings::get('url') . "download.php?ID=" . $data['ID'] . "&file=" . urlencode($file) . "\">$file</a><br />\n";
+//				}
 
-/**
- * Setting the altBody in case the receiver doesnt have html supported
- * PS. Leave it like this for markup of the text
- */
-$altBody = "{$openingLine}
-            
-{$dateOfArrival}: {$data['date']}
-{$senderOrganisation}: {$data['their_organisation']}
-{$senderName}: {$data['their_name']}
-{$typeOfDocument}: {$type_of_document}
-{$subject}: {$data['subject']}
-{$postLink}: {$_SERVER['REQUEST_URI']}?ID={$post_id[0]}
+				$data['skipped'] = "<br />\n" . $sk1 . $sk2 . $sk3;
+			}
 
-{$closingLine}
-
-{$kindRegards}
-{$mailIISG}";
-
+            //
+            $mail->isHTML(true);
+            $mail->Subject = Mail::fillMailValues(Translations::get('post' . $data['in_out'] . '_mail_subject'), $data);
+            $mail->Body = Mail::fillMailValues(Translations::get('post' . $data['in_out'] . '_mail_body'), $data);
+			$altBody = strip_tags ( str_replace(array('<br>', '<br />'), "\n", $mail->Body) );
             $mail->AltBody = $altBody;
 
-            if(!$mail->send()){
-                $mailSent = false;
-                file_put_contents('log.txt', 'Meh!!!', FILE_APPEND);
-            }else{
-                $mailSent = true;
+            if ( !$mail->send() ) {
+                // log error
+                error_log('Error 954278: failed sending mail to: ' . $result['mail']);
+
+				//
+                die( 'Error 954278: failed sending mail to: ' . $result['mail'] );
+            } else {
+                $mailSent = 1;
             }
-        }catch (Exception $e){
-            // TODO: Figure something out for exception handling! Like an exception page or something.
+        } catch (Exception $e) {
+	        // log exception
+	        error_log( 'Caught exception (error 347283): ' . $e->getMessage() );
+
+			//
+	        die( 'Caught exception (error 347283): ' . $e->getMessage() );
         }
+
         return $mailSent;
     }
 
@@ -305,5 +244,35 @@ $altBody = "{$openingLine}
         return "Class: " . get_class($this) . "\n";
     }
 
+    public static function fillMailValues( $template, $data ) {
+        $ret = $template;
 
+	    $ret = str_replace('[kenmerk]', $data['kenmerk'], $ret);
+	    $ret = str_replace('[date]', Misc::convertDateTimeToNice( $data['date'], "d-m-Y"), $ret);
+	    $ret = str_replace('[their_organisation]', $data['their_organisation'], $ret);
+	    $ret = str_replace('[their_name]', $data['their_name'], $ret);
+	    $ret = str_replace('[subject]', $data['subject'], $ret);
+	    $ret = str_replace('[application_name]', Settings::get('application_name'), $ret);
+
+		//
+		if ( isset($data['skipped']) && $data['skipped'] != '' ) {
+			$ret = str_replace('[skipped]', $data['skipped'], $ret);
+		} else {
+			$ret = str_replace('[skipped]', '', $ret);
+		}
+
+		//
+	    $tmpTOD = DocumentTypes::get($data['type_of_document']);
+	    $ret = str_replace('[type_of_document]', $tmpTOD[0], $ret);
+
+		return $ret;
+    }
+
+	public static function updateMailSent($kenmerk_of_post){
+		global $dbConn;
+		$query = "UPDATE `post` SET is_mailed = is_mailed+1 WHERE kenmerk = :post_kenmerk ";
+		$stmt = $dbConn->getConnection()->prepare($query);
+		$stmt->bindParam(':post_kenmerk', $kenmerk_of_post, PDO::PARAM_STR);
+		$stmt->execute();
+	}
 }

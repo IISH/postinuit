@@ -39,21 +39,26 @@ function createLoginPage() {
 			if ( $result_login_check == 1 ) {
 				// retain login name
 				$_SESSION["loginname"] = $fldLogin;
+				if ($result_login_check == 1) {
+					$_SESSION["editor_rights"] = 1;
+				} else {
+					$_SESSION["editor_rights"] = 0;
+				}
 
 				//
-				$burl = getBackUrl();
-				if ( $burl == '' ) {
-					$burl = 'index.php';
-				}
+				$burl = getBackUrl( 'index.php' );
 				Header("Location: " . $burl);
 				die(Translations::get('go_to') . " <a href=\"" . $burl . "\">next</a>");
+			} elseif ( $result_login_check == 2 || $result_login_check == 3 ) {
+				// show error
+				$error .= Translations::get('not_authorised') . "<br />";
 			} else {
 				// show error
-				$error .= "User/Password combination incorrect.";
+				$error .= Translations::get('user_password_incorrect') . "<br />";
 			}
 		} else {
 			// show error
-			$error .= "Both field are required.<br>";
+			$error .= Translations::get('both_fields_are_required') . "<br />";
 		}
 	}
 

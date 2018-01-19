@@ -31,7 +31,6 @@ class Page {
 			if ( $niceName == '' ) {
 				$niceName = '...';
 			}
-			$niceName = '<a href="user.php">' . $niceName . '</a>';
 
 			$welcome .= ', ' . $niceName;
 

@@ -5,19 +5,27 @@
 	<br>
 {% endif %}
 
-<form name="frmA" method="POST" action="{{action}}">
+<script language="javascript">
+<!--
+function submitDocument() {
+	document.getElementById("frmA").submit();
+}
+// -->
+</script>
+
+<form id="frmA" name="frmA" method="POST" action="{{action}}">
 <table class="login">
 	<tr>
 		<td>{{lblLoginname}}</td>
-		<td><input type="text" name="fldLogin" class="login" maxlength="50" value="{{loginname}}" placeholder="{{loginname_placeholder}}"> <i>{{loginname_help}}</i></td>
+		<td><input type="text" id="fldLogin" name="fldLogin" class="login" maxlength="50" value="{{loginname}}" placeholder="{{loginname_placeholder}}"> <i>{{loginname_help}}</i></td>
 	</tr>
 	<tr>
 		<td>{{lblPassword}}</td>
-		<td><input type="password" name="fldPassword" class="password" maxlength="50" autocomplete="on" placeholder="{{password_placeholder}}"></td>
+		<td><input type="password" id="fldPassword" name="fldPassword" class="password" maxlength="50" autocomplete="on" placeholder="{{password_placeholder}}"></td>
 	</tr>
 	<tr>
 		<td></td>
-		<td>&nbsp;<input class="button_login" type="submit" name="btnSubmit" value="{{btn_login}}"></td>
+		<td>&nbsp;<input class="button_login" type="button" id="btnSubmit" name="btnSubmit" value="{{btn_login}}" onclick="submitDocument();"></td>
 	</tr>
 </table>
 </form>
@@ -28,6 +36,20 @@
 
 <script language="javascript">
 <!--
-document.frmA.fldLogin.focus();
+document.getElementById("fldLogin").focus();
+
+document.getElementById("fldLogin").onkeydown = function(e){
+	if(e.keyCode == 13) { // enter key
+		// submit
+		document.getElementById("fldPassword").focus();
+	}
+};
+
+document.getElementById("fldPassword").onkeydown = function(e){
+	if(e.keyCode == 13) { // enter key
+		// submit
+		document.getElementById("frmA").submit();
+	}
+};
 // -->
 </script>
