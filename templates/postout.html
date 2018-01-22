@@ -116,24 +116,32 @@
 			</table>
 
 		</div>
+
 		<div class="col-xs-12 col-sm-12 col-md-3 col-lg-3">
 			{% include 'lasttimesent.html' %}
 			{% include 'uploadfiles.html' %}
+
+			{%  if selectedPost['ID'] != '' %}
+				<div class="border attachment">
+					<label>{{ lbl_already_uploaded_files }}</label>
+					<ul id="attachment_list" class="in_out">
+					</ul>
+				</div>
+
+				<div class="border attachment">
+					<label>Verwijderde bestanden</label>
+					<ul id="deleted_list" class="in_out">
+					</ul>
+				</div>
+			{% endif %}
 		</div>
 	</div>
 </form>
 
+{% include 'postinout_javascript.html' %}
+
 <script>
 	$(document).ready(function() {
-
-        $('.deleteFileFromServer').on('click', function(){
-        if(confirm("{{ are_you_sure_delete }}")){
-            deleteAttachment($(this).val());
-            }
-        });
-
-        var requireds = document.getElementsByClassName('required');
-        var semi_requireds = document.getElementsByClassName('semiRequired');
 
         {% if not has_rights_to_edit %}
             $('.required').remove();
@@ -145,35 +153,31 @@
             nr_of_files.innerText = '{{ nr_of_files_upload }}' + event.target.files.length;
         });
 
-    $('#senderNameInput').on('change onblur', function(){
-            $.ajax({
-                url: 'handle_autocomplete_auto_fill.php',
-                type: 'GET',
-                data: {
-                    name: $(this).val()
-                },
-                dataType: 'json',
-                success: function(data) {
-                    if(data.length > 0) {
-                        $('#senderInstituteInput').val(data[0]['clean_institute']);
-                        if ( data[0]['clean_department'] != 'n.v.t.') {
-	                        $('#senderDepartmentInput').val(data[0]['clean_department']);
-                        } else {
+	    $('#senderNameInput').on('change onblur', function(){
+	            $.ajax({
+	                url: 'handle_autocomplete_auto_fill.php',
+	                type: 'GET',
+	                data: {
+	                    name: $(this).val()
+	                },
+	                dataType: 'json',
+	                success: function(data) {
+	                    if(data.length > 0) {
+	                        $('#senderInstituteInput').val(data[0]['clean_institute']);
+	                        if ( data[0]['clean_department'] != 'n.v.t.') {
+		                        $('#senderDepartmentInput').val(data[0]['clean_department']);
+	                        } else {
+		                        $('#senderDepartmentInput').val('');
+	                        }
+	                        $('#our_loginname').val(data[0]['clean_loginname']);
+	                    } else {
+	                        $('#senderInstituteInput').val('');
 	                        $('#senderDepartmentInput').val('');
-                        }
-                        $('#our_loginname').val(data[0]['clean_loginname']);
-                    } else {
-                        $('#senderInstituteInput').val('');
-                        $('#senderDepartmentInput').val('');
-                        $('#our_loginname').val('');
-                    }
-                }
-            });
-        });
-
-		$('#deleteFileFromServer').on('click', function(){
-			return confirm("{{ are_you_sure_delete }}");
-		});
+	                        $('#our_loginname').val('');
+	                    }
+	                }
+	            });
+	        });
 
 		$('[data-toggle="popover"]').popover();
 
@@ -199,50 +203,11 @@
 		$('#receiverInstituteInput').on('keyup', function(){
 			autoComplete($(this), $(this).val(), 'their_organisation');
 		});
+
+		//
+		refreshList('uploaded', 'attachment_list');
+		refreshList('deleted', 'deleted_list');
 	});
-
-	// Function to delete the attachment selected to delete.
-	function deleteAttachment(filename){
-        $.ajax({
-            type: 'POST',
-            url: 'remove_file_from_post.php',
-            data: {
-                'file' : filename,
-                'kenmerk' : {{ selectedPost['kenmerk'] }}
-            },
-            success: function (response) {
-                if( response === "true" ) {
-                    var lis = document.querySelectorAll('#attachment_list li');
-                    for(var i=0; li=lis[i]; i++) {
-	                    if(li.getAttribute('value') === filename.trim()) {
-                            li.innerText = filename + " ({{ removed }})";
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    function validateForm(){
-        var isValid = true;
-        if ( $('#dateSentInput').val() === "" ) {
-            isValid = false;
-        }else if ( $('#senderNameInput').val() === "" ) {
-            isValid = false;
-        }else if ( $('#receiverNameInput').val() === "" && $('#receiverInstituteInput').val() === "" ) {
-            isValid = false;
-        }else if ( $('[name="type_of_document"]').selected === false ) {
-            isValid = false;
-        }else if ( $('#subjectInput').val() === "" ) {
-            isValid = false;
-        }
-
-        if ( !isValid )
-            alert("{{ not_all_required_fields_have_been_filled_out }}");
-
-        return isValid;
-    }
-
 </script>
 
 {% endif %}

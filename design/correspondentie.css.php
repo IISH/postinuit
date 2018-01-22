@@ -400,20 +400,24 @@ input[type=file] {
     font-size: 20px;
 }
 
-#attachment_list_item{
+#attachment_list_item
+, #deleted_list_item {
     list-style-type: none;
     padding: 2px 0px;
 }
 
-#attachment_list_item:hover{
+#attachment_list_item:hover
+, #deleted_list_item:hover {
     background-color: #bfbfbf !important;
 }
 
-#attachment_list{
+#attachment_list
+, #deleted_list {
     padding-left: 0;
 }
 
-#attachment_list li:nth-child(odd){
+#attachment_list li:nth-child(odd)
+, #deleted_list li:nth-child(odd) {
     background-color: #dfdfdf;
 }
 

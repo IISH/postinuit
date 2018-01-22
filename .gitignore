@@ -3,6 +3,7 @@ correspondentie.settings.LOCAL.php
 vendor/
 .idea
 documenten/
+documenten-deleted/
 test.php
 import/
 /bootstrap-3.3.7

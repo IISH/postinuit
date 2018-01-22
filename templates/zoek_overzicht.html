@@ -44,7 +44,7 @@
 			{% else %}
 				<tr>
 			{% endif %}
-		<td><a name="A{{post.ID}}" href="{{post.url}}?ID={{post.ID}}{{ backurl }}">#{{post.kenmerk}}</a><br>{{post.date}}</td>
+		<td><a name="{{post.ID}}" href="{{post.url}}?ID={{post.ID}}{{ backurl }}">#{{post.kenmerk}}</a><br>{{post.date}}</td>
 		<td>
 			{{post.inOut}}
 

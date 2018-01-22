@@ -8,7 +8,6 @@ function createPostInOutContent( $inOrOut ) {
 	$submitValue = Translations::get('lbl_submit_post');
 	$submitAndMailValue = Translations::get('lbl_submit_and_mail_post_' . $inOrOut);
 	$selectedPost = array();
-	$files_belonging_to_post = array();
 	$submitError = array();
 	$submitWarning = array();
 	$hasRightsToEdit = true;
@@ -115,7 +114,7 @@ function createPostInOutContent( $inOrOut ) {
 			if ( count($submitError) == 0 && count($submitWarning) == 0  ) {
 				// set the location header to the given location in the code above
 				if ( isset($_GET['backurl']) && $_GET['backurl'] != '' ) {
-					$next = $_GET['backurl'] . '#A' . $id;
+					$next = $_GET['backurl'] . '#' . $id;
 				} else {
 					$next = 'zoeken.php';
 				}
@@ -133,7 +132,6 @@ function createPostInOutContent( $inOrOut ) {
 				die('error 9514587456');
 			}
 			$kenmerk = $selectedPost['kenmerk']; // TODO TODOGCU BUG SOMS IS DEZE LEEG
-			$files_belonging_to_post = Misc::getListOfFiles( Settings::get('attachment_directory') . $kenmerk );
 		}
 	}
 	/**
@@ -159,7 +157,7 @@ function createPostInOutContent( $inOrOut ) {
 				$numberOfFiles = Posts::getNumberOfFilesFromPost($selectedPost['kenmerk']);
 				if ($selectedPost['number_of_files'] != $numberOfFiles) {
 					// save new number of files
-					Posts::saveNumberOfFiles($selectedPost, $numberOfFiles);
+					Posts::saveNumberOfFiles($selectedPost['ID'], $numberOfFiles);
 					// set new value to object
 					$selectedPost['number_of_files'] = $numberOfFiles;
 				}
@@ -173,7 +171,6 @@ function createPostInOutContent( $inOrOut ) {
 
 				//
 				$kenmerk = $selectedPost['kenmerk'];
-				$files_belonging_to_post = Misc::getListOfFiles(Settings::get('attachment_directory') . $kenmerk);
 
 				$lastTimeMailSent = Mail::getLastTimeMailed($id) ? Misc::convertDateTimeToNice(Mail::getLastTimeMailed($id)) : Translations::get('lbl_not_yet_mailed');
 			} else {
@@ -184,7 +181,7 @@ function createPostInOutContent( $inOrOut ) {
 			// NEW
 			$currentDate = date('y');
 			$characteristicsCount = intval(Settings::get('post_characteristic_last_used_counter')) + 1;
-			for ( $i = strlen($characteristicsCount); $i < 3; $i++ ) { // TODO TODOGCU hier hard lengte van kenemerk (zonder jaartal)
+			for ( $i = strlen($characteristicsCount); $i < (Settings::get('length_of_kenmerk')-2); $i++ ) {
 				$currentDate .= '0';
 			}
 			$kenmerk = $currentDate . $characteristicsCount;
@@ -215,7 +212,9 @@ function createPostInOutContent( $inOrOut ) {
 	$renderArray['has_rights_to_edit'] = $hasRightsToEdit;
 	$renderArray['submitAndMailValue'] = $submitAndMailValue;
 	$renderArray['are_you_sure_delete'] = Translations::get('are_you_sure_delete');
+	$renderArray['are_you_sure_undelete'] = Translations::get('are_you_sure_undelete');
 	$renderArray['removed'] = Translations::get('removed');
+	$renderArray['undeleted'] = Translations::get('undeleted');
 	$renderArray['lbl_upload_files'] = Translations::get('lbl_upload_files');
 	$renderArray['lbl_already_uploaded_files'] = Translations::get('lbl_already_uploaded_files');
 	$renderArray['document_upload_comment'] = Translations::get('document_upload_comment');
@@ -226,7 +225,6 @@ function createPostInOutContent( $inOrOut ) {
 	$renderArray['help_date'] = Translations::get('help_date');
 	$renderArray['characteristicsValue'] = $kenmerk;
 	$renderArray['submitValue'] = $submitValue;
-	$renderArray['files_from_post'] = $files_belonging_to_post;
 	$renderArray['submitError'] = implode("<br />\n", $submitError);
 	$renderArray['submitWarning'] = implode("<br />\n", $submitWarning);
 	$renderArray['selectedPost'] = $selectedPost;

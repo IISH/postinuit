@@ -11,32 +11,3 @@
 		<h6>{{ document_upload_comment }}</h6>
 	</div>
 {% endif %}
-
-{% if files_from_post|length > 0 %}
-	<div class="border attachment">
-		<label>{{ lbl_already_uploaded_files }}</label>
-		<ul id="attachment_list" class="in_out">
-			{% for file in files_from_post %}
-				<li id="attachment_list_item" value="{{ file }}">
-					<button type="submit" class="openFileFromServer" name="openFileFromServer" formaction="open_file_from_post.php" value="{{ file }}">
-						<span class="glyphicon glyphicon-save-file attachment_button_images" aria-hidden="true"></span>
-					</button>
-
-					{% if has_rights_to_edit %}
-						<button type="button" class="deleteFileFromServer" name="deleteFileFromServer" value="{{ file }}">
-							<span class="glyphicon glyphicon-remove attachment_button_images" aria-hidden="true"></span>
-						</button>
-					{% endif %}
-
-					{% set maxLength = 14 %}
-					{% if file|length <= maxLength %}
-						{{ file }}
-					{% else %}
-						<span title="{{ file }}">{{ file|slice(0,maxLength/2) }}&hellip;{{ file|slice( file|length-maxLength/2, maxLength/2 ) }}</span>
-					{% endif %}
-
-				</li>
-			{% endfor %}
-		</ul>
-	</div>
-{% endif %}

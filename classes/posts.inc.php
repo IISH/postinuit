@@ -63,28 +63,21 @@ class Posts{
 
 		// Set a variable with the value from the form combined with the characteristic from the database
 		$new_kenmerk = substr($data['kenmerk'],0, 2);
-		for ( $i = strlen($post_id); $i < 3; $i++ ) { // TODO TODOGCU hard lengte van kenmerk (zonder jaartal)
+		for ( $i = strlen($post_id); $i < (Settings::get('length_of_kenmerk')-2); $i++ ) {
 			$new_kenmerk .= '0';
 		}
 		$new_kenmerk .= $post_id;
 
 		// get the directory to which to save the documents included in the post
-        $directory_to_save = Settings::get('attachment_directory').$new_kenmerk."/";
+		$directory_to_save = Settings::get('attachment_directory') . $new_kenmerk . "/";
+		$directory_deleted_files = Settings::get('deleted_attachment_directory') . $new_kenmerk . "/";
 
-        // check to see if the directory exists, otherwise create it
-        if ( !file_exists( $directory_to_save ) ) {
-            if ( !mkdir($directory_to_save, 0764, true ) ) {
-                die('Failed to create documents directory');
-            }
-        }
+		// check to see if the directory exists, otherwise create it
+		File::ensureDirectoryExists( $directory_to_save, 'documents' );
+		File::ensureDirectoryExists( $directory_deleted_files, 'deleted documents' );
 
-        // check to see if the array with files is empty or not
-        for ( $i = 0; $i < count($files['documentInput']['name']); $i++ ) {
-            if ( $files['documentInput']['tmp_name'][$i] != '' ) {
-                $fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
-                file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
-            }
-        }
+		//
+		File::uploadFilesToServer($files['documentInput'], $new_kenmerk);
 
         // count number of files in kenmerk directory
         $number_of_existing_files = self::getNumberOfFilesFromPost($data['kenmerk']);
@@ -133,14 +126,26 @@ class Posts{
 	 * @param $kenmerk string the folder where the file exists
      * @return boolean
 	 */
-	public static function removeFileFromPost($filename, $kenmerk){
+	 // TODO TODOGCU2
+	public static function moveFile($filename, $kenmerk, $source = '', $target = ''){
+		if ( $source == '' || $target == '' ) {
+			die('Error moving file, source or taget missing.');
+		}
 
-        if( file_exists(Settings::get('attachment_directory').$kenmerk."/".$filename) ) {
-            unlink(Settings::get('attachment_directory').$kenmerk."/".$filename);
-            return true;
-        } else {
-            return false;
-        }
+		if ( file_exists($source . $kenmerk . '/' . $filename) ) {
+			if ( Settings::get('allow_overwrite_on_upload') == 1 || !file_exists($target . $kenmerk . '/' . $filename) ) {
+				// if new or if overwrite allowed
+				rename( $source . $kenmerk . '/' . $filename, $target . $kenmerk . '/' . $filename );
+			} else {
+				// if existing and NO overwrite
+				$newFileName = File::findNewFilename($target, $filename);
+				rename( $source . $kenmerk . '/' . $filename, $target . $kenmerk . '/' . $newFileName );
+			}
+
+			return true;
+		} else {
+			return false;
+		}
 	}
 
     /**
@@ -185,10 +190,10 @@ class Posts{
 	/**
 	 * Save the number of files for the post
 	 */
-	public static function saveNumberOfFiles( $data, $numberOfFiles = 0 ) {
+	public static function saveNumberOfFiles($id, $numberOfFiles = 0 ) {
 		global $dbConn;
 
-		if ( $data['ID'] == '' || $data['ID'] == '0' ) {
+		if ( $id == '' || $id == '0' ) {
 			return false;
 		}
 
@@ -198,7 +203,7 @@ class Posts{
 		$stmt = $dbConn->getConnection()->prepare( $query );
 
 		$stmt->bindParam(':number_of_files', $numberOfFiles, PDO::PARAM_INT);
-		$stmt->bindParam(':ID', $data['ID'], PDO::PARAM_INT);
+		$stmt->bindParam(':ID', $id, PDO::PARAM_INT);
 		$stmt->execute();
 
 		return true;
@@ -211,23 +216,18 @@ class Posts{
 	public static function editPost($data, $files){
 		global $dbConn;
 
-        $directory_to_save = Settings::get('attachment_directory').$data['kenmerk']."/";
-        $numberOfFiles = count($files['documentInput']['name']);
+		// get the directory to which to save the documents included in the post
+        $directory_to_save = Settings::get('attachment_directory') . $data['kenmerk'] . "/";
+		$directory_deleted_files = Settings::get('deleted_attachment_directory') . $data['kenmerk'] . "/";
+
+		// check to see if the directory exists, otherwise create it
+		File::ensureDirectoryExists( $directory_to_save, 'documents' );
+		File::ensureDirectoryExists( $directory_deleted_files, 'deleted documents' );
 
 		// TODO TODOGCU EERST DOCUMENT BEWAREN EN DAN PAS FILES UPLOADEN
-		// AANTAL FILES KAN OOK ACHTERAF GEUPDATE WORDEN
-		if ( !file_exists( $directory_to_save ) ) {
-			if ( !mkdir($directory_to_save, 0764, true ) ) {
-				die('Failed to create documents directory');
-			}
-		}
 
-		for ( $i = 0; $i < $numberOfFiles; $i++ ) {
-			if ( $files['documentInput']['tmp_name'][$i] != '' ) {
-				$fileData = file_get_contents($files['documentInput']['tmp_name'][$i]);
-				file_put_contents($directory_to_save.$files['documentInput']['name'][$i], $fileData);
-			}
-		}
+		//
+		File::uploadFilesToServer($files['documentInput'], $data['kenmerk']);
 
 		// count number of files in kenmerk directory
 		$number_of_existing_files = self::getNumberOfFilesFromPost($data['kenmerk']);
@@ -559,15 +559,15 @@ class Posts{
 		return $ret;
 	}
 
-	public static function decreaseNumberOfFiles( $kenmerk ) {
-		global $dbConn;
-
-		//
-		$query = "UPDATE `post` SET number_of_files = number_of_files - 1 WHERE kenmerk = :kenmerk AND number_of_files > 0 ";
-		$stmt = $dbConn->getConnection()->prepare( $query );
-		$stmt->bindParam(':kenmerk', $kenmerk, PDO::PARAM_STR);
-		$stmt->execute();
-	}
+//	public static function decreaseNumberOfFiles( $kenmerk ) {
+//		global $dbConn;
+//
+//		//
+//		$query = "UPDATE `post` SET number_of_files = number_of_files - 1 WHERE kenmerk = :kenmerk AND number_of_files > 0 ";
+//		$stmt = $dbConn->getConnection()->prepare( $query );
+//		$stmt->bindParam(':kenmerk', $kenmerk, PDO::PARAM_STR);
+//		$stmt->execute();
+//	}
 
 	/**
 	 * toString method for the current class

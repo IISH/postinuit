@@ -39,6 +39,7 @@ require_once dirname(__FILE__) . "/mail.inc.php";
 require_once dirname(__FILE__) . "/logins.inc.php";
 require_once dirname(__FILE__) . "/wiki.inc.php";
 require_once dirname(__FILE__) . "/wikis.inc.php";
+require_once dirname(__FILE__) . "/file.inc.php";
 
 //
 $protect = new WebsiteProtection();

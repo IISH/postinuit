@@ -1,12 +1,21 @@
 <?php
 
 class Wikis {
-	public static function search( $search ) {
+	public static function search( $search = '') {
 		global $dbConn;
 
 		$ret = array();
+		$extraCriterium = '';
 
-		$query = "SELECT * FROM `wiki` WHERE is_deleted = 0 ORDER BY title ";
+		$arrField = array('title', 'description');
+		$arrSearch = explode(' ', $search);
+
+		if ( count($arrSearch) > 0 ) {
+			$extraCriterium = Generate_Query($arrField, $arrSearch, $concat = ' AND ');
+		}
+
+		$query = "SELECT * FROM `wiki` WHERE is_deleted = 0 " . $extraCriterium . " ORDER BY title ";
+
 		$stmt = $dbConn->getConnection()->prepare($query);
 		$stmt->execute();
 		$result = $stmt->fetchAll();

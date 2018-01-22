@@ -18,22 +18,9 @@ echo $twig->render('design.html', $oPage->getPageAttributes() );
 function createContent() {
 	global $twig, $oWebuser;
 
-	$records = array();
-
-	//
-	$arrOfWikis = Wikis::search('');
-	foreach ( $arrOfWikis as $wiki ) {
-		$records[] = array(
-			'ID' => $wiki->getId()
-			, 'title' => $wiki->getTitle()
-			, 'description' => $wiki->getDescription()
-			);
-	}
-
 	//
 	return $twig->render('wiki.html', array(
 			'title' => Translations::get('page_wiki_title')
-			, 'records' => $records
 			, 'is_admin' => $oWebuser->isAdmin()
 			, 'backurl' => 'wiki.php'
 	));
