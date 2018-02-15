@@ -1,0 +1,26 @@
+
+		{% if files|length > 0 %}
+			{% for file in files %}
+				<li id="attachment_list_item" value="{{ file }}">
+					<button type="submit" class="openFileFromServer" name="openFileFromServer" formaction="open_file_from_post.php" value="{{ file }}">
+						<span class="glyphicon glyphicon-save-file attachment_button_images" aria-hidden="true"></span>
+					</button>
+
+					{% if has_rights_to_edit %}
+						<button type="button" class="delete_attachment" name="delete_attachment" value="{{ file }}" onclick="confirmDelete(this.value);">
+							<span class="glyphicon glyphicon-remove attachment_button_images" aria-hidden="true"></span>
+						</button>
+					{% endif %}
+
+					{% set maxLength = 14 %}
+					{% if file|length <= maxLength %}
+						{{ file }}
+					{% else %}
+						<span title="{{ file }}">{{ file|slice(0,maxLength/2) }}&hellip;{{ file|slice( file|length-maxLength/2, maxLength/2 ) }}</span>
+					{% endif %}
+
+				</li>
+			{% endfor %}
+		{% else %}
+			{{ geen }}
+		{% endif %}

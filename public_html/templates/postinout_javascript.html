@@ -1,0 +1,92 @@
+<script>
+		// Function to delete the attachment selected to delete.
+	function refreshList(what, fieldname){
+			var strList = $.ajax({
+				type: 'GET',
+				url: 'uploadfiles_' + what + '.php?kenmerk={{ selectedPost['kenmerk'] }}',
+				async: false
+			}).responseText;
+
+			var oList = document.getElementById(fieldname);
+			oList.innerHTML = strList;
+		}
+
+	// Function to UNdelete a attachment
+	function undeleteAttachment(filename){
+		$.ajax({
+			type: 'POST',
+			url: 'undelete.php',
+			data: {
+				'file' : filename,
+				'kenmerk' : {{ selectedPost['kenmerk'] }}
+			},
+			success: function (response) {
+				if( response === "true" ) {
+					var lis = document.querySelectorAll('#deleted_list li');
+					for(var i=0; li=lis[i]; i++) {
+						if(li.getAttribute('value') === filename.trim()) {
+							li.innerText = filename + " ({{ undeleted }})";
+						}
+					}
+					refreshList('uploaded', 'attachment_list');
+				}
+			}
+		});
+	}
+
+	// Function to delete the attachment selected to delete.
+	function deleteAttachment(filename){
+		$.ajax({
+			type: 'POST',
+			url: 'delete.php',
+			data: {
+				'file' : filename,
+				'kenmerk' : {{ selectedPost['kenmerk'] }}
+			},
+			success: function (response) {
+				if( response === "true" ) {
+					var lis = document.querySelectorAll('#attachment_list li');
+					for(var i=0; li=lis[i]; i++) {
+						if(li.getAttribute('value') === filename.trim()) {
+							li.innerText = filename + " ({{ removed }})";
+						}
+					}
+					refreshList('deleted', 'deleted_list');
+				}
+			}
+		});
+	}
+
+	function validateForm(){
+		var isValid = true;
+		if ( $('#dateSentInput').val() === "" ) {
+			isValid = false;
+		} else if ( $('#senderNameInput').val() === "" ) {
+			isValid = false;
+		} else if ( $('#receiverNameInput').val() === "" && $('#receiverInstituteInput').val() === "" ) {
+			isValid = false;
+		} else if ( $('[name="type_of_document"]').selected === false ) {
+			isValid = false;
+		} else if ( $('#subjectInput').val() === "" ) {
+			isValid = false;
+		}
+
+		if ( !isValid ) {
+			alert("{{ not_all_required_fields_have_been_filled_out }}");
+		}
+
+		return isValid;
+	}
+
+	function confirmUndelete( filename ) {
+		if(confirm("{{ are_you_sure_undelete }}")){
+			undeleteAttachment(filename);
+		}
+	}
+
+	function confirmDelete( filename ) {
+		if(confirm("{{ are_you_sure_delete }}")){
+			deleteAttachment(filename);
+		}
+	}
+</script>

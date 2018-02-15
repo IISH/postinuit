@@ -1,0 +1,55 @@
+<h1>{{title}}</h1>
+
+{% if is_admin == true %}
+	<p style="line-height:20px"><a href="wiki-edit.php?ID=0&backurl={{ backurl }}" class="button">Nieuw</a><br />&nbsp;</p>
+{% endif %}
+
+<script>
+var searchModified = true;
+var previousSearch = '';
+
+function refreshWikiList() {
+	var strSearch = document.getElementById('fldSearch').value;
+	if ( searchModified == true) {
+		document.getElementById('tcContentSearch').innerHTML = '<center><img src="images/loading.gif"></center>';
+
+		var strList = $.ajax({
+			type: 'GET',
+			url: 'wiki_list.php?s=' + strSearch,
+			async: false
+		 }).responseText;
+
+		document.getElementById('tcContentSearch').innerHTML = strList;
+		previousSearch = strSearch;
+		searchModified = false;
+	}
+}
+
+function setModified() {
+	var strSearch = document.getElementById('fldSearch').value;
+	if ( strSearch.length == 0 || strSearch.length >= 2 ) {
+		if ( strSearch != previousSearch ) {
+			searchModified = true;
+		}
+	}
+}
+
+function searchStart() {
+	refreshWikiList();
+
+	// refresh automatically after X millisedoncs
+	var t = setTimeout("searchStart()", 500);
+}
+</script>
+
+Filter: <input type="text" name="fldSearch" id="fldSearch" maxlength="20" onkeyup="setModified();" value=""><br /><br />
+
+<div id="tcContentSearch" style="clear:both;">
+	<center><img src="images/loading.gif"></center>
+</div>
+
+<script>
+$(document).ready(function() {
+	searchStart();
+});
+</script>

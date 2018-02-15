@@ -1,7 +1,7 @@
-correspondentie.settings.php
-correspondentie.settings.LOCAL.php
+etc/config.php
 vendor/
 .idea
 documenten/
+documenten-deleted/
 test.php
-import/
+/etc/config.php
