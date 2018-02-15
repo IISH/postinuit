@@ -1,0 +1,16 @@
+<td>
+	<label id="in_uit_search_lbl">{{ in_uit_lbl }}</label>
+</td>
+<td>
+	{% for in_out in in_outs %}
+
+		{% set selected = false %}
+		{% for in_or_out in selected_in_or_out %}
+			{% if in_or_out == in_out.key %}
+				{% set selected = true %}
+			{% endif %}
+		{% endfor %}
+
+		<label class="in_out"><input type="checkbox" id="in_uit_search" name="in_uit_search" {% if selected %}checked{% endif %} value="{{ in_out.key }}"> {{ in_out.label }}</label>
+	{% endfor %}
+</td>

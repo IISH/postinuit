@@ -1,0 +1,147 @@
+<h1>{{title}}</h1>
+({{ or_go_to }} <a href="geavanceerd_zoeken.php">{{ btn_advanced_search }}</a>)<br>
+<br>
+
+{{ lbl_search_for }}: <input type="text" id="search" value="{{ search }}"> <button id="zoek">{{ btn_search }}</button><br>
+<br>
+
+{% include 'zoek_overzicht.html' %}
+
+<script language="javascript">
+<!--
+navigationEnum = {
+    FIRST: 'first',
+    PREVIOUS: 'previous',
+    NEXT: 'next',
+    LAST: 'last'
+};
+
+var pageNumber = document.getElementById('current_page').value;
+var maxPages = document.getElementById('max_pages').value;
+var fldSearchOriginal = document.getElementById('search').value;
+
+// jquery for the handling of the click action on the page navigation buttons
+$(document).ready(function(){
+    $('#first_page_button_top').on('click', function(){
+        pageNavigation(navigationEnum.FIRST);
+    });
+    $('#first_page_button_bottom').on('click', function(){
+        pageNavigation(navigationEnum.FIRST);
+    });
+    $('#previous_button_top').on('click', function(){
+        pageNavigation(navigationEnum.PREVIOUS);
+    });
+    $('#previous_button_bottom').on('click', function(){
+        pageNavigation(navigationEnum.PREVIOUS);
+    });
+    $('#next_button_top').on('click', function(){
+        pageNavigation(navigationEnum.NEXT);
+    });
+    $('#next_button_bottom').on('click', function(){
+        pageNavigation(navigationEnum.NEXT);
+    });
+    $('#last_page_button_top').on('click', function(){
+        pageNavigation(navigationEnum.LAST);
+    });
+    $('#last_page_button_bottom').on('click', function(){
+        pageNavigation(navigationEnum.LAST);
+    });
+
+    // hide prev/next button
+    if ( pageNumber < 1 ) {
+        $('#previous_button_bottom').prop('disabled', true);
+        $('#previous_button_top').prop('disabled', true);
+        $('#first_page_button_top').prop('disabled', true);
+        $('#first_page_button_bottom').prop('disabled', true);
+    }
+    if ( pageNumber > maxPages - 2 ) {
+        $('#next_button_bottom').prop('disabled', true);
+        $('#next_button_top').prop('disabled', true);
+        $('#last_page_button_top').prop('disabled', true);
+        $('#last_page_button_bottom').prop('disabled', true);
+    }
+
+	//
+	$('#search').focus();
+	$('#search').keydown(function( event ){
+		if ( event.keyCode == 13 ){
+			doSearch();
+		}
+	});
+
+	$('#btnKenmerk').on('click', function(){
+		if ( document.getElementById('order_by').value == "kenmerk_desc" ) {
+			document.getElementById('order_by').value = 'kenmerk_asc';
+		} else {
+			document.getElementById('order_by').value = 'kenmerk_desc';
+		}
+		doSearch();
+	});
+
+	$('#btnDate').on('click', function(){
+		if ( document.getElementById('order_by').value == 'date_desc' ) {
+			document.getElementById('order_by').value = 'date_asc';
+		} else {
+			document.getElementById('order_by').value = 'date_desc';
+		}
+		doSearch();
+	});
+
+	$('#btnAfzender').on('click', function(){
+		if ( document.getElementById('order_by').value == 'afzender_asc' ) {
+			document.getElementById('order_by').value = 'afzender_desc';
+		} else {
+			document.getElementById('order_by').value = 'afzender_asc';
+		}
+		doSearch();
+	});
+
+	$('#btnOntvanger').on('click', function(){
+		if ( document.getElementById('order_by').value == 'ontvanger_asc' ) {
+			document.getElementById('order_by').value = 'ontvanger_desc';
+		} else {
+			document.getElementById('order_by').value = 'ontvanger_asc';
+		}
+		doSearch();
+	});
+
+	$('#btnType').on('click', function(){
+		if ( document.getElementById('order_by').value == 'type_asc' ) {
+			document.getElementById('order_by').value = 'type_desc';
+		} else {
+			document.getElementById('order_by').value = 'type_asc';
+		}
+		doSearch();
+	});
+});
+
+//
+function doSearch() {
+	var fldNewSearch = document.getElementById('search').value;
+	var fldOrderBy = document.getElementById('order_by').value;
+	location = '?search=' + fldNewSearch + '&order_by=' + fldOrderBy;
+}
+
+function pageNavigation(nav){
+    switch(nav){
+        case navigationEnum.FIRST:
+            pageNumber = 0;
+            break;
+        case navigationEnum.LAST:
+            pageNumber = ({{ max_pages }} - 1);
+            break;
+        case navigationEnum.NEXT:
+            pageNumber++;
+            break;
+        case navigationEnum.PREVIOUS:
+            if(pageNumber >= 1) { pageNumber--; }
+            break;
+        default:
+            break;
+    }
+    location = '?page=' + pageNumber + '&search=' + fldSearchOriginal + '&order_by=' + document.getElementById('order_by').value;
+}
+
+document.getElementById("zoek").addEventListener ("click", doSearch, false);
+// -->
+</script>

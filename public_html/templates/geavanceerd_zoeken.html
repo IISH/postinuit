@@ -1,0 +1,301 @@
+<h1>{{title}}</h1>
+({{ or_go_to }} <a href="zoeken.php">{{ btn_simple_search }}</a>)<br>
+<br>
+
+<table id="advanced_search_table">
+	<tr>
+		{% include 'geavanceerd_zoeken_kenmerk.html' %}
+		{% include 'geavanceerd_zoeken_afzender.html' %}
+	</tr>
+
+	<tr>
+		{% include 'geavanceerd_zoeken_inuit.html' %}
+		{% include 'geavanceerd_zoeken_ontvanger.html' %}
+	</tr>
+
+	<tr>
+		{% include 'geavanceerd_zoeken_datum.html' %}
+		{% include 'geavanceerd_zoeken_onderwerp.html' %}
+	</tr>
+
+	<tr>
+		{% include 'geavanceerd_zoeken_geregistreerddoor.html' %}
+		{% include 'geavanceerd_zoeken_opmerkingen.html' %}
+	</tr>
+
+	<tr>
+		<td>
+			<label id="type_of_document_search_lbl">{{ type_of_document_lbl }}</label>
+		</td>
+		<td colspan=3>
+			{% for key, doctype in document_types %}
+				{% set selected = false %}
+				{% for doc_type in selected_document_types %}
+					{% if doc_type == key %}
+						{% set selected = true %}
+					{% endif %}
+				{% endfor %}
+				<label class="type_of_document"><input type="checkbox" id="type_of_document_search" name="type_of_document_search" {% if selected %}checked{% endif %} value="{{ key }}"> {{ doctype[0] }}</label>
+			{% endfor %}
+		</td>
+	</tr>
+
+	<tr>
+		<td colspan="4">
+			<button id="advanced_search_button">{{ search_lbl }}</button>
+		</td>
+	</tr>
+</table>
+
+<br>
+
+{% include 'zoek_overzicht.html' %}
+
+<script language="JavaScript">
+	navigationEnum = {
+	    FIRST: 'first',
+        PREVIOUS: 'previous',
+        NEXT: 'next',
+        LAST: 'last'
+    };
+
+	var pageNumber = document.getElementById('current_page').value;
+	var maxPages = document.getElementById('max_pages').value;
+
+    $(document).ready(function(){
+        $('#first_page_button_top').on('click', function(){
+            pageNavigation(navigationEnum.FIRST);
+        });
+        $('#first_page_button_bottom').on('click', function(){
+            pageNavigation(navigationEnum.FIRST);
+        });
+        $('#previous_button_top').on('click', function(){
+            pageNavigation(navigationEnum.PREVIOUS);
+        });
+        $('#previous_button_bottom').on('click', function(){
+            pageNavigation(navigationEnum.PREVIOUS);
+        });
+        $('#next_button_top').on('click', function(){
+            pageNavigation(navigationEnum.NEXT);
+        });
+        $('#next_button_bottom').on('click', function(){
+            pageNavigation(navigationEnum.NEXT);
+        });
+        $('#last_page_button_top').on('click', function(){
+            pageNavigation(navigationEnum.LAST);
+        });
+        $('#last_page_button_bottom').on('click', function(){
+            pageNavigation(navigationEnum.LAST);
+        });
+
+        // hide prev/next button
+        if ( pageNumber < 1 ) {
+            $('#previous_button_bottom').prop('disabled', true);
+            $('#previous_button_top').prop('disabled', true);
+            $('#first_page_button_top').prop('disabled', true);
+            $('#first_page_button_bottom').prop('disabled', true);
+        }
+        if ( pageNumber > maxPages - 2 ) {
+            $('#next_button_bottom').prop('disabled', true);
+            $('#next_button_top').prop('disabled', true);
+            $('#last_page_button_top').prop('disabled', true);
+            $('#last_page_button_bottom').prop('disabled', true);
+        }
+
+        $(function(){
+            $('#date_to_search').datepicker({ dateFormat: 'dd-mm-yy' });
+            $('#date_from_search').datepicker({ dateFormat: 'dd-mm-yy'});
+        });
+
+	    //
+	    $('#kenmerk_search').focus();
+	    $('#kenmerk_search').keydown(function( event ){
+		    if ( event.keyCode == 13 ){
+			    doAdvancedSearch();
+		    }
+	    });
+
+	    $('#sender_search').keydown(function( event ){
+		    if ( event.keyCode == 13 ){
+			    doAdvancedSearch();
+		    }
+	    });
+
+	    $('#receiver_search').keydown(function( event ){
+		    if ( event.keyCode == 13 ){
+			    doAdvancedSearch();
+		    }
+	    });
+
+	    $('#date_from_search').keydown(function( event ){
+		    if ( event.keyCode == 13 ){
+			    doAdvancedSearch();
+		    }
+	    });
+
+	    $('#date_to_search').keydown(function( event ){
+		    if ( event.keyCode == 13 ){
+			    doAdvancedSearch();
+		    }
+	    });
+
+	    $('#subject_search').keydown(function( event ){
+		    if ( event.keyCode == 13 ){
+			    doAdvancedSearch();
+		    }
+	    });
+
+	    $('#registered_by_search').keydown(function( event ){
+		    if ( event.keyCode == 13 ){
+			    doAdvancedSearch();
+		    }
+	    });
+
+	    $('#remarks_search').keydown(function( event ){
+		    if ( event.keyCode == 13 ){
+			    doAdvancedSearch();
+		    }
+	    });
+
+	    $('#btnKenmerk').on('click', function(){
+		    if ( document.getElementById('order_by').value == "kenmerk_desc" ) {
+			    document.getElementById('order_by').value = 'kenmerk_asc';
+		    } else {
+			    document.getElementById('order_by').value = 'kenmerk_desc';
+		    }
+		    doAdvancedSearch();
+	    });
+
+	    $('#btnDate').on('click', function(){
+		    if ( document.getElementById('order_by').value == 'date_desc' ) {
+			    document.getElementById('order_by').value = 'date_asc';
+		    } else {
+			    document.getElementById('order_by').value = 'date_desc';
+		    }
+		    doAdvancedSearch();
+	    });
+
+	    $('#btnAfzender').on('click', function(){
+		    if ( document.getElementById('order_by').value == 'afzender_asc' ) {
+			    document.getElementById('order_by').value = 'afzender_desc';
+		    } else {
+			    document.getElementById('order_by').value = 'afzender_asc';
+		    }
+		    doAdvancedSearch();
+	    });
+
+	    $('#btnOntvanger').on('click', function(){
+		    if ( document.getElementById('order_by').value == 'ontvanger_asc' ) {
+			    document.getElementById('order_by').value = 'ontvanger_desc';
+		    } else {
+			    document.getElementById('order_by').value = 'ontvanger_asc';
+		    }
+		    doAdvancedSearch();
+	    });
+
+	    $('#btnType').on('click', function(){
+		    if ( document.getElementById('order_by').value == 'type_asc' ) {
+			    document.getElementById('order_by').value = 'type_desc';
+		    } else {
+			    document.getElementById('order_by').value = 'type_asc';
+		    }
+		    doAdvancedSearch();
+	    });
+
+    });
+
+	function doAdvancedSearch(){
+		var kenmerk_value = $('#kenmerk_search').val();
+		if ( $('#date_from_search').val() <= $('#date_to_search').val() ) {
+			var date_from_value = $('#date_from_search').val();
+			var date_to_value = $('#date_to_search').val();
+		} else {
+			var date_from_value = $('#date_to_search').val();
+			var date_to_value = $('#date_from_search').val();
+		}
+		var sender_name_value = $('#sender_search').val();
+		var receiver_name_value = $('#receiver_search').val();
+		var in_uit_value = "";
+		var separator = "";
+		$("input:checkbox[name='in_uit_search']:checked").each(function(){
+			in_uit_value += separator + $(this).val();
+			separator = ","
+		});
+		var type_of_document_value = "";
+		separator = "";
+		$("input:checkbox[name='type_of_document_search']:checked").each(function(){
+			type_of_document_value += separator +$(this).val();
+			separator = ",";
+		});
+		var subject_value = $('#subject_search').val();
+		var remarks_value = $('#remarks_search').val();
+		var registered_by_value = $('#registered_by_search').val();
+		var order_by_value = $('#order_by').val();
+		location = '?in_out=' + in_uit_value
+					+ '&kenmerk=' + kenmerk_value
+					+ '&date_from=' + date_from_value
+					+ '&date_to=' + date_to_value
+					+ '&sender_name=' + sender_name_value
+					+ '&receiver_name=' + receiver_name_value
+					+ '&type_of_document=' + type_of_document_value
+					+ '&subject=' + subject_value
+					+ '&remarks=' + remarks_value
+					+ '&registered_by=' + registered_by_value
+					+ '&order_by=' + order_by_value;
+	}
+
+	function pageNavigation(nav){
+        switch(nav){
+            case navigationEnum.FIRST:
+                pageNumber = 0;
+                break;
+            case navigationEnum.LAST:
+                pageNumber = ({{ max_pages }} - 1);
+                break;
+            case navigationEnum.NEXT:
+                pageNumber++;
+                break;
+            case navigationEnum.PREVIOUS:
+                if(pageNumber >= 1) { pageNumber--; }
+                break;
+            default:
+                break;
+        }
+
+        var kenmerk_value = $('#kenmerk_search').val();
+        var date_from_value = $('#date_from_search').val();
+        var date_to_value = $('#date_to_search').val();
+        var sender_name_value = $('#sender_search').val();
+        var receiver_name_value = $('#receiver_search').val();
+        var in_uit_value = "";
+        var separator = "";
+        $("input:checkbox[name='in_uit_search']:checked").each(function(){
+            in_uit_value += separator + $(this).val();
+            separator = ",";
+        });
+        var type_of_document_value = "";
+        separator = "";
+        $("input:checkbox[name='type_of_document_search']:checked").each(function(){
+            type_of_document_value += separator + $(this).val();
+            separator = ",";
+        });
+        var subject_value = $('#subject_search').val();
+        var remarks_value = $('#remarks_search').val();
+		var registered_by_value = $('#registered_by_search').val();
+		var order_by_value = $('#order_by').val();
+        location = '?page=' + pageNumber + '&in_out=' + in_uit_value
+            + '&kenmerk=' + kenmerk_value
+            + '&date_from=' + date_from_value
+            + '&date_to=' + date_to_value
+            + '&sender_name=' + sender_name_value
+            + '&receiver_name=' + receiver_name_value
+            + '&type_of_document=' + type_of_document_value
+            + '&subject=' + subject_value
+            + '&remarks=' + remarks_value
+	        + '&registered_by=' + registered_by_value
+			+ '&order_by=' + order_by_value;
+    }
+
+    document.getElementById("advanced_search_button").addEventListener("click", doAdvancedSearch, false);
+
+</script>
