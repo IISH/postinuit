@@ -1,0 +1,13 @@
+
+<ol>
+{% for record in records %}
+	<li>
+		<b>
+			{% if is_admin == true %}
+				<a NAME="{{ record.ID }}" href="wiki-edit.php?ID={{ record.ID }}&backurl={{ backurl }}" title="Edit Wiki">{{  record.title|raw }}</a>
+			{% else %}
+				{{  record.title|raw }}
+			{% endif %}
+		</b><br />{{ record.description|raw }}<br>&nbsp;</li>
+{% endfor %}
+</ol>

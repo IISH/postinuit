@@ -1,9 +1,7 @@
-correspondentie.settings.php
-correspondentie.settings.LOCAL.php
+etc/config.php
 vendor/
 .idea
 documenten/
 documenten-deleted/
 test.php
-import/
-/bootstrap-3.3.7
+/etc/config.php
