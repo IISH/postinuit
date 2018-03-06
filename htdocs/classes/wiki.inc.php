@@ -6,6 +6,9 @@ class Wiki {
 	protected $description_nl = '';
 	protected $description_en = '';
 	protected $is_deleted = 0;
+	protected $groupname_nl = '';
+	protected $groupname_en = '';
+	protected $language = '';
 
 	function __construct( $row ) {
 		$this->ID = $row['ID'];
@@ -14,6 +17,12 @@ class Wiki {
 		$this->description_nl = $row["description_nl"];
 		$this->description_en = $row["description_en"];
 		$this->is_deleted = $row["is_deleted"];
+		$this->groupname_nl = $row["groupname_nl"];
+		$this->groupname_en = $row["groupname_en"];
+
+		// for now only dutch
+//		$this->language = getLanguage();
+		$this->language = 'nl';
 	}
 
 	public function getId() {
@@ -21,7 +30,7 @@ class Wiki {
 	}
 
 	public function getTitle() {
-		if ( getLanguage() == 'nl' ) {
+		if ( $this->language == 'nl' ) {
 			return $this->title_nl;
 		} else {
 			return $this->title_en;
@@ -29,7 +38,7 @@ class Wiki {
 	}
 
 	public function getDescription() {
-		if ( getLanguage() == 'nl' ) {
+		if ( $this->language == 'nl' ) {
 			return $this->description_nl;
 		} else {
 			return $this->description_en;
@@ -38,5 +47,13 @@ class Wiki {
 
 	public function getIsdeleted() {
 		return $this->is_deleted;
+	}
+
+	public function getGroupname() {
+		if ( $this->language == 'nl' ) {
+			return $this->groupname_nl;
+		} else {
+			return $this->groupname_en;
+		}
 	}
 }

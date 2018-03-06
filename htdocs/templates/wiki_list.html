@@ -1,0 +1,18 @@
+
+{% set lastGroupname = '' %}
+{% for record in records %}
+	{% if lastGroupname != record.groupname %}
+		<h1>{{ record.groupname }}</h1>
+	{% endif %}
+		{% if is_admin == true %}
+			<b><a NAME="{{ record.ID }}" href="wiki-edit.php?ID={{ record.ID }}&backurl={{ backurl }}" title="Edit Wiki">{{  record.title|raw }} (edit)</a></b><br />
+		{% else %}
+			{% if record.title  %}
+				<b>{{  record.title|raw }}</b><br />
+			{% endif %}
+		{% endif %}
+	{{ record.description|raw }}<br>
+	<br>
+
+	{% set lastGroupname = record.groupname %}
+{% endfor %}

@@ -15,6 +15,7 @@ $arrOfWikis = Wikis::search($search);
 foreach ( $arrOfWikis as $wiki ) {
 	$records[] = array(
 		'ID' => $wiki->getId()
+		, 'groupname' => $wiki->getGroupname()
 		, 'title' => $wiki->getTitle()
 		, 'description' => $wiki->getDescription()
 		);

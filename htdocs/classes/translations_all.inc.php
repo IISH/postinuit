@@ -3,9 +3,7 @@
  * Class for loading and getting translations from the database
  */
 
-//require_once dirname(__FILE__) . "/../classes/_misc_functions.inc.php";
-
-class Translations {
+class TranslationsAll {
 	private static $is_loaded = false;
 	private static $settings = null;
 	private static $settings_table = 'translations';
@@ -15,7 +13,6 @@ class Translations {
 	 */
 	private static function load() {
 		global $dbConn;
-		$language = getLanguage();
 
 		$arr = array();
 
@@ -25,7 +22,7 @@ class Translations {
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		foreach ($result as $row) {
-			$arr[ $row["property"] ] = $row["lang_" . $language];
+			$arr[ $row["property"] ] = array( 'nl' => $row["lang_nl"], 'en' => $row["lang_en"] );
 		}
 
 		self::$settings = $arr;
@@ -38,12 +35,12 @@ class Translations {
 	 * @param string $setting_name The name of the setting
 	 * @return string The value of the setting
 	 */
-	public static function get($setting_name) {
+	public static function get($setting_name, $language = 'nl') {
 		if ( !self::$is_loaded ) {
 			self::load();
 		}
 
-		$value = isset( self::$settings[$setting_name] ) ? self::$settings[$setting_name] : '';
+		$value = isset( self::$settings[$setting_name][$language] ) ? self::$settings[$setting_name][$language] : '';
 
 		return $value;
 	}

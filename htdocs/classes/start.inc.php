@@ -27,6 +27,7 @@ require_once dirname(__FILE__) . "/inisettings.inc.php";
 require_once dirname(__FILE__) . "/settings.inc.php";
 require_once dirname(__FILE__) . "/tcdatetime.inc.php";
 require_once dirname(__FILE__) . "/translations.inc.php";
+require_once dirname(__FILE__) . "/translations_all.inc.php";
 require_once dirname(__FILE__) . "/website_protection.inc.php";
 require_once dirname(__FILE__) . "/documentTypes.inc.php";
 require_once dirname(__FILE__) . "/post.inc.php";

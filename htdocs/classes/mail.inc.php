@@ -132,12 +132,16 @@ class Mail{
 		//
 		if ( $data['ID'] == '' ) {
 			// Get the post id corresponding to the given kenmerk
-			$post_query = "SELECT ID FROM post WHERE kenmerk='" . $kenmerk_of_post . "' ";
+			$post_query = "SELECT ID, registered_by FROM post WHERE kenmerk='" . $kenmerk_of_post . "' ";
 			$post_stmt = $dbConn->getConnection()->prepare($post_query);
 			$post_stmt->execute();
 			$post_id = $post_stmt->fetch();
 			$data['ID'] = $post_id['ID'];
+			$data['registered_by'] = $post_id['registered_by'];
 		}
+
+	    $oRegisteredBy = new User($data['registered_by']);
+	    $data['registered_by'] = $oRegisteredBy->getName();
 
 	    // try to send email
 	    $mail = new PHPMailer(true);
@@ -150,63 +154,69 @@ class Mail{
 	        $mail->SMTPAuth = true;                                       // Enable SMTP authentication
 	        $mail->Username = IniSettings::get('mail_server', 'smtp_username'); // SMTP username
 	        $mail->Password = IniSettings::get('mail_server', 'smtp_password'); // SMTP password
-	        //$mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
+
 	        $mail->Port = IniSettings::get('mail_server', 'port');              // TCP port to connect to
 
+	        //$mail->SMTPSecure = 'tls';                                  // Enable TLS encryption
+	        //$mail->SMTPSecure = 'ssl';                                  // Enable SSL encryption
+	        $mail->SMTPSecure = false;                                  // als geen smtp secure, dan ook geen smtpautotls
+	        $mail->SMTPAutoTLS = false;
+
             // set recipients and senders on the mail
-	        $mail->setFrom(trim(IniSettings::get('settings', "from_email")), trim(Translations::get("website_name")));
+	        $mail->setFrom(trim(IniSettings::get('settings', "from_email")), trim(TranslationsAll::get("website_name")));
 	        $mail->addAddress($result['mail']);
 			if ( IniSettings::get('settings', "bcc_email") != '' ) {
 				$mail->addBCC(IniSettings::get('settings', "bcc_email"));
 			}
 
-            /**
-             * Add attachments to the mail
-             */
-	        $maxMailSize = Settings::get('max_mail_size') * 1024 * 1024;
-			$attachmentsSize = 0;
+			//
+	        $attachmentsSize = 0;
 	        $skippedAttachments = array();
 	        $attachmentsInMail = array();
+	        $maxMailSize = Settings::get('max_mail_size') * 1024 * 1024;
 
-            foreach($files as $file){
-				$fileSize = filesize( IniSettings::get('settings', 'attachment_directory') . $data['kenmerk'] . "/". $file );
-				if ( $fileSize + $attachmentsSize < $maxMailSize ) {
-					$mail->addAttachment(IniSettings::get('settings', 'attachment_directory') . $data['kenmerk'] . "/". $file);
-					$attachmentsSize += $fileSize;
-					$attachmentsInMail[] = "$file";
-				} else {
-					$skippedAttachments[] = "$file";
-				}
-            }
-
-	        if ( count($skippedAttachments) > 0 ) {
-		        $sk1 = Translations::get('email_skipped_attachments_1') . "<br />\n";
-
-		        $sk2 = Translations::get('email_skipped_attachments_2');
-				if ( $sk2 != '' ) {
-					$sk2 = str_replace('{s}', ( count($attachmentsInMail) > 1 ? 's': ''), $sk2);
-					$sk2 = "<br />\n" . $sk2 . "<br />\n";
-					foreach ( $attachmentsInMail as $file ) {
-						$sk2 .= "- $file<br />\n";
+			if ( $data['in_out'] == 'in' ) {
+	            /**
+	             * Add attachments to the mail
+	             */
+	            foreach($files as $file){
+					$fileSize = filesize( IniSettings::get('settings', 'attachment_directory') . $data['kenmerk'] . "/". $file );
+					if ( $fileSize + $attachmentsSize < $maxMailSize ) {
+						$mail->addAttachment(IniSettings::get('settings', 'attachment_directory') . $data['kenmerk'] . "/". $file);
+						$attachmentsSize += $fileSize;
+						$attachmentsInMail[] = "$file";
+					} else {
+						$skippedAttachments[] = "$file";
 					}
-				}
+	            }
 
-		        $sk3 = Translations::get('email_skipped_attachments_3');
-		        if ( $sk3 != '' ) {
-			        $sk3 = str_replace('{s}', ( count($skippedAttachments) > 1 ? 's': ''), $sk3);
-			        $sk3 = "<br />\n" . $sk3 . "<br />\n";
-			        foreach ( $skippedAttachments as $file ) {
-				        $sk3 .= "- <a href=\"" . IniSettings::get('settings', 'url') . "download.php?ID=" . $data['ID'] . "&file=" . urlencode($file) . "\">$file</a><br />\n";
+		        if ( count($skippedAttachments) > 0 ) {
+			        if ( count($attachmentsSize) == 0 && count($skippedAttachments) == 1 ) {
+			            $sk1 = TranslationsAll::get('email_skipped_attachments_1') . "<br />\n";
+			        } elseif ( count($skippedAttachments) == 1 ) {
+			            $sk1 = TranslationsAll::get('email_skipped_attachments_2') . "<br />\n";
+			        } else {
+				        $sk1 = TranslationsAll::get('email_skipped_attachments_3') . "<br />\n";
 			        }
-		        }
 
-				$data['skipped'] = "<br />\n" . $sk1 . $sk2 . $sk3;
+			        foreach ( $skippedAttachments as $file ) {
+				        $sk1 .= "- <a href=\"" . IniSettings::get('settings', 'url') . "download.php?ID=" . $data['ID'] . "&file=" . urlencode($file) . "\">$file</a><br />\n";
+			        }
+
+					$data['skipped'] = $sk1 . "<br />\n";
+				}
 			}
+
+			//
+			$data['url_intranet_bb_huc'] = Settings::get('url_intranet_bb_huc');
+	        $data['het_document_sp'] = ( count($files) > 1 ) ? TranslationsAll::get('het_document_plural') : TranslationsAll::get('het_document_singular');
+	        $data['de_scan_sp'] = ( count($files) > 1) ? TranslationsAll::get('de_scan_plural') : TranslationsAll::get('de_scan_singular');
+	        $data['je_document_sp'] = ( count($files) > 1 ) ? TranslationsAll::get('je_document_plural') : TranslationsAll::get('je_document_singular');
 
             //
             $mail->isHTML(true);
-            $mail->Subject = Mail::fillMailValues(Translations::get('post' . $data['in_out'] . '_mail_subject'), $data);
-            $mail->Body = Mail::fillMailValues(Translations::get('post' . $data['in_out'] . '_mail_body'), $data);
+            $mail->Subject = Mail::fillMailValues(TranslationsAll::get('post' . $data['in_out'] . '_mail_subject'), $data);
+            $mail->Body = Mail::fillMailValues(TranslationsAll::get('post' . $data['in_out'] . '_mail_body'), $data);
 			$altBody = strip_tags ( str_replace(array('<br>', '<br />'), "\n", $mail->Body) );
             $mail->AltBody = $altBody;
 
@@ -246,7 +256,12 @@ class Mail{
 	    $ret = str_replace('[their_organisation]', $data['their_organisation'], $ret);
 	    $ret = str_replace('[their_name]', $data['their_name'], $ret);
 	    $ret = str_replace('[subject]', $data['subject'], $ret);
-	    $ret = str_replace('[website_name]', Translations::get('website_name'), $ret);
+	    $ret = str_replace('[website_name]', TranslationsAll::get('website_name'), $ret);
+	    $ret = str_replace('[registered_by]', $data['registered_by'], $ret);
+	    $ret = str_replace('[het_document_sp]', $data['het_document_sp'], $ret);
+	    $ret = str_replace('[de_scan_sp]', $data['de_scan_sp'], $ret);
+	    $ret = str_replace('[je_document_sp]', $data['je_document_sp'], $ret);
+	    $ret = str_replace('[url_intranet_bb_huc]', $data['url_intranet_bb_huc'], $ret);
 
 		//
 		if ( isset($data['skipped']) && $data['skipped'] != '' ) {

@@ -25,6 +25,7 @@ function createContent() {
 
 	require_once("./classes/class_form/class_form.inc.php");
 	require_once("./classes/class_form/fieldtypes/class_field_hidden.inc.php");
+	require_once("./classes/class_form/fieldtypes/class_field_integer.inc.php");
 	require_once("./classes/class_form/fieldtypes/class_field_string.inc.php");
 	require_once("./classes/class_form/fieldtypes/class_field_textarea.inc.php");
 
@@ -50,6 +51,13 @@ function createContent() {
 		, 'onNew' => '0'
 		)));
 
+	$oForm->add_field( new class_field_integer ( array(
+		'fieldname' => 'wiki_group_id'
+		, 'fieldlabel' => 'Group'
+		, 'onNew' => '2'
+		, 'required' => 1
+		)));
+
 	$oForm->add_field( new class_field_string ( array(
 		'fieldname' => 'title_nl'
 		, 'fieldlabel' => 'Title (NL)'
@@ -59,7 +67,7 @@ function createContent() {
 	$oForm->add_field( new class_field_string ( array(
 		'fieldname' => 'title_en'
 		, 'fieldlabel' => 'Title (EN)'
-		, 'required' => 1
+		, 'required' => 0
 		)));
 
 	$oForm->add_field( new class_field_textarea ( array(
@@ -72,8 +80,15 @@ function createContent() {
 	$oForm->add_field( new class_field_textarea ( array(
 		'fieldname' => 'description_en'
 		, 'fieldlabel' => 'Description (EN)'
-		, 'required' => 1
+		, 'required' => 0
 		, 'class' => 'translation-edit'
+		)));
+
+	$oForm->add_field( new class_field_integer ( array(
+		'fieldname' => 'sort_order'
+		, 'fieldlabel' => 'Sort order'
+		, 'onNew' => '999'
+		, 'required' => 1
 		)));
 
 	// generate form
