@@ -61,7 +61,7 @@ function createContent() {
 	$oForm->add_field( new class_field_string ( array(
 		'fieldname' => 'title_nl'
 		, 'fieldlabel' => 'Title (NL)'
-		, 'required' => 1
+		, 'required' => 0
 		)));
 
 	$oForm->add_field( new class_field_string ( array(
