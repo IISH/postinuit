@@ -9,6 +9,7 @@ bcc_email = ; only during testing
 
 attachment_directory =  ; end with forward slash
 deleted_attachment_directory = ; end with forward slash
+wiki_directory = ; end with forward slash
 
 mail_server_port = 25
 mail_server_host =

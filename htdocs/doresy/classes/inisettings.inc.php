@@ -5,7 +5,7 @@
 class IniSettings {
 	private static $is_loaded = false;
 	private static $settings = null;
-	private static $settings_file = '../settings/config.php';
+	private static $settings_file = '../../settings/config.php';
 
 	/**
 	 * Load the settings from the database
