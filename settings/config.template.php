@@ -7,6 +7,7 @@ contact_name =
 contact_email=
 bcc_email = ; only during testing
 
+mount_check_file = ; this file must exist on the mount
 attachment_directory =  ; end with forward slash
 deleted_attachment_directory = ; end with forward slash
 wiki_directory = ; end with forward slash

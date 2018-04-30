@@ -37,8 +37,12 @@ class WebsiteProtection {
 	            $mail->SMTPAuth = true;                                       // Enable SMTP authentication
 	            $mail->Username = IniSettings::get('mail_server', 'smtp_username'); // SMTP username
 	            $mail->Password = IniSettings::get('mail_server', 'smtp_password'); // SMTP password
-				//$mail->SMTPSecure = 'tls';                                  // Enable TLS encryption, `ssl` also accepted
 				$mail->Port = IniSettings::get('mail_server', 'port');              // TCP port to connect to
+
+				//$mail->SMTPSecure = 'tls';                                  // Enable TLS encryption
+				//$mail->SMTPSecure = 'ssl';                                  // Enable SSL encryption
+				$mail->SMTPSecure = false;                                  // als geen smtp secure, dan ook geen smtpautotls
+				$mail->SMTPAutoTLS = false;
 
 				// set recipients and senders on the mail
 				$mail->setFrom(trim(IniSettings::get('settings', "from_email")), trim(Translations::get("website_name")));
@@ -52,11 +56,13 @@ class WebsiteProtection {
 				if ( !$mail->send() ) {
 					// log error
 					error_log('Error 954278: failed sending mail to: ' . '...');
+					echo 'Error 954278: failed sending mail to: ';
 				} else {
 				}
 			} catch (Exception $e) {
 				// log exception
 				error_log( 'Caught exception (error 347893): ' . $e->getMessage() );
+				echo 'Caught exception (error 347893): ' . $e->getMessage();
 			}
 		}
 	}
@@ -232,20 +238,5 @@ class WebsiteProtection {
 		}
 
 		return $text;
-	}
-
-	public function send_email( $recipients, $subject, $message ) {
-		// check recipients value
-		$recipients = str_replace(array(',', ' '), ';', trim($recipients));
-		while ( strpos($recipients, ';;') !== false ) {
-			$recipients = str_replace(';;', ';', $recipients);
-		}
-
-		if ( $recipients != '' ) {
-			$headers = "From: " . Settings::get("email_sender_name") . " <" . Settings::get("email_sender_email") . ">";
-
-			// send email
-			mail($recipients, $subject, $message, $headers);
-		}
 	}
 }

@@ -5,7 +5,7 @@ class File {
         // check to see if the directory exists, otherwise create it
         if ( !file_exists( $directory ) ) {
             if ( !mkdir($directory, 0764, true ) ) {
-                die("Failed to create $label directory");
+                die("Failed to create $label directory: " . $directory);
             }
 		}
 	}

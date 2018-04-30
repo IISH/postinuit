@@ -75,3 +75,10 @@ if ( !isset($settings) ) {
 }
 
 $oMisc = new Misc();
+
+// CHECK IF MOUNT FILE EXISTS, IF NOT FOUND, STOP APPLICATION
+if ( !file_exists( IniSettings::get('settings', 'mount_check_file') ) ) {
+	$errorMessage = 'ERROR 985412: Mount cannot be found. Please contact KNAW Humanities Cluster Digital Infrastructure department.';
+	$protect->sendWarningMail( $errorMessage );
+	die( $errorMessage );
+}
