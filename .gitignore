@@ -1,7 +1,7 @@
-etc/config.php
 vendor/
 .idea
 documenten/
 documenten-deleted/
 test.php
-/etc/config.php
+*.sql
+/settings/config.php
