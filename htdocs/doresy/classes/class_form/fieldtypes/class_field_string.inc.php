@@ -31,7 +31,7 @@ class class_field_string extends class_field {
 		}
 
 		// strip slashes
-		$veldwaarde = stripslashes($veldwaarde);
+//		$veldwaarde = stripslashes($veldwaarde);
 		$veldwaarde = str_replace("\"", "&quot;", $veldwaarde);
 
 		// extra

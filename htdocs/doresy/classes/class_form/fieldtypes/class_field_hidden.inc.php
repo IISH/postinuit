@@ -31,7 +31,7 @@ class class_field_hidden extends class_field {
 		}
 
 		// strip slashes
-		$veldwaarde = stripslashes($veldwaarde);
+//		$veldwaarde = stripslashes($veldwaarde);
 		$veldwaarde = str_replace("\"", "&quot;", $veldwaarde);
 
 		$inputfield = "<input name=\"FORM_::FIELDNAME::\" id=\"FORM_::FIELDNAME::\" type=\"hidden\" value=\"::VALUE::\" ::CLASS::>";

@@ -25,7 +25,7 @@ class class_field_readonly extends class_field {
 		}
 
 		// strip slashes
-		$veldwaarde = stripslashes($veldwaarde);
+//		$veldwaarde = stripslashes($veldwaarde);
 		$veldwaarde = str_replace("\"", "&quot;", $veldwaarde);
 
 		$inputfield = "::VALUE::";

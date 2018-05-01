@@ -31,7 +31,7 @@ class class_field_textarea extends class_field {
 		}
 
 		// strip slashes
-		$veldwaarde = stripslashes($veldwaarde);
+//		$veldwaarde = stripslashes($veldwaarde);
 		$veldwaarde = str_replace("\"", "&quot;", $veldwaarde);
 		$veldwaarde = trim($veldwaarde);
 
