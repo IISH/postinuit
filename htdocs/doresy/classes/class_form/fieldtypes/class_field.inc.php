@@ -15,6 +15,7 @@ class class_field {
 		$this->m_addquotes = 1;
 		$this->m_class = '';
 		$this->m_readonly = 0;
+		$this->m_placeholder = '';
 
 		if ( is_array( $fieldsettings ) ) {
 			foreach ( $fieldsettings as $field => $value ) {
@@ -42,6 +43,9 @@ class class_field {
 						break;
 					case "readonly":
 						$this->m_readonly = $fieldsettings["readonly"];
+						break;
+					case "placeholder":
+						$this->m_placeholder = $fieldsettings["placeholder"];
 						break;
 				}
 			}

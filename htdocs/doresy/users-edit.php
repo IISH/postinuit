@@ -55,12 +55,13 @@ function createContent() {
 		'fieldname' => 'loginname'
 		, 'fieldlabel' => Translations::get('knaw_loginname')
 		, 'required' => 1
+		, 'placeholder' => 'FirstnameL'
 		)));
 
 	$oForm->add_field( new class_field_string ( array(
 		'fieldname' => 'name'
 		, 'fieldlabel' => Translations::get('name')
-		, 'required' => 0
+		, 'required' => 1
 		)));
 
 	$oForm->add_field(new class_field_readonly (array(
@@ -75,6 +76,7 @@ function createContent() {
 		, 'fieldlabel' => 'Is data invoerder?'
 		, 'required' => 0
 		, 'class' => ''
+		, 'onNew' => 1
 		)));
 
 	$oForm->add_field(new class_field_bit (array(
