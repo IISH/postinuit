@@ -37,9 +37,10 @@ class class_field_string extends class_field {
 		// extra
 		$veldwaarde = trim($veldwaarde);
 
-		$inputfield = "<input name=\"FORM_::FIELDNAME::\" id=\"FORM_::FIELDNAME::\" type=\"text\" value=\"::VALUE::\" size=\"::SIZE::\" ::CLASS::>";
+		$inputfield = "<input name=\"FORM_::FIELDNAME::\" id=\"FORM_::FIELDNAME::\" type=\"text\" value=\"::VALUE::\" size=\"::SIZE::\" placeholder=\"::PLACEHOLDER::\" ::CLASS::>";
 
 		$inputfield = str_replace("::SIZE::", $this->m_size, $inputfield);
+		$inputfield = str_replace("::PLACEHOLDER::", $this->m_placeholder, $inputfield);
 		$inputfield = str_replace("::FIELDNAME::", $this->get_fieldname(), $inputfield);
 		$inputfield = str_replace("::VALUE::", $veldwaarde, $inputfield);
 
